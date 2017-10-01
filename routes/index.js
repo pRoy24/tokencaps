@@ -4,14 +4,14 @@ var request = require('request');
 var getCoinList = require('../models/GetCoinList');
 var DataFetchAPI = require('../models/DataFetchAPI');
 /* GET home page. */
-var redis = require('redis');
+
 
 var DBConnection = require('../models/DBModel');
-// create a new redis client and connect to our local redis instance
-var redisClient = redis.createClient();
+
+
 
 var axios = require('axios');
-// create a new redis client and connect to our local redis instance
+
 const cassandra = require('cassandra-driver');
 const cassandraClient = new cassandra.Client({contactPoints: ['127.0.0.1']});
 router.get('/', function(req, res, next) {
