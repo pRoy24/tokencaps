@@ -21,5 +21,14 @@ module.exports = {
   },
   findExchangeList: function() {
     return ExchangeList.getExchangeList();
+  },
+  searchCoin: function (coinSymbol) {
+    return CoinList.searchCoin(coinSymbol);
+  },
+  findCoinRow: function(coinSymbol) {
+    return CoinList.getCoinList().then(function(coinListResponse){
+      let currentCoinItem = coinListResponse.data.find((coinItem) => (coinItem.symbol === coinSymbol));
+      return ({data: currentCoinItem});
+    });
   }
 }

@@ -8,15 +8,14 @@ const DiskStorage = require('./DiskStorage'),
 module.exports = {
   getCoinRow: function(coinSymbol) {
     return DiskStorage.findCoinRow(coinSymbol).then(function (response) {
-      if (response && Object.keys(response).length > 0) {
+      if (response && response.data && Object.keys(response.data).length > 0) {
         return response;
       } else {
         return APIStorage.findCoinRow(coinSymbol).then(function(apiCoinResponse){
-          DiskStorage.saveCoinRow(apiCoinResponse);
-          return apiCoinResponse;
+          return ({data: apiCoinResponse.data});
         })
       }
-    })
+    }).catch((e)=>{console.log(e)})
   },
 
   getCoinSnapshot: function(coinSymbol) {
@@ -25,7 +24,6 @@ module.exports = {
         return response;
       } else {
         return APIStorage.findCoinSnapshot(coinSymbol).then(function(apiCoinSnapshotResponse){
-          DiskStorage.saveCoinSnapshot(CoinUtils.normalizeCoinSnapShotData(apiCoinSnapshotResponse));
           return CoinUtils.normalizeCoinSnapShotData(apiCoinSnapshotResponse);
         })
       }
@@ -73,13 +71,11 @@ module.exports = {
 
   getCoinList: function() {
     return DiskStorage.findCoinList().then(function(response){
-      console.log(response);
       if (response && response.data && response.data.length > 0) {
         return response.data;
       } else {
         return APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
           const coinSocialResponse = apiCoinSnapshotResponse.data;
-          DiskStorage.saveCoinListData(coinSocialResponse);
           return coinSocialResponse;
         })
       }
@@ -108,7 +104,6 @@ module.exports = {
       } else {
         return APIStorage.findExchangeList().then(function(apiStorageResponse){
           let apiExchangeListResponse = apiStorageResponse.data.data;
-          DiskStorage.saveExchangeList();
           return {data: apiExchangeListResponse};
         });
       }
@@ -117,12 +112,24 @@ module.exports = {
 
   mergeExchangeList: function(exchangeMarketData) {
     return DiskStorage.findExchangeList().then(function(diskStorageResponse){
-      if (diskStorageResponse && diskStorageResponse.data.length > 0) {
+      if (diskStorageResponse && diskStorageResponse.data && diskStorageResponse.data.length > 0) {
         return diskStorageResponse.data;
       } else {
         return APIStorage.findExchangeList().then(function(apiStorageResponse){
           let apiExchangeListResponse = apiStorageResponse.data.data;
           return {data: mergeList(exchangeMarketData, apiExchangeListResponse)};
+        });
+      }
+    })
+  },
+
+  findCoinByName: function(coinSearchString) {
+    return DiskStorage.searchCoin(coinSearchString).then(function(searchCoinResponse){
+      if (searchCoinResponse && searchCoinResponse.data.length > 0) {
+        return {data: searchCoinResponse.data}
+      } else {
+        return APIStorage.searchCoin(coinSearchString).then(function(apiSearchCoinResponse){
+          return {data: searchCoinResponse.data}
         });
       }
     })
@@ -146,5 +153,5 @@ function mergeList(exchangeMarketData, exchangeList) {
     }
    }
    return mergedList;
-
 }
+

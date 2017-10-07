@@ -8,13 +8,13 @@ module.exports = {
   getCoinItem: function(coinSymbol) {
     const query = "select * from churchdb.coins where symbol = '"+coinSymbol+"'";
     return cassandraClient.execute(query).then(function(response){
-      return response.rows[0];
+      return {data: response.rows[0]};
     });
   },
   getCoinSnapShot: function(coinSymbol) {
     const query = "select * from churchdb.coin_details where fromsymbol = '"+coinSymbol+"'";
     return cassandraClient.execute(query).then(function(response){
-      return response.rows;
+      return response.rows[0];
     });
   },
   getCoinSocialData: function(coinID) {
@@ -33,6 +33,13 @@ module.exports = {
   },
   getCoinDayHistoryData: function(coinSymbol) {
     const query = "SELECT symbol, time, high from churchdb.daily_history_data where symbol='" + coinSymbol+"'";
+    return cassandraClient.execute(query).then(function(response){
+      return {data: response.rows};
+    });
+  },
+
+  searchCoinByQuery: function(coinSearchQuery) {
+    const query = "SELECT * from churchdb.coins where fullname like '%" + coinSearchQuery.trim() + "%'";
     return cassandraClient.execute(query).then(function(response){
       return {data: response.rows};
     });

@@ -9,6 +9,6 @@ var express = require('express')
 router.route('/get-coin-detail').get(CoinDetail.getCoinDetailSnapshot)
 router.route('/get-coin-list').get(CoinDetail.getCoinList)
 router.route('/daily-coin-history').get(CoinDetail.getCoinDailyData)
-
+router.route('/search').get(CoinDetail.searchCoinByName)
 
 module.exports = router;

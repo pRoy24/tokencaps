@@ -50,7 +50,14 @@ module.exports = {
       return cassandraClient.execute(Create_Coin_Table);
     })
       .then(function(createTableResponse){
-        console.log(cassandraClient.metadata.getTable('churchdb', 'coins'));
+        let sdsiQuery = "CREATE CUSTOM INDEX  fn_prefix ON churchdb.coins (fullname)" +
+                        " USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = { " +
+                        "'mode': 'CONTAINS'," +
+                        "'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.NonTokenizingAnalyzer'," +
+                        "'case_sensitive': 'false'"+
+                        "}";
+
+        cassandraClient.execute(sdsiQuery);
         return res.send({data: createTableResponse});
       })
       .catch(function (err) {
@@ -172,11 +179,9 @@ module.exports = {
       return cassandraClient.execute(Create_Exchange_Table);
     })
       .then(function(createTableResponse){
-        console.log(cassandraClient.metadata.getTable('churchdb', 'exchanges'));
         return res.send({data: createTableResponse});
       })
       .catch(function (err) {
-        console.error('There was an error', err);
         return cassandraClient.shutdown();
       });
   }

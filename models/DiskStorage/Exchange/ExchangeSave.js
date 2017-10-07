@@ -6,6 +6,7 @@ const cassandraClient = new cassandra.Client({contactPoints: ['127.0.0.1']});
 
 module.exports ={
   saveExchangeList: function(exchangeList) {
+    console.log("HERE");
     exchangeList.forEach(function(exchangeItem){
       const placeHolders = "?,?,?,?,?,?,?";
       let values = [];
@@ -20,6 +21,8 @@ module.exports ={
       let ttl = 6000;
       const query = 'INSERT INTO churchdb.exchanges (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
       const params = values;
+
+      console.log(values);
 
       cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
         if (err) {

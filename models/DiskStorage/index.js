@@ -49,5 +49,8 @@ module.exports = {
   },
 
 
-
+  // Search Utils
+  searchCoin: function(coinString) {
+    return CoinList.searchCoinByQuery(coinString);
+  }
 }

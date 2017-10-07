@@ -6,8 +6,8 @@ var axios = require('axios');
 
 module.exports = {
   getCoinSnapShot: function(coinSymbol) {
-    const histogramDataEndpoint = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym="+coinSymbol+"&tsym=USD";
-    return axios.get(histogramDataEndpoint);
+    const coinSnapShotEndpoint = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym="+coinSymbol+"&tsym=USD";
+    return axios.get(coinSnapShotEndpoint);
   },
   getCoinSocialData(coinID) {
     const histogramDataEndpoint = "https://www.cryptocompare.com/api/data/socialstats/?id="+coinID;
@@ -76,6 +76,11 @@ module.exports = {
   getCoinDayHistoryData: function(coinSymbol) {
     const histogramDataEndpoint = "https://min-api.cryptocompare.com/data/histohour?fsym="+coinSymbol+"&tsym=USD&limit=24&aggregate=1";
     return axios.get(histogramDataEndpoint);
+  },
+
+  searchCoin: function(coinSymbol) {
+    console.log(this);
+    return ({data: []});
   }
 }
 

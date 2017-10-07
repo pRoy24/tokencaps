@@ -62,7 +62,7 @@ module.exports = {
         }
       }).filter(Boolean).join(",");
 
-      const query = 'INSERT INTO churchdb.coins (' + keyslist + ') VALUES (' + placeholders + ') USING TTL 00';
+      const query = 'INSERT INTO churchdb.coins (' + keyslist + ') VALUES (' + placeholders + ') USING TTL 60';
       queries.push({
         query: query,
         params: values
@@ -78,7 +78,7 @@ module.exports = {
       const placeHolders = "?, ?, ?";
       let values = [coinSymbol, dataResponseItem["high"], dataResponseItem["time"]];
       let keyItems = "symbol, high, time";
-      let ttl = 6000;
+      let ttl = 600;
       const query = 'INSERT INTO churchdb.daily_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
       const params = values;
 

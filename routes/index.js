@@ -3,13 +3,9 @@ var router = express.Router();
 var request = require('request');
 var getCoinList = require('../models/GetCoinList');
 var DataFetchAPI = require('../models/DataFetchAPI');
+
 /* GET home page. */
-
-
 var DBConnection = require('../models/DBModel');
-
-
-
 var axios = require('axios');
 
 const cassandra = require('cassandra-driver');
@@ -124,9 +120,6 @@ router.get('/coin-list', function(req, res, next){
   })
 });
 
-
-
-
 router.get('/daily-coin-history', function(req, res, next){
   let coinListQuery = req.query.coin_symbol;
   cassandraClient.execute("SELECT * from churchdb.daily_history_data where symbol=" + coinListQuery, function (err, result) {
@@ -177,8 +170,6 @@ router.get('/coin-snapshot', function(req, res, next){
         const exchangeMarketData = historyDataResponse.data.Data['Exchanges'];
 
         return DataFetchAPI.mergeExchangeList(exchangeMarketData).then(function(exchangeListResponse){
-
-          console.log(exchangeListResponse);
           const coinTradeData = exchangeListResponse.data.concat(ccMarketData);
           let coinTradeNormalizedData = coinTradeData.map(function(tradeDataItem){
             return Object.assign(...Object.keys(tradeDataItem).map(function(keyItem){

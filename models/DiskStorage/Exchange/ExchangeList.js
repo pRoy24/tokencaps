@@ -8,7 +8,7 @@ module.exports = {
   getExchangeList: function () {
     const query = "select * from churchdb.exchanges";
     return cassandraClient.execute(query).then(function(response){
-      return response.rows[0];
+      return {data: response.rows[0]};
     });
   },
 }
