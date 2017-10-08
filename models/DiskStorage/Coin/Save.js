@@ -7,7 +7,7 @@ const cassandraClient = new cassandra.Client({contactPoints: ['127.0.0.1']});
 module.exports = {
   saveCoinSnapshot: function(coinTradeNormalizedData) {
     const queries = [];
-    coinTradeNormalizedData.forEach(function(coinTradeData){
+    coinTradeNormalizedData.forEach(function(coinTradeData) {
       let keys = Object.keys(coinTradeData).map(function(key){
         if (key === "lastmarket") {
           return null;
@@ -33,14 +33,15 @@ module.exports = {
         params: values
       })
     });
-    return cassandraClient.batch(queries, { prepare: true })
+    return cassandraClient.batch(queries, { prepare: true });
   },
+
   saveCoinSocialData: function(coinSocialData) {
     return null;
   },
+
   saveCoinListData: function(coinListData) {
     let arrays = [], size = 20;
-
     while (coinListData.length > 0)
       arrays.push(coinListData.splice(0, size));
     arrays.forEach(function (coinListData) {
@@ -73,20 +74,37 @@ module.exports = {
     })
   },
 
-  saveCoinDayHistoryData: function (coinHistoryData, coinSymbol) {
-    coinHistoryData.forEach(function(dataResponseItem){
-      const placeHolders = "?, ?, ?";
-      let values = [coinSymbol, dataResponseItem["high"], dataResponseItem["time"]];
-      let keyItems = "symbol, high, time";
-      let ttl = 600;
-      const query = 'INSERT INTO churchdb.daily_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
-      const params = values;
+  saveCoinDayHistoryData: function (coinHistoryDataList) {
+  //  console.log(coinHistoryDataList);
+    Object.keys(coinHistoryDataList).forEach(function(coinSymbol){
+      if (coinHistoryDataList[coinSymbol].length > 0) {
+        let coinHistoryData = coinHistoryDataList[coinSymbol];
+        coinHistoryData.forEach(function(dataResponseItem){
+          const placeHolders = "?, ?, ?";
+          let values = [coinSymbol, dataResponseItem["high"], dataResponseItem["time"]];
+          let keyItems = "symbol, high, time";
+          let ttl = 1000 + randomRange(-500, 500);
+          const query = 'INSERT INTO churchdb.daily_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
+          const params = values;
 
-      cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
-        if (err) {
-          console.log(err);
-        }
-      });
+          cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
+            if (err) {
+              console.log(err);
+            }
+          });
+        });
+      }
     });
+  },
+
+  saveCoinExtraDetails: function(coinDetails) {
+    console.log(coinDetails);
   }
+}
+
+function randomRange(l,h){
+  var range = (h-l);
+  var random = Math.floor(Math.random()*range);
+  if (random === 0){random+=1;}
+  return l+random;
 }

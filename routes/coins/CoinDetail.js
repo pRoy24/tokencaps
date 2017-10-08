@@ -13,8 +13,6 @@ module.exports = {
       res.send ({error: "coin detail must be specified"});
     } else {
       DataFetchAPI.getCoinRow(coinSymbol).then(function (coinRowResponse) {
-        return coinRowResponse;
-      }).then(function (coinRowResponse) {
         let responseData = {};
         responseData[coinRowResponse.data.symbol] = {
           "detail": coinRowResponse.data
@@ -33,6 +31,10 @@ module.exports = {
 
         function callback(responseData) {
           res.send({data: responseData});
+
+          let responseDataNormalized = responseData[Object.keys(responseData)[0]];
+          DiskStorage.saveCoinSnapshot(responseDataNormalized);
+        //  DiskStorage.saveCoinExtraDetails(responseDataNormalized);
         }
 
         const coinDetailsObjects = ["coinSnapshot", "coinSocial"];
@@ -54,22 +56,36 @@ module.exports = {
 
   // Coin List
   getCoinList: function(req, res, next) {
-    DataFetchAPI.getCoinList().then(function(coinListResponse){
-      let responseData = coinListResponse.sort(function(a,b){
+    let rangeRequest = 100;
+    if (req.query.range) {
+      rangeRequest = req.query.range * 100 ;
+    }
+    DataFetchAPI.getCoinList(rangeRequest).then(function(coinListResponse){
+      let responseData = coinListResponse.filter(function(item){
+        return ((item.rank <= rangeRequest) && (item.rank >= rangeRequest - 100));
+      }).sort(function(a,b){
         return a.rank - b.rank;
       });
-      res.send({data: responseData.slice(0,100)});
+      res.send({data: responseData});
       DiskStorage.saveCoinListData(coinListResponse);
     })
   },
 
   getCoinDailyData(req, res, next) {
+    let rangeRequest = 100;
+    if (req.query.range) {
+      rangeRequest = req.query.range * 100 ;
+    }
     DataFetchAPI.getCoinList().then(function (coinListResponse) {
-      let coinList = coinListResponse.sort(function (a, b) {
+      let coinList = coinListResponse.filter(function(item){
+        return ((item.rank <= rangeRequest) && (item.rank >= rangeRequest - 100));
+      }).sort(function (a, b) {
         return a.rank - b.rank;
-      }).slice(0, 100);
+      });
+
       function callback(responseData) {
         res.send({data: responseData});
+        DiskStorage.saveCoinDayHistoryData(responseData);
       }
       let responseData = {};
       let counter = 0;
@@ -77,8 +93,10 @@ module.exports = {
         let coinSymbol = coinItem.symbol;
         DataFetchAPI.getDailyHistoryData(coinSymbol).then(function (historyDataResponse) {
           responseData[coinSymbol] = historyDataResponse;
-          DiskStorage.saveCoinDayHistoryData(historyDataResponse, coinSymbol);
           counter++;
+          if (historyDataResponse.length === 0) {
+            console.log(coinSymbol);
+          }
           if (counter === arr.length - 1) {
             callback(responseData);
           }

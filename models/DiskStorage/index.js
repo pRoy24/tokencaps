@@ -15,8 +15,8 @@ module.exports = {
     return CoinList.getCoinSocialData(coinID);
   },
 
-  findCoinList: function() {
-    return CoinList.getCoinDataArray()
+  findCoinList: function(rangeRequest) {
+    return CoinList.getCoinDataArray(rangeRequest)
   },
 
   findCoinDayHistoryData: function(coinSymbol) {
@@ -27,21 +27,23 @@ module.exports = {
     return ExchangeList.getExchangeList();
   },
 
-  saveCoinSnapshot: function (coinSnapshotData) {
-    return CoinSave.saveCoinSnapshot(coinSnapshotData);
+  saveCoinSnapshot: function (coinDetailData) {
+    return CoinSave.saveCoinSnapshot(coinDetailData.coinSnapshot);
   },
-
+  // Extra details about coin with longer TTL
+  saveCoinExtraDetails: function(coinDetailData) {
+    return CoinSave.saveCoinExtraDetails(coinDetailData);
+  },
   saveCoinSocialData: function(coinSocialData) {
     return CoinSave.saveCoinSocialData(coinSocialData);
   },
 
   saveCoinListData: function(coinListData) {
     return CoinSave.saveCoinListData(coinListData);
-
   },
 
-  saveCoinDayHistoryData: function(coinDayHistoryData, coinSymbol) {
-    return CoinSave.saveCoinDayHistoryData(coinDayHistoryData, coinSymbol);
+  saveCoinDayHistoryData: function(coinDayHistoryData) {
+    return CoinSave.saveCoinDayHistoryData(coinDayHistoryData);
   },
 
   saveExchangeList: function(exchangeListData) {

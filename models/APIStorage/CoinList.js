@@ -5,8 +5,8 @@
 var axios = require('axios');
 
 module.exports = {
-  getCoinSnapShot: function(coinSymbol) {
-    const coinSnapShotEndpoint = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym="+coinSymbol+"&tsym=USD";
+  getCoinSnapShot: function(coinSymbol, toSymbol) {
+    const coinSnapShotEndpoint = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym="+coinSymbol+"&tsym="+toSymbol;
     return axios.get(coinSnapShotEndpoint);
   },
   getCoinSocialData(coinID) {
@@ -79,7 +79,6 @@ module.exports = {
   },
 
   searchCoin: function(coinSymbol) {
-    console.log(this);
     return ({data: []});
   }
 }

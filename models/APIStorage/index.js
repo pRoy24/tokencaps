@@ -4,8 +4,8 @@
 const CoinList = require('./CoinList');
 const ExchangeList  = require('./Exchange/ExchangeList');
 module.exports = {
-  findCoinSnapshot: function (coinSymbol) {
-    return CoinList.getCoinSnapShot(coinSymbol);
+  findCoinSnapshot: function (coinSymbol, toSymbol) {
+    return CoinList.getCoinSnapShot(coinSymbol, toSymbol);
   },
   findCoinSocialData: function(coinID) {
     return CoinList.getCoinSocialData(coinID);

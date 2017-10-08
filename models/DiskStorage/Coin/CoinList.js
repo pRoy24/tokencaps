@@ -14,7 +14,9 @@ module.exports = {
   getCoinSnapShot: function(coinSymbol) {
     const query = "select * from churchdb.coin_details where fromsymbol = '"+coinSymbol+"'";
     return cassandraClient.execute(query).then(function(response){
-      return response.rows[0];
+      if (response && response.rows.length > 0) {
+        return response.rows;
+      } else {}
     });
   },
   getCoinSocialData: function(coinID) {

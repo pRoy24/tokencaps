@@ -20,11 +20,20 @@ module.exports = {
 
   getCoinSnapshot: function(coinSymbol) {
     return DiskStorage.findCoinSnapshot(coinSymbol).then(function(response){
+      console.log(response);
       if (response && Object.keys(response).length > 0) {
         return response;
       } else {
-        return APIStorage.findCoinSnapshot(coinSymbol).then(function(apiCoinSnapshotResponse){
-          return CoinUtils.normalizeCoinSnapShotData(apiCoinSnapshotResponse);
+        return APIStorage.findCoinSnapshot(coinSymbol, "USD").then(function(apiCoinSnapshotResponseUSD){
+          console.log(apiCoinSnapshotResponseUSD);
+          if (!apiCoinSnapshotResponseUSD || apiCoinSnapshotResponseUSD.data.Data === null
+            || Object.keys(apiCoinSnapshotResponseUSD.data.Data).length === 0) {
+            return APIStorage.findCoinSnapshot(coinSymbol, "BTC").then(function(apiCoinSnapshotResponseBTC){
+              return CoinUtils.normalizeCoinSnapShotData(apiCoinSnapshotResponseBTC);
+            });
+          } else {
+            return CoinUtils.normalizeCoinSnapShotData(apiCoinSnapshotResponseUSD);
+          }
         })
       }
     });
@@ -36,7 +45,6 @@ module.exports = {
         return response;
       } else {
         return APIStorage.findCoinSnapshot(coinID).then(function(apiCoinSnapshotResponse){
-          DiskStorage.saveCoinSnapshot(apiCoinSnapshotResponse);
           return apiCoinSnapshotResponse;
         })
       }
@@ -75,8 +83,8 @@ module.exports = {
         return response.data;
       } else {
         return APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
-          const coinSocialResponse = apiCoinSnapshotResponse.data;
-          return coinSocialResponse;
+          const coinListResponse = apiCoinSnapshotResponse.data;
+          return coinListResponse;
         })
       }
     });
@@ -128,8 +136,13 @@ module.exports = {
       if (searchCoinResponse && searchCoinResponse.data.length > 0) {
         return {data: searchCoinResponse.data}
       } else {
-        return APIStorage.searchCoin(coinSearchString).then(function(apiSearchCoinResponse){
-          return {data: searchCoinResponse.data}
+        return APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
+          const coinListResponse = apiCoinSnapshotResponse.data;
+          let coinSearchMatchesList = coinListResponse.filter(function(coin){
+            return (new RegExp(coinSearchString.toLowerCase()).test(coin.fullname.toLowerCase()));
+          });
+          DiskStorage.saveCoinListData(coinListResponse);
+          return {data: coinSearchMatchesList}
         });
       }
     })
