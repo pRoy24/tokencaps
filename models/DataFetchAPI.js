@@ -20,12 +20,10 @@ module.exports = {
 
   getCoinSnapshot: function(coinSymbol) {
     return DiskStorage.findCoinSnapshot(coinSymbol).then(function(response){
-      console.log(response);
       if (response && Object.keys(response).length > 0) {
         return response;
       } else {
         return APIStorage.findCoinSnapshot(coinSymbol, "USD").then(function(apiCoinSnapshotResponseUSD){
-          console.log(apiCoinSnapshotResponseUSD);
           if (!apiCoinSnapshotResponseUSD || apiCoinSnapshotResponseUSD.data.Data === null
             || Object.keys(apiCoinSnapshotResponseUSD.data.Data).length === 0) {
             return APIStorage.findCoinSnapshot(coinSymbol, "BTC").then(function(apiCoinSnapshotResponseBTC){

@@ -98,7 +98,7 @@ module.exports = {
   },
 
   saveCoinExtraDetails: function(coinDetails) {
-    console.log(coinDetails);
+    // TODO add method to save coin details
   }
 }
 
