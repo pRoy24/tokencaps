@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+
 var create_table = require('./routes/schema');
 
 const coin_detail_api = require('./routes/coins');

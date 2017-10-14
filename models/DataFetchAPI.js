@@ -1,6 +1,7 @@
 /**
  Copyright Church of Crypto, Baron Nashor
  */
+let _ = require('lodash');
 const DiskStorage = require('./DiskStorage'),
   APIStorage = require('./APIStorage');
   CoinUtils = require('./DiskStorage/Coin/util');
@@ -27,12 +28,16 @@ module.exports = {
           if (!apiCoinSnapshotResponseUSD || apiCoinSnapshotResponseUSD.data.Data === null
             || Object.keys(apiCoinSnapshotResponseUSD.data.Data).length === 0) {
             return APIStorage.findCoinSnapshot(coinSymbol, "BTC").then(function(apiCoinSnapshotResponseBTC){
-              return CoinUtils.normalizeCoinSnapShotData(apiCoinSnapshotResponseBTC);
+              let normalizedAPISnapshot = CoinUtils.normalizeCoinSnapShotData(apiCoinSnapshotResponseBTC);
+              DiskStorage.saveCoinSnapshot(normalizedAPISnapshot);
+              return normalizedAPISnapshot;
             });
           } else {
-            return CoinUtils.normalizeCoinSnapShotData(apiCoinSnapshotResponseUSD);
+            let normalizedAPISnapshot = CoinUtils.normalizeCoinSnapShotData(apiCoinSnapshotResponseUSD);
+            DiskStorage.saveCoinSnapshot(normalizedAPISnapshot);
+            return normalizedAPISnapshot;
           }
-        })
+        });
       }
     });
   },
@@ -63,12 +68,20 @@ module.exports = {
   },
   getCoinSocialData: function (coinID) {
     return DiskStorage.findCoinSocialData(coinID).then(function(response){
-      if (response && response.data) {
-        return response;
+      if (response && response.data.length > 0) {
+        let items = {};
+        Object.keys(response.data[0]).forEach(function(key){
+          if (key === "coderepository") {
+            items["CodeRepository"] = JSON.parse(response.data[0][key]);
+          } else {
+            items[_.capitalize(key)] = JSON.parse(response.data[0][key]);
+          }
+        });
+        return items;
       } else {
-        return APIStorage.findCoinSocialData(coinID).then(function(apiCoinSnapshotResponse){
-          const coinSocialResponse = apiCoinSnapshotResponse.data.Data;
-          DiskStorage.saveCoinSocialData(coinSocialResponse);
+        return APIStorage.findCoinSocialData(coinID).then(function(apiCoinSocialResponse){
+          const coinSocialResponse = apiCoinSocialResponse.data.Data;
+          DiskStorage.saveCoinSocialData(coinID, coinSocialResponse);
           return coinSocialResponse;
         })
       }
@@ -97,6 +110,7 @@ module.exports = {
           const coinSocialResponse = apiCoinDayHistoryDataResponse.data.Data;
           return coinSocialResponse;
         }).catch(function(e){
+          console.log(e);
           return {error: e};
         })
       }

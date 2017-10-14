@@ -216,41 +216,6 @@ router.get('/coin-snapshot', function(req, res, next){
   });
 });
 
-router.get('/coin-history-data', function(req, res, next){
-  let coinListQuery = req.query.coin_symbol;
-  cassandraClient.execute("SELECT * from churchdb.coin_history_data where symbol=" + coinListQuery, function (err, result) {
-    if (result && result.rows.length > 0) {
-      let responseData = {};
-      responseData[coinListQuery] = result.rows;
-      res.send({data: responseData});
-    } else {
-      getCoinList.getCoinMinuteData(coinListQuery).then(function (historyDataResponse) {
-        const coinDataResponse = historyDataResponse.data.Data;
-        coinDataResponse.forEach(function(dataResponseItem){
-          const placeHolders = "?, ?, ?, ?, ?, ?, ?, ?";
-          const keys = "time ,high ,low ,open ,volumefrom , volumeto ,close, symbol";
-          let values = [];
-          Object.keys(dataResponseItem).forEach(function(key){
-            values.push(dataResponseItem[key]);
-          });
-          values.push(coinListQuery);
-          let ttl = Math.floor(Math.random() * 300) + 200;
-          const query = 'INSERT INTO churchdb.coin_history_data (' + keys + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
-          const params = values;
 
-          cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
-            if (err) {
-              console.log(err);
-            }
-          });
-        });
-        let responseData = {};
-        responseData[coinListQuery] = coinDataResponse;
-        res.send({data: responseData});
-      });
-    }
-  });
-  //res.send({error: ""});
-});
 
 module.exports = router;

@@ -13,4 +13,6 @@ router.route('/create-week-history-table').get(CreateTable.createCoinWeekHistory
 
 router.route('/create-exchange-table').get(CreateTable.createExchangeTable)
 
+router.route('/create-social-table').get(CreateTable.createCoinSocialTable)
+
 module.exports = router;

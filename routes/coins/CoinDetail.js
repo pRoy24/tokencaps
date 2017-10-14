@@ -31,10 +31,6 @@ module.exports = {
 
         function callback(responseData) {
           res.send({data: responseData});
-
-          let responseDataNormalized = responseData[Object.keys(responseData)[0]];
-          DiskStorage.saveCoinSnapshot(responseDataNormalized);
-        //  DiskStorage.saveCoinExtraDetails(responseDataNormalized);
         }
 
         const coinDetailsObjects = ["coinSnapshot", "coinSocial"];
@@ -95,7 +91,7 @@ module.exports = {
           responseData[coinSymbol] = historyDataResponse;
           counter++;
           if (historyDataResponse.length === 0) {
-            console.log(coinSymbol);
+
           }
           if (counter === arr.length - 1) {
             callback(responseData);

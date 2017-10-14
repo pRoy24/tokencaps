@@ -94,9 +94,9 @@ module.exports = {
       });
   },
 
-  // Create Coin 24 hour history table, consists of hourly data points.
+  // Create Coin 7 day history table, consists of hourly data points.
   createCoinWeekHistoryTable: function(req, res, next) {
-    const CREATE_DAILY_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS churchdb.coin_week_history_data" +
+    const CREATE_WEEK_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS churchdb.coin_week_history_data" +
       "(symbol varchar," +
       " time timestamp," +
       "high float," +
@@ -105,16 +105,43 @@ module.exports = {
       "volumefrom float," +
       "volumeto float," +
       "close float, PRIMARY KEY(symbol, time))";
-    const DELETE_DAILY_HISTORY_TABLE = "DROP TABLE IF EXISTS churchdb.coin_history_data";
+    const DELETE_WEEK_HISTORY_TABLE = "DROP TABLE IF EXISTS churchdb.coin_week_history_data";
 
     cassandraClient.connect()
       .then(function () {
-        return cassandraClient.execute(DELETE_DAILY_HISTORY_TABLE).then(function () {
-          return cassandraClient.execute(CREATE_DAILY_HISTORY_TABLE)
+        return cassandraClient.execute(DELETE_WEEK_HISTORY_TABLE).then(function () {
+          return cassandraClient.execute(CREATE_WEEK_HISTORY_TABLE)
         })
           .then(function (createTableResponse) {
             res.send({data: createTableResponse});
-            return cassandraClient.metadata.getTable('churchdb', 'coin_history_data');
+            return cassandraClient.metadata.getTable('churchdb', 'coin_week_history_data');
+
+          }).catch(function (err) {
+            res.send({"error": err});
+          });
+      });
+  },
+
+  // Create Coin All Time history table
+  createAllTimeHistoryTable: function(req, res, next) {
+    const CREATE_ALL_TIME_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS churchdb.coin_all_time_history_data" +
+      "(symbol varchar," +
+      " time timestamp," +
+      "high float," +
+      "low float," +
+      "open float," +
+      "volumefrom float," +
+      "volumeto float," +
+      "close float, PRIMARY KEY(symbol, time))";
+    const DELETE_ALL_TIME_HISTORY_TABLE = "DROP TABLE IF EXISTS churchdb.coin_all_time_history_data";
+    cassandraClient.connect()
+      .then(function () {
+        return cassandraClient.execute(DELETE_ALL_TIME_HISTORY_TABLE).then(function () {
+          return cassandraClient.execute(CREATE_ALL_TIME_HISTORY_TABLE)
+        })
+          .then(function (createTableResponse) {
+            res.send({data: createTableResponse});
+            return cassandraClient.metadata.getTable('churchdb', 'coin_all_time_history_data');
 
           }).catch(function (err) {
             res.send({"error": err});
@@ -157,10 +184,6 @@ module.exports = {
       });
   },
 
-  createCoinSocialDataTable: function(req, res, next) {
-
-  },
-
   createExchangeTable: function(req, res) {
     const Delete_Exchange_Table = "DROP TABLE IF EXISTS churchdb.exchanges";
     const Create_Exchange_Table = "CREATE TABLE IF NOT EXISTS churchdb.exchanges" +
@@ -184,5 +207,30 @@ module.exports = {
       .catch(function (err) {
         return cassandraClient.shutdown();
       });
+  },
+
+
+  createCoinSocialTable: function(req, res) {
+    const Delete_Social_Table = "DROP TABLE IF EXISTS churchdb.coin_social";
+    const Create_Social_Table = "CREATE TABLE IF NOT EXISTS churchdb.coin_social" +
+      " (TimeStamp time," +
+      " id varchar," +
+      " Reddit text," +
+      " Facebook text," +
+      " Twitter text," +
+      " CodeRepository Text, PRIMARY KEY(id))";
+
+    cassandraClient.execute(Delete_Social_Table).then(function(deleteTableResponse){
+
+      return cassandraClient.execute(Create_Social_Table);
+    })
+      .then(function(createTableResponse){
+         res.send({data: createTableResponse});
+      })
+      .catch(function (err) {
+        console.log(err);
+        return cassandraClient.shutdown();
+      });
   }
+
 }

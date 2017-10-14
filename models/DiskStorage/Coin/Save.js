@@ -26,7 +26,7 @@ module.exports = {
         }
         return coinTradeData[key]
       }).filter(Boolean);
-      let ttl = 400;
+      let ttl = 120;
       const query = 'INSERT INTO churchdb.coin_details (' + keys + ') VALUES (' + placeholders + ') USING TTL ' +ttl;
       queries.push({
         query: query,
@@ -36,7 +36,25 @@ module.exports = {
     return cassandraClient.batch(queries, { prepare: true });
   },
 
-  saveCoinSocialData: function(coinSocialData) {
+  saveCoinSocialData: function(coinID, coinSocialData) {
+    let Reddit = JSON.stringify(coinSocialData.Reddit);
+    let Twitter = JSON.stringify(coinSocialData.Twitter);
+    let Facebook = JSON.stringify(coinSocialData.Facebook);
+    let Repository = JSON.stringify(coinSocialData.CodeRepository);
+
+    const placeHolders = "?, ?, ?, ?, ?";
+    let values = [coinID, Reddit, Facebook, Twitter, Repository];
+    let keyItems = "id, Reddit, Facebook, Twitter, CodeRepository";
+
+    const SOCIAL_DATA_TTL = 3600;
+    const query = 'INSERT INTO churchdb.coin_social (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' + SOCIAL_DATA_TTL;
+    const params = values;
+
+    cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
+      if (err) {
+        console.log(err);
+      }
+    });
     return null;
   },
 
@@ -76,14 +94,14 @@ module.exports = {
 
   saveCoinDayHistoryData: function (coinHistoryDataList) {
   //  console.log(coinHistoryDataList);
-    Object.keys(coinHistoryDataList).forEach(function(coinSymbol){
+    Object.keys(coinHistoryDataList).forEach(function(coinSymbol) {
       if (coinHistoryDataList[coinSymbol].length > 0) {
         let coinHistoryData = coinHistoryDataList[coinSymbol];
         coinHistoryData.forEach(function(dataResponseItem){
           const placeHolders = "?, ?, ?";
           let values = [coinSymbol, dataResponseItem["high"], dataResponseItem["time"]];
           let keyItems = "symbol, high, time";
-          let ttl = 1000 + randomRange(-500, 500);
+          let ttl = 3000 + randomRange(-1000, 1000);
           const query = 'INSERT INTO churchdb.daily_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
           const params = values;
 

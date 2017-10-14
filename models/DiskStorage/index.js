@@ -28,14 +28,14 @@ module.exports = {
   },
 
   saveCoinSnapshot: function (coinDetailData) {
-    return CoinSave.saveCoinSnapshot(coinDetailData.coinSnapshot);
+    return CoinSave.saveCoinSnapshot(coinDetailData);
   },
   // Extra details about coin with longer TTL
   saveCoinExtraDetails: function(coinDetailData) {
     return CoinSave.saveCoinExtraDetails(coinDetailData);
   },
-  saveCoinSocialData: function(coinSocialData) {
-    return CoinSave.saveCoinSocialData(coinSocialData);
+  saveCoinSocialData: function(coinID, coinSocialData) {
+    return CoinSave.saveCoinSocialData(coinID, coinSocialData);
   },
 
   saveCoinListData: function(coinListData) {
