@@ -11,31 +11,7 @@ var axios = require('axios');
 const cassandra = require('cassandra-driver');
 const cassandraClient = new cassandra.Client({contactPoints: ['127.0.0.1']});
 router.get('/', function(req, res, next) {
-  getCoinList.getCoinMarketCapCoinList().then(function (coinMarketApiResponse) {
-    coinMarketApiResponse = coinMarketApiResponse.data;
-    getCoinList.getCryptoCompareCoinList().then(function (coinListResponse) {
-      coinListResponse = coinListResponse.data.Data;
-      let coinListItems = Object.keys(coinListResponse).map(function (key) {
-        return coinListResponse[key];
-      });
-      coinListItems = coinListItems.sort(function (a, b) {
-        return Number(a.SortOrder) - Number(b.SortOrder);
-      });
-      let joinedCoinDataList = [];
-      for (let a = 0; a < coinMarketApiResponse.length; a++) {
-        for (let b = 0; b < coinListItems.length; b++) {
-          if (coinMarketApiResponse[a].symbol.toLowerCase() === coinListItems[b].Name.toLowerCase()) {
-            joinedCoinDataList.push(Object.assign({}, coinMarketApiResponse[a], coinListItems[b], {HistoryData: {}}));
-            break;
-          }
-        }
-      }
-      joinedCoinDataList = joinedCoinDataList.sort(function(a, b){
-        return Number(b['24h_volume_usd']) - Number(a["24h_volume_usd"])
-      });
-      res.send({data: joinedCoinDataList.slice(0, 100)});
-    });
-  });
+  res.send({"data": "Welcome to Church Of Crypto API. API version 0.0.1"});
 });
 
 router.get('/coin-list', function(req, res, next){

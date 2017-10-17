@@ -3,11 +3,4 @@
  */
 module.exports = {
 
-  getCoinList: function() {
-
-  },
-
-  getCoinDetail: function() {
-
-  }
 }

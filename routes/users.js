@@ -18,7 +18,7 @@ router.get('/list-coin', function(req, res, next) {
     DataFetchAPI.getCoinRow(coin).then(function(coinResponse){
       counter ++;
       responseArr.push(coinResponse.data);
-      if (counter === (arr.length - 1)) {
+      if (counter === (arr.length)) {
         callback(responseArr);
       }
     });
