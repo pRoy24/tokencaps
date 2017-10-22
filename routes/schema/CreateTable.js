@@ -70,6 +70,7 @@ module.exports = {
   createDayHistoryTable: function(req, res, next) {
     const CREATE_DAILY_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS churchdb.daily_history_data" +
       "(symbol varchar," +
+      " createtime timestamp," +
       " time timestamp," +
       "high float," +
       "low float," +

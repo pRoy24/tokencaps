@@ -34,7 +34,7 @@ module.exports = {
     });
   },
   getCoinDayHistoryData: function(coinSymbol) {
-    const query = "SELECT symbol, time, high from churchdb.daily_history_data where symbol='" + coinSymbol+"'";
+    const query = "SELECT * from churchdb.daily_history_data where symbol='" + coinSymbol+"'";
     return cassandraClient.execute(query).then(function(response){
       return {data: response.rows};
     });
