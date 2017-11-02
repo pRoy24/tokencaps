@@ -18,7 +18,7 @@ module.exports = {
   createCoinDailyHistoryTable: function(req, res, next) {
     DataFetchAPI.getCoinList().then(function (coinListResponse) {
       let currentCoinCounter = 0;
-      new CronJob('* * * * *', function() {
+      let top100CoinHistoryDataScrape = new CronJob('1 * * * * *', function() {
         if (currentCoinCounter <= 100) {
           let coinSymbol = coinListResponse[currentCoinCounter].symbol;
           APIStorage.findCoinDayHistoryData(coinSymbol).then(function(apiCoinDayHistoryDataResponse){
@@ -39,7 +39,7 @@ module.exports = {
       }, null, true, 'America/Los_Angeles');
 
       let allCoinCounter = 0;
-      new CronJob('* * * * *', function() {
+      let allCoinHistoryDataCounter = new CronJob('5 * * * * *', function() {
         if (allCoinCounter <= coinListResponse.length) {
           let coinSymbol = coinListResponse[currentCoinCounter].symbol;
           APIStorage.findCoinDayHistoryData(coinSymbol).then(function(apiCoinDayHistoryDataResponse){
@@ -58,6 +58,7 @@ module.exports = {
           allCoinCounter = 0;
         }
       }, null, true, 'America/Los_Angeles');
+      
       res.send({data: "Cron Job Started"});
     });
   }
