@@ -3,7 +3,7 @@
  */
 const DataFetchAPI = require('../../models/DataFetchAPI');
 const DiskStorage = require("../../models/DiskStorage");
-
+const CronTab = require("../../cron/ScrapeUtils");
 module.exports = {
 
   // Coin Detail Snapshot
@@ -81,7 +81,6 @@ module.exports = {
 
       function callback(responseData) {
         res.send({data: responseData});
-        DiskStorage.saveCoinDayHistoryData(responseData);
       }
       let responseData = {};
       let counter = 0;
@@ -111,6 +110,10 @@ module.exports = {
   getCoinDetail(req, res, next) {
     let coinSymbol = req.query.coinSymbol;
     DataFetchAPI.getCoinSnapshot(coinSymbol);
+  },
+
+  initCoinScrape(req, res, next) {
+
   }
 
 }

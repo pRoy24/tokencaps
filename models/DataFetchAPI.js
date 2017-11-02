@@ -104,23 +104,7 @@ module.exports = {
   getDailyHistoryData: function(coinSymbol) {
     return DiskStorage.findCoinDayHistoryData(coinSymbol).then(function(response){
       if (response && response.data.length > 0) {
-        // If create time of record was more than 30 mins ago, then try to fetch it again
-        let recordCreateTime = response.data[0].createtime;
-        let currentTime = new Date().getSeconds();
-        const timeDifference = currentTime - recordCreateTime;
-        if (timeDifference > 3600) {
-          return APIStorage.findCoinDayHistoryData(coinSymbol).then(function(apiCoinDayHistoryDataResponse){
-            const coinDayHistoryResponse = apiCoinDayHistoryDataResponse.data.Data;
-            if (coinDayHistoryResponse && coinDayHistoryResponse.length > 0) {
-              DiskStorage.saveCoinDayHistoryData(coinDayHistoryResponse);
-              return coinDayHistoryResponse;
-            } else {
-              return response.data;
-            }
-          });
-        } else {
-          return response.data;
-        }
+        return response.data;
       } else {
         return APIStorage.findCoinDayHistoryData(coinSymbol).then(function(apiCoinDayHistoryDataResponse){
           const coinSocialResponse = apiCoinDayHistoryDataResponse.data.Data;
@@ -128,7 +112,7 @@ module.exports = {
         }).catch(function(e){
           console.log(e);
           return {error: e};
-        })
+        });
       }
     });
   },

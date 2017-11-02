@@ -93,19 +93,17 @@ module.exports = {
   },
 
   saveCoinDayHistoryData: function (coinHistoryDataList) {
-  //  console.log(coinHistoryDataList);
-    let timeStamp = new Date().getSeconds();
     Object.keys(coinHistoryDataList).forEach(function(coinSymbol) {
       if (coinHistoryDataList[coinSymbol].length > 0) {
         let coinHistoryData = coinHistoryDataList[coinSymbol];
         coinHistoryData.forEach(function(dataResponseItem){
-          const placeHolders = "?, ?, ?, ?";
-          let values = [coinSymbol, dataResponseItem["high"], dataResponseItem["time"], timeStamp];
-          let keyItems = "symbol, high, time, createtime";
-          let ttl = 86400 + randomRange(-1000, 1000);
-          const query = 'INSERT INTO churchdb.daily_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
-          const params = values;
+          const placeHolders = "?, ?, ?";
+          let values = [coinSymbol, dataResponseItem["high"], dataResponseItem["time"]];
+          let keyItems = "symbol, high, time";
+          let ttl = 86400;
 
+          const query = 'INSERT INTO churchdb.daily_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' + ttl;
+          const params = values;
           cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
             if (err) {
               console.log(err);
@@ -113,6 +111,14 @@ module.exports = {
           });
         });
       }
+    });
+    return {data: "started job"};
+  },
+
+  deleteCoinDayHistoryData: function(coinSymbol) {
+    const query = "DELETE FROM churchdb.daily_history_data WHERE symbol = '" + coinSymbol +"'";
+    return cassandraClient.execute(query).then(function(response){
+      return response;
     });
   },
 

@@ -10,7 +10,9 @@ var users = require('./routes/users');
 
 var create_table = require('./routes/schema');
 
+const cron_route_api = require('./routes/cron');
 const coin_detail_api = require('./routes/coins');
+
 var cors = require('cors')
 
 
@@ -18,6 +20,7 @@ var cors = require('cors')
 
 var app = express();
 app.use(cors())
+app.use(express.static('public'))
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -34,6 +37,7 @@ app.use('/', index);
 app.use('/coin', coin_detail_api);
 app.use('/create', create_table);
 app.use('/users', users);
+app.use('/cron', cron_route_api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

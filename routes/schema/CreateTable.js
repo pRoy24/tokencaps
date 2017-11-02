@@ -69,15 +69,14 @@ module.exports = {
   // Create Coin 24 hour history table, consists of hourly data points.
   createDayHistoryTable: function(req, res, next) {
     const CREATE_DAILY_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS churchdb.daily_history_data" +
-      "(symbol varchar," +
-      " createtime timestamp," +
+      "( symbol varchar," +
       " time timestamp," +
-      "high float," +
-      "low float," +
-      "open float," +
-      "volumefrom float," +
-      "volumeto float," +
-      "close float, PRIMARY KEY(symbol, time))";
+      " high float," +
+      " low float," +
+      " open float," +
+      " volumefrom float," +
+      " volumeto float," +
+      " close float, PRIMARY KEY(symbol, time))";
     const DELETE_DAILY_HISTORY_TABLE = "DROP TABLE IF EXISTS churchdb.daily_history_data";
 
     cassandraClient.connect()
@@ -209,7 +208,6 @@ module.exports = {
         return cassandraClient.shutdown();
       });
   },
-
 
   createCoinSocialTable: function(req, res) {
     const Delete_Social_Table = "DROP TABLE IF EXISTS churchdb.coin_social";

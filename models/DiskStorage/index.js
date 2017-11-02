@@ -1,5 +1,5 @@
 const CoinList = require('./Coin/CoinList');
-const CoinSave = require('./Coin/Save');
+const CoinUpdate = require('./Coin/CoinUpdate');
 const ExchangeSave = require('./Exchange/ExchangeSave');
 const ExchangeList = require('./Exchange/ExchangeList');
 
@@ -28,22 +28,22 @@ module.exports = {
   },
 
   saveCoinSnapshot: function (coinDetailData) {
-    return CoinSave.saveCoinSnapshot(coinDetailData);
+    return CoinUpdate.saveCoinSnapshot(coinDetailData);
   },
   // Extra details about coin with longer TTL
   saveCoinExtraDetails: function(coinDetailData) {
-    return CoinSave.saveCoinExtraDetails(coinDetailData);
+    return CoinUpdate.saveCoinExtraDetails(coinDetailData);
   },
   saveCoinSocialData: function(coinID, coinSocialData) {
-    return CoinSave.saveCoinSocialData(coinID, coinSocialData);
+    return CoinUpdate.saveCoinSocialData(coinID, coinSocialData);
   },
 
   saveCoinListData: function(coinListData) {
-    return CoinSave.saveCoinListData(coinListData);
+    return CoinUpdate.saveCoinListData(coinListData);
   },
 
   saveCoinDayHistoryData: function(coinDayHistoryData) {
-    return CoinSave.saveCoinDayHistoryData(coinDayHistoryData);
+    return CoinUpdate.saveCoinDayHistoryData(coinDayHistoryData);
   },
 
   saveExchangeList: function(exchangeListData) {
@@ -54,5 +54,10 @@ module.exports = {
   // Search Utils
   searchCoin: function(coinString) {
     return CoinList.searchCoinByQuery(coinString);
+  },
+
+
+  deleteCoinDayHistoryData(coinSymbol) {
+    return CoinUpdate.deleteCoinDayHistoryData(coinSymbol)
   }
 }
