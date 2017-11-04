@@ -17,49 +17,41 @@ const DiskStorage = require('../../models/DiskStorage'),
 module.exports = {
   createCoinDailyHistoryTable: function(req, res, next) {
     DataFetchAPI.getCoinList().then(function (coinListResponse) {
-      let currentCoinCounter = 0;
-      let top100CoinHistoryDataScrape = new CronJob('1 * * * * *', function() {
-        if (currentCoinCounter <= 100) {
-          let coinSymbol = coinListResponse[currentCoinCounter].symbol;
-          APIStorage.findCoinDayHistoryData(coinSymbol).then(function(apiCoinDayHistoryDataResponse){
-            const coinDayHistoryResponse = apiCoinDayHistoryDataResponse.data.Data;
-            if (coinDayHistoryResponse && coinDayHistoryResponse.length > 0) {
-              const responseData  = {};
-              responseData[coinSymbol] = coinDayHistoryResponse;
-              CoinGraph.chartCoinDailyHistoryGraph(responseData);
-              return DiskStorage.deleteCoinDayHistoryData(coinSymbol).then(function(deleteResponse){
-                return DiskStorage.saveCoinDayHistoryData(responseData);
-              });
-            }
-          });
-          currentCoinCounter ++;
-        } else {
-          currentCoinCounter = 0;
+      const separators = Math.ceil(coinListResponse.length / 100);
+      let jobArrayScheduler = [];
+      for (let counter = 0; counter < separators; counter ++) {
+        let currentTimeSchedulerSeconds = ((counter + 4) + " * * * * *");
+        let beginIndex = counter * 100;
+        let endIndex = (counter + 1) * 100;
+        if (counter === separators - 1) {
+          endIndex = coinListResponse.length;
         }
-      }, null, true, 'America/Los_Angeles');
+        saveCoinGraphResponse(coinListResponse.slice(beginIndex, endIndex), currentTimeSchedulerSeconds, jobArrayScheduler, counter);
 
-      let allCoinCounter = 0;
-      let allCoinHistoryDataCounter = new CronJob('5 * * * * *', function() {
-        if (allCoinCounter <= coinListResponse.length) {
-          let coinSymbol = coinListResponse[currentCoinCounter].symbol;
-          APIStorage.findCoinDayHistoryData(coinSymbol).then(function(apiCoinDayHistoryDataResponse){
-            const coinDayHistoryResponse = apiCoinDayHistoryDataResponse.data.Data;
-            if (coinDayHistoryResponse && coinDayHistoryResponse.length > 0) {
-              const responseData  = {};
-              responseData[coinSymbol] = coinDayHistoryResponse;
-              CoinGraph.chartCoinDailyHistoryGraph(responseData);
-              return DiskStorage.deleteCoinDayHistoryData(coinSymbol).then(function(deleteResponse){
-                return DiskStorage.saveCoinDayHistoryData(responseData);
-              });
-            }
-          });
-          allCoinCounter ++;
-        } else {
-          allCoinCounter = 0;
-        }
-      }, null, true, 'America/Los_Angeles');
-      
-      res.send({data: "Cron Job Started"});
+      }
     });
+    res.send({"data": "all ok"})
   }
+}
+
+function saveCoinGraphResponse(coinListResponse, currentTimeSchedulerSeconds,jobArrayScheduler, jobScheduleIndex) {
+  let counter = 0;
+  jobArrayScheduler[jobScheduleIndex] = new CronJob(currentTimeSchedulerSeconds, function() {
+   let coinSymbol = coinListResponse[counter].symbol;
+   APIStorage.findCoinDayHistoryData(coinSymbol).then(function(apiCoinDayHistoryDataResponse){
+     const coinDayHistoryResponse = apiCoinDayHistoryDataResponse.data.Data;
+     if (coinDayHistoryResponse && coinDayHistoryResponse.length > 0) {
+       const responseData  = {};
+       responseData[coinSymbol] = coinDayHistoryResponse;
+       CoinGraph.chartCoinDailyHistoryGraph(responseData);
+       return DiskStorage.deleteCoinDayHistoryData(coinSymbol).then(function(deleteResponse){
+         return DiskStorage.saveCoinDayHistoryData(responseData);
+       });
+     }
+   });
+   counter ++;
+   if (counter === coinSymbol.length) {
+     counter = 0;
+   }
+  }, null, true, 'America/Los_Angeles');
 }
