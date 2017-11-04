@@ -18,7 +18,6 @@ module.exports = {
   createCoinDailyHistoryTable: function(req, res, next) {
     DataFetchAPI.getCoinList().then(function (coinListResponse) {
       const separators = Math.ceil(coinListResponse.length / 100);
-      let jobArrayScheduler = [];
       for (let counter = 0; counter < separators; counter ++) {
         let currentTimeSchedulerSeconds = ((counter + 4) + " * * * * *");
         let beginIndex = counter * 100;
@@ -26,32 +25,35 @@ module.exports = {
         if (counter === separators - 1) {
           endIndex = coinListResponse.length;
         }
-        saveCoinGraphResponse(coinListResponse.slice(beginIndex, endIndex), currentTimeSchedulerSeconds, jobArrayScheduler, counter);
-
+        saveCoinGraphResponse(coinListResponse.slice(beginIndex, endIndex), currentTimeSchedulerSeconds);
       }
     });
-    res.send({"data": "all ok"})
+    res.send({"data": "Started 24 History Data Request"});
   }
 }
 
-function saveCoinGraphResponse(coinListResponse, currentTimeSchedulerSeconds,jobArrayScheduler, jobScheduleIndex) {
+function saveCoinGraphResponse(coinListResponse, currentTimeSchedulerSeconds) {
   let counter = 0;
-  jobArrayScheduler[jobScheduleIndex] = new CronJob(currentTimeSchedulerSeconds, function() {
-   let coinSymbol = coinListResponse[counter].symbol;
-   APIStorage.findCoinDayHistoryData(coinSymbol).then(function(apiCoinDayHistoryDataResponse){
-     const coinDayHistoryResponse = apiCoinDayHistoryDataResponse.data.Data;
-     if (coinDayHistoryResponse && coinDayHistoryResponse.length > 0) {
-       const responseData  = {};
-       responseData[coinSymbol] = coinDayHistoryResponse;
-       CoinGraph.chartCoinDailyHistoryGraph(responseData);
-       return DiskStorage.deleteCoinDayHistoryData(coinSymbol).then(function(deleteResponse){
-         return DiskStorage.saveCoinDayHistoryData(responseData);
-       });
-     }
-   });
-   counter ++;
-   if (counter === coinSymbol.length) {
+  return new CronJob(currentTimeSchedulerSeconds, function() {
+
+    if (coinListResponse[counter]) {
+      let coinSymbol = coinListResponse[counter].symbol;
+      APIStorage.findCoinDayHistoryData(coinSymbol).then(function (apiCoinDayHistoryDataResponse) {
+        const coinDayHistoryResponse = apiCoinDayHistoryDataResponse.data.Data;
+        if (coinDayHistoryResponse && coinDayHistoryResponse.length > 0) {
+          const responseData = {};
+          responseData[coinSymbol] = coinDayHistoryResponse;
+          CoinGraph.chartCoinDailyHistoryGraph(responseData);
+          return DiskStorage.deleteCoinDayHistoryData(coinSymbol).then(function (deleteResponse) {
+            return DiskStorage.saveCoinDayHistoryData(responseData);
+          });
+        }
+      });
+      counter ++;
+    }
+   if (counter === coinListResponse.length) {
      counter = 0;
    }
+
   }, null, true, 'America/Los_Angeles');
 }

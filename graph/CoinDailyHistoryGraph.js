@@ -79,13 +79,14 @@ module.exports = {
         streamResult.stream // => Stream object
         streamResult.length // => Integer length of stream
 
-        // write to a file
-        console.log("Charting image now");
-        return chartNode.writeImageToFile('image/png', 'public/images/charts/'+coinSymbol+'.png');
+        return chartNode.writeImageToFile('image/png', 'public/images/charts/' + coinSymbol + '.png');
+
       })
       .then(() => {
         // chart is now written to the file path
         // ./testimage.png
+      }).catch(function(err){
+        console.log(err);
       });
   }
 }

@@ -108,6 +108,7 @@ module.exports = {
       } else {
         return APIStorage.findCoinDayHistoryData(coinSymbol).then(function(apiCoinDayHistoryDataResponse){
           const coinSocialResponse = apiCoinDayHistoryDataResponse.data.Data;
+          console.log(coinSocialResponse);
           return coinSocialResponse;
         }).catch(function(e){
           console.log(e);

@@ -74,7 +74,7 @@ module.exports = {
   },
 
   getCoinDayHistoryData: function(coinSymbol) {
-    const histogramDataEndpoint = "https://min-api.cryptocompare.com/data/histohour?fsym="+coinSymbol+"&tsym=USD&limit=24&aggregate=1";
+    const histogramDataEndpoint = "https://min-api.cryptocompare.com/data/histohour?fsym="+coinSymbol+"&tsym=USD&limit=24&aggregate=1&e=CCCAGG";
     return axios.get(histogramDataEndpoint);
   },
 
