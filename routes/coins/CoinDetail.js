@@ -56,47 +56,33 @@ module.exports = {
     if (req.query.range) {
       rangeRequest = req.query.range * 100 ;
     }
+    function promiseFullfilled(responseData) {
+      res.send({data: responseData});
+    }
     DataFetchAPI.getCoinList(rangeRequest).then(function(coinListResponse){
       let responseData = coinListResponse.filter(function(item){
         return ((item.rank <= rangeRequest) && (item.rank >= rangeRequest - 100));
       }).sort(function(a,b){
         return a.rank - b.rank;
       });
-      res.send({data: responseData});
-      DiskStorage.saveCoinListData(coinListResponse);
-    })
+      promiseFullfilled(responseData);
+    });
   },
 
   getCoinDailyData(req, res, next) {
-    let rangeRequest = 100;
-    if (req.query.range) {
-      rangeRequest = req.query.range * 100 ;
+    let coinSymbol = req.query.coin_symbol;
+    DataFetchAPI.getDailyHistoryData(coinSymbol).then(function (historyDataResponse) {
+      return {data: historyDataResponse}
+    });
+  },
+
+  getCoinWeekData(req, res, next) {
+    let coinSymbol = req.query.coin_symbol;
+    function promiseFullfilled(historyDataResponse) {
+      res.send({data: historyDataResponse});
     }
-    DataFetchAPI.getCoinList().then(function (coinListResponse) {
-      let coinList = coinListResponse.filter(function(item){
-        return ((item.rank <= rangeRequest) && (item.rank >= rangeRequest - 100));
-      }).sort(function (a, b) {
-        return a.rank - b.rank;
-      });
-
-      function callback(responseData) {
-        res.send({data: responseData});
-      }
-      let responseData = {};
-      let counter = 0;
-      coinList.forEach(function (coinItem, coinIdx, arr) {
-        let coinSymbol = coinItem.symbol;
-        DataFetchAPI.getDailyHistoryData(coinSymbol).then(function (historyDataResponse) {
-          responseData[coinSymbol] = historyDataResponse;
-          counter++;
-          if (historyDataResponse.length === 0) {
-
-          }
-          if (counter === arr.length - 1) {
-            callback(responseData);
-          }
-        }).catch((e)=>{counter ++;})
-      })
+    DataFetchAPI.getWeekMinuteHistoryData(coinSymbol).then(function (historyDataResponse) {
+      promiseFullfilled(historyDataResponse);
     });
   },
 
@@ -104,16 +90,12 @@ module.exports = {
     let coinNameString = req.query.coin_symbol;
     DataFetchAPI.findCoinByName(coinNameString).then(function(coinDetailResponse){
       res.send(coinDetailResponse);
-    })
+    });
   },
 
   getCoinDetail(req, res, next) {
     let coinSymbol = req.query.coinSymbol;
     DataFetchAPI.getCoinSnapshot(coinSymbol);
   },
-
-  initCoinScrape(req, res, next) {
-
-  }
 
 }

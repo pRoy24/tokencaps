@@ -40,6 +40,13 @@ module.exports = {
     });
   },
 
+  getCoinWeekHistoryData: function(coinSymbol) {
+    const query = "SELECT * from churchdb.week_history_data where symbol='" + coinSymbol + "'";
+    return cassandraClient.execute(query).then(function(response){
+      return {data: response.rows};
+    });
+  },
+
   searchCoinByQuery: function(coinSearchQuery) {
     const query = "SELECT * from churchdb.coins where fullname like '%" + coinSearchQuery.trim() + "%'";
     return cassandraClient.execute(query).then(function(response){

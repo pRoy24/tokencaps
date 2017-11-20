@@ -23,6 +23,10 @@ module.exports = {
     return CoinList.getCoinDayHistoryData(coinSymbol);
   },
 
+  findCoinWeekMinuteHistoryData: function(coinSymbol) {
+    return CoinList.getCoinWeekHistoryData(coinSymbol);
+  },
+
   findExchangeList: function() {
     return ExchangeList.getExchangeList();
   },
@@ -44,6 +48,10 @@ module.exports = {
 
   saveCoinDayHistoryData: function(coinDayHistoryData) {
     return CoinUpdate.saveCoinDayHistoryData(coinDayHistoryData);
+  },
+
+  saveCoinWeekMinuteHistoryData: function(coinWeekHistoryData) {
+    return CoinUpdate.saveCoinWeekMinuteHistoryData(coinWeekHistoryData);
   },
 
   saveExchangeList: function(exchangeListData) {

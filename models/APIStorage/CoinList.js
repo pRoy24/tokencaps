@@ -20,7 +20,7 @@ module.exports = {
     return axios.get(getCoinMarketCapListEndpoint);
   },
   getCryptoCompareCoinList: function () {
-    const getCruptoCompreListEndpoint = "https://www.cryptocompare.com/api/data/coinlist/";
+    const getCruptoCompreListEndpoint = "https://min-api.cryptocompare.com/data/all/coinlist";
     return axios.get(getCruptoCompreListEndpoint);
   },
   getCoinDayHistogram: function(coinSymbol) {
@@ -73,13 +73,28 @@ module.exports = {
     });
   },
 
+  // Method returns 10080 minute data endpoints for past week
+  getCoinWeekHistoryData: function(coinSymbol) {
+    const dataEndpoint = "https://min-api.cryptocompare.com/data/histohour?fsym="+coinSymbol+"&tsym=USD&limit=1440&aggregate=3&e=CCCAGG";
+    return axios.get(dataEndpoint);
+  },
+
+  // Method return 24 hourly data points for last day
   getCoinDayHistoryData: function(coinSymbol) {
     const histogramDataEndpoint = "https://min-api.cryptocompare.com/data/histohour?fsym="+coinSymbol+"&tsym=USD&limit=24&aggregate=1&e=CCCAGG";
     return axios.get(histogramDataEndpoint);
   },
 
+
   searchCoin: function(coinSymbol) {
     return ({data: []});
+  },
+
+  getCoinHistoricalPrice: function(fromSymbol, exchange, timeStamp) {
+    let toSymbol = "BTC,USD,ETH";
+    const priceHistoricalEndpoint = "https://min-api.cryptocompare.com/data/pricehistorical?fsym="
+      + fromSymbol +"&tsyms=" + toSymbol + "&markets=" + exchange + "&ts=" + timeStamp;
+    return axios.get(priceHistoricalEndpoint);
   }
 }
 

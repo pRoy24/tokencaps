@@ -17,7 +17,7 @@ const DiskStorage = require('../../models/DiskStorage'),
 module.exports = {
   createCoinDailyHistoryTable: function(req, res, next) {
     DataFetchAPI.getCoinList().then(function (coinListResponse) {
-      const separators = Math.ceil(coinListResponse.length / 100);
+      const separators = Math.ceil(coinListResponse / 100);
       for (let counter = 0; counter < separators; counter ++) {
         let currentTimeSchedulerSeconds = ((counter + 4) + " * * * * *");
         let beginIndex = counter * 100;
@@ -29,6 +29,16 @@ module.exports = {
       }
     });
     res.send({"data": "Started 24 History Data Request"});
+  },
+
+  getCoinListAndMerge: function(req, res, next) {
+    new CronJob("*/2 * * * *", function() {
+      APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
+        const coinListResponse = apiCoinSnapshotResponse.data;
+        DiskStorage.saveCoinListData(coinListResponse);
+      });
+    }, null, true, 'America/Los_Angeles');
+    res.send({"data": "Stated Coin List Data Request"});
   }
 }
 

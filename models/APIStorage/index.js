@@ -19,8 +19,8 @@ module.exports = {
   findCoinDayHistoryData: function(coinSymbol) {
     return CoinList.getCoinDayHistoryData(coinSymbol);
   },
-  findExchangeList: function() {
-    return ExchangeList.getExchangeList();
+  findCoinWeekMinuteHistoryData: function(coinSymbol) {
+    return CoinList.getCoinWeekHistoryData(coinSymbol);
   },
   searchCoin: function (coinSymbol) {
     return CoinList.searchCoin(coinSymbol);
@@ -30,5 +30,8 @@ module.exports = {
       let currentCoinItem = coinListResponse.data.find((coinItem) => (coinItem.symbol === coinSymbol));
       return ({data: currentCoinItem});
     });
+  },
+  getCoinHistoricalPrice: function(fromSymbol, exchange, timeStamp) {
+    return CoinList.getCoinHistoricalPrice(fromSymbol, exchange, timeStamp);
   }
 }

@@ -169,7 +169,6 @@ router.get('/coin-history-data', function(req, res, next){
   //res.send({error: ""});
 });
 
-
 router.get('/coin-snapshot', function(req, res, next){
   let coinSnapShotQuery = req.query.coin_symbol;
   cassandraClient.execute("SELECT * FROM churchdb.coin_details WHERE fromsymbol='"+coinSnapShotQuery+"'", function (err, result) {

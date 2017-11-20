@@ -46,6 +46,8 @@ module.exports = {
         "preminedvalue varchar," +
         "totalcoinsfreefloat varchar," +
         "sortorder varchar, " +
+          "max_supply varchar, " +
+          "sponsored varchar, " +
         "PRIMARY KEY(symbol))";
       return cassandraClient.execute(Create_Coin_Table);
     })
@@ -96,7 +98,7 @@ module.exports = {
 
   // Create Coin 7 day history table, consists of hourly data points.
   createCoinWeekHistoryTable: function(req, res, next) {
-    const CREATE_WEEK_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS churchdb.coin_week_history_data" +
+    const CREATE_WEEK_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS churchdb.week_history_data" +
       "(symbol varchar," +
       " time timestamp," +
       "high float," +
@@ -115,7 +117,6 @@ module.exports = {
           .then(function (createTableResponse) {
             res.send({data: createTableResponse});
             return cassandraClient.metadata.getTable('churchdb', 'coin_week_history_data');
-
           }).catch(function (err) {
             res.send({"error": err});
           });
@@ -220,7 +221,6 @@ module.exports = {
       " CodeRepository Text, PRIMARY KEY(id))";
 
     cassandraClient.execute(Delete_Social_Table).then(function(deleteTableResponse){
-
       return cassandraClient.execute(Create_Social_Table);
     })
       .then(function(createTableResponse){
@@ -230,6 +230,10 @@ module.exports = {
         console.log(err);
         return cassandraClient.shutdown();
       });
+  },
+
+  createCoinFullSnapshotTable: function(req, res) {
+
   }
 
 }

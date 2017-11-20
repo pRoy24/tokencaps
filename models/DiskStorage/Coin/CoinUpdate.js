@@ -115,6 +115,29 @@ module.exports = {
     return {data: "started job"};
   },
 
+  saveCoinWeekMinuteHistoryData: function(coinHistoryDataList) {
+    Object.keys(coinHistoryDataList).forEach(function(coinSymbol) {
+      if (coinHistoryDataList[coinSymbol].length > 0) {
+        let coinHistoryData = coinHistoryDataList[coinSymbol];
+        coinHistoryData.forEach(function(dataResponseItem){
+          const placeHolders = "?, ?, ?";
+          let values = [coinSymbol, dataResponseItem["high"], dataResponseItem["time"]];
+          let keyItems = "symbol, high, time";
+          let ttl = 86400;
+
+          const query = 'INSERT INTO churchdb.week_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' + ttl;
+          const params = values;
+          cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
+            if (err) {
+              console.log(err);
+            }
+          });
+        });
+      }
+    });
+    return {data: "started job"};
+  },
+
   deleteCoinDayHistoryData: function(coinSymbol) {
     const query = "DELETE FROM churchdb.daily_history_data WHERE symbol = '" + coinSymbol +"'";
     return cassandraClient.execute(query).then(function(response){

@@ -16,7 +16,7 @@ module.exports = {
           return ({data: apiCoinResponse.data});
         })
       }
-    }).catch((e)=>{console.log(e)})
+    })
   },
 
   getCoinSnapshot: function(coinSymbol) {
@@ -107,17 +107,32 @@ module.exports = {
         return response.data;
       } else {
         return APIStorage.findCoinDayHistoryData(coinSymbol).then(function(apiCoinDayHistoryDataResponse){
-          const coinSocialResponse = apiCoinDayHistoryDataResponse.data.Data;
-          console.log(coinSocialResponse);
-          return coinSocialResponse;
+          const coinAPIResponse = apiCoinDayHistoryDataResponse.data.Data;
+          return coinAPIResponse;
         }).catch(function(e){
-          console.log(e);
           return {error: e};
         });
       }
     });
   },
 
+  getWeekMinuteHistoryData: function(coin_symbol) {
+    return DiskStorage.findCoinWeekMinuteHistoryData(coin_symbol).then(function (response) {
+      if (response && response.data.length > 0) {
+        return response.data;
+      } else {
+        return APIStorage.findCoinWeekMinuteHistoryData(coin_symbol).then(function(apiCoinDayHistoryDataResponse){
+          const coinAPIResponse = apiCoinDayHistoryDataResponse.data.Data;
+          let response = {};
+          response[coin_symbol] = coinAPIResponse;
+          return coinAPIResponse;
+        }).catch(function(e){
+          console.log(e);
+          return {error: e};
+        });
+      }
+    })
+  },
   getExchangeList: function() {
     return DiskStorage.findExchangeList().then(function(diskStorageResponse){
       if (diskStorageResponse && diskStorageResponse.data.length > 0) {
@@ -159,6 +174,14 @@ module.exports = {
         });
       }
     })
+  },
+  findCoinPriceAtTimeStamp: function(fromSymbol, exchange, timeStamp ) {
+    return APIStorage.getCoinHistoricalPrice(fromSymbol, exchange, timeStamp)
+      .then(function(coinHistoryResponse){
+        let responseObject = coinHistoryResponse.data;
+        let coinPrice = responseObject[Object.keys(responseObject)[0]];
+        return {data: coinPrice};
+      })
   }
 }
 
