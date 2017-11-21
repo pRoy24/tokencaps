@@ -66,7 +66,7 @@ module.exports = {
       let queries = [];
     coinListData.forEach(function (listItem, idx) {
       let values = Object.keys(listItem).map(function (currentKey, currIdx) {
-        if (currentKey && listItem[currentKey] && currentKey !== "sponsored") {
+        if (currentKey && listItem[currentKey] && currentKey !== "sponsored" && currentKey !== "max_supply") {
           return listItem[currentKey];
         } else {
           return null;
@@ -74,7 +74,7 @@ module.exports = {
       }).filter(Boolean);
       let placeholders = Object.keys(values).map((a)=>"?").join(", ");
       let keyslist = Object.keys(listItem).map(function (currentKey, currIdx) {
-        if (listItem[currentKey] && currentKey !== "sponsored") {
+        if (listItem[currentKey] && currentKey !== "sponsored" && currentKey !== "max_supply") {
           return currentKey;
         } else {
           return null;
