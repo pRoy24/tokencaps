@@ -16,7 +16,7 @@ const DiskStorage = require('../../models/DiskStorage'),
 
 module.exports = {
   createCoinDailyHistoryTable: function(req, res, next) {
-    DataFetchAPI.getCoinList().then(function (coinListResponse) {
+    DataFetchAPI.getAPICoinList().then(function (coinListResponse) {
       const separators = Math.ceil(coinListResponse / 100);
       for (let counter = 0; counter < separators; counter ++) {
         let currentTimeSchedulerSeconds = ((counter + 4) + " * * * * *");

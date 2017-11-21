@@ -88,6 +88,13 @@ module.exports = {
     });
   },
 
+  getAPICoinList: function() {
+    return APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
+      const coinListResponse = apiCoinSnapshotResponse.data;
+      return coinListResponse;
+    })
+  },
+
   getCoinList: function() {
     return DiskStorage.findCoinList().then(function(response){
       if (response && response.data && response.data.length > 0) {

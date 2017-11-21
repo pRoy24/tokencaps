@@ -32,15 +32,19 @@ module.exports = {
   getCoinList: function() {
     return getCoinMarketCapCoinList().then(function (coinMarketApiResponse) {
       coinMarketApiResponse = coinMarketApiResponse.data;
+
       return getCryptoCompareCoinList().then(function (coinListResponse) {
         coinListResponse = coinListResponse.data.Data;
+
         let coinListItems = Object.keys(coinListResponse).map(function (key) {
           return coinListResponse[key];
         });
+
         coinListItems = coinListItems.sort(function (a, b) {
           return Number(a.Rank) - Number(b.Rank);
         });
         let joinedCoinDataList = [];
+
         for (let a = 0; a < coinMarketApiResponse.length; a++) {
           for (let b = 0; b < coinListItems.length; b++) {
             if (coinMarketApiResponse[a].symbol.toLowerCase().trim() === coinListItems[b].Name.toLowerCase().trim() ||
@@ -75,7 +79,12 @@ module.exports = {
 
   // Method returns 10080 minute data endpoints for past week
   getCoinWeekHistoryData: function(coinSymbol) {
-    const dataEndpoint = "https://min-api.cryptocompare.com/data/histohour?fsym="+coinSymbol+"&tsym=USD&limit=1440&aggregate=3&e=CCCAGG";
+    const dataEndpoint = "https://min-api.cryptocompare.com/data/histohour?fsym="+coinSymbol+"&tsym=USD&limit=168&aggregate=3&e=CCCAGG";
+    return axios.get(dataEndpoint);
+  },
+
+  getCoinYearHistoryData: function(coinSymbol) {
+    const dataEndpoint = "hhttps://min-api.cryptocompare.com/data/histoday?fsym="+coinSymbol+"&tsym=USD&limit=365&aggregate=1&e=CCCAGG";
     return axios.get(dataEndpoint);
   },
 
@@ -100,7 +109,7 @@ module.exports = {
 
 function getCoinMarketCapCoinList()
 {
-  const getCoinMarketCapListEndpoint = "https://api.coinmarketcap.com/v1/ticker";
+  const getCoinMarketCapListEndpoint = "https://api.coinmarketcap.com/v1/ticker/?limit=500";
   return axios.get(getCoinMarketCapListEndpoint);
 };
 function getCryptoCompareCoinList () {
