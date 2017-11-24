@@ -14,4 +14,10 @@ router.route('/coin-day-history').get(CoinDetail.getCoinDailyData);
 router.route('/coin-week-history').get(CoinDetail.getCoinWeekData);
 router.route('/search').get(CoinDetail.searchCoinByName);
 
+router.route('/save-coin-list').get(CoinDetail.saveCoinListToCache);
+router.route('/get-cache-list').get(CoinDetail.fetchCoinListFromCache);
+
+
+router.route('/delete-coin-list').delete(CoinDetail.deleteCoinList);
+
 module.exports = router;

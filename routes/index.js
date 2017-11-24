@@ -9,7 +9,8 @@ var DBConnection = require('../models/DBModel');
 var axios = require('axios');
 
 const cassandra = require('cassandra-driver');
-const cassandraClient = new cassandra.Client({contactPoints: ['127.0.0.1']});
+var Storage = require('../constants/Storage');
+const cassandraClient = new cassandra.Client({contactPoints: [Storage.CQL_API_SERVER]});
 router.get('/', function(req, res, next) {
   res.send({"data": "Welcome to Church Of Crypto API. API version 0.0.1"});
 });

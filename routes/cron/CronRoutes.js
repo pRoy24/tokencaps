@@ -11,31 +11,39 @@ var CronJob = require('cron').CronJob;
 let _ = require('lodash');
 const DiskStorage = require('../../models/DiskStorage'),
   APIStorage = require('../../models/APIStorage'),
+  CacheStorage = require('../../models/CacheStorage'),
   CoinGraph = require('../../graph');
+
+const winston = require('winston')
 
 
 module.exports = {
   createCoinDailyHistoryTable: function(req, res, next) {
-    DataFetchAPI.getAPICoinList().then(function (coinListResponse) {
-      const separators = Math.ceil(coinListResponse / 100);
-      for (let counter = 0; counter < separators; counter ++) {
-        let currentTimeSchedulerSeconds = ((counter + 4) + " * * * * *");
-        let beginIndex = counter * 100;
-        let endIndex = (counter + 1) * 100;
-        if (counter === separators - 1) {
-          endIndex = coinListResponse.length;
+    DataFetchAPI.getCoinList(600).then(function (coinListResponse) {
+      let counter  = 0;
+
+      setInterval(function(){
+        if (counter < coinListResponse.length - 1) {
+          if (coinListResponse[counter].symbol) {
+            saveCoinDailyGraph(coinListResponse[counter].symbol);
+            counter++;
+          }
+        } else {
+          counter = 0;
         }
-        saveCoinGraphResponse(coinListResponse.slice(beginIndex, endIndex), currentTimeSchedulerSeconds);
-      }
+      }, 1200);
     });
     res.send({"data": "Started 24 History Data Request"});
   },
 
   getCoinListAndMerge: function(req, res, next) {
     new CronJob("*/2 * * * *", function() {
+      winston.log('info', 'querying API for Coin List', {
+        "timestamp": Date.now()
+      })
       APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
         const coinListResponse = apiCoinSnapshotResponse.data;
-        DiskStorage.saveCoinListData(coinListResponse);
+        CacheStorage.saveCoinList(coinListResponse);
       });
     }, null, true, 'America/Los_Angeles');
     res.send({"data": "Stated Coin List Data Request"});
@@ -48,6 +56,10 @@ function saveCoinGraphResponse(coinListResponse, currentTimeSchedulerSeconds) {
 
     if (coinListResponse[counter]) {
       let coinSymbol = coinListResponse[counter].symbol;
+      winston.log('info', 'querying API for Coin Daily History Data', {
+        "timestamp": Date.now(),
+        'coin': coinSymbol
+      })
       APIStorage.findCoinDayHistoryData(coinSymbol).then(function (apiCoinDayHistoryDataResponse) {
         const coinDayHistoryResponse = apiCoinDayHistoryDataResponse.data.Data;
         if (coinDayHistoryResponse && coinDayHistoryResponse.length > 0) {
@@ -67,3 +79,21 @@ function saveCoinGraphResponse(coinListResponse, currentTimeSchedulerSeconds) {
 
   }, null, true, 'America/Los_Angeles');
 }
+
+
+function saveCoinDailyGraph(coinSymbol) {
+  winston.log('info', 'Saving Coin Daily History Data', {
+    "timestamp": Date.now(),
+    'coin': coinSymbol
+  })
+  APIStorage.findCoinDayHistoryData(coinSymbol).then(function (apiCoinDayHistoryDataResponse) {
+    const coinDayHistoryResponse = apiCoinDayHistoryDataResponse.data.Data;
+    if (coinDayHistoryResponse && coinDayHistoryResponse.length > 0) {
+      const responseData = {};
+      responseData[coinSymbol] = coinDayHistoryResponse;
+      CoinGraph.chartCoinDailyHistoryGraph(responseData);
+    }
+  });
+}
+
+

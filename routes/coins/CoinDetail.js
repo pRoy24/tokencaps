@@ -98,4 +98,18 @@ module.exports = {
     DataFetchAPI.getCoinSnapshot(coinSymbol);
   },
 
+  saveCoinListToCache(req, res, next) {
+    DataFetchAPI.saveCoinListToCache();
+  },
+
+  fetchCoinListFromCache(req, res, next) {
+    DataFetchAPI.getCoinListFromCache();
+  },
+
+  deleteCoinList(req, res, next) {
+    let token = req.query.token;
+    DataFetchAPI.deleteCoinList(token);
+    res.send({"data": "deleting data now"});
+  }
+
 }

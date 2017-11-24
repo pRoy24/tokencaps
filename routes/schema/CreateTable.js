@@ -5,7 +5,8 @@
 let express = require('express');
 var DBConnection = require('../../models/DBModel');
 const cassandra = require('cassandra-driver');
-const cassandraClient = new cassandra.Client({contactPoints: ['127.0.0.1']});
+var Storage = require('../../constants/Storage');
+const cassandraClient = new cassandra.Client({contactPoints: [Storage.CQL_API_SERVER]});
 
 module.exports = {
   // Create Coin List table, used to render top level views
@@ -52,14 +53,14 @@ module.exports = {
       return cassandraClient.execute(Create_Coin_Table);
     })
       .then(function(createTableResponse){
-        let sdsiQuery = "CREATE CUSTOM INDEX  fn_prefix ON churchdb.coins (fullname)" +
+/*        let sdsiQuery = "CREATE CUSTOM INDEX  fn_prefix ON churchdb.coins (fullname)" +
                         " USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = { " +
                         "'mode': 'CONTAINS'," +
                         "'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.NonTokenizingAnalyzer'," +
                         "'case_sensitive': 'false'"+
                         "}";
 
-        cassandraClient.execute(sdsiQuery);
+        cassandraClient.execute(sdsiQuery);*/
         return res.send({data: createTableResponse});
       })
       .catch(function (err) {
@@ -188,7 +189,7 @@ module.exports = {
   createExchangeTable: function(req, res) {
     const Delete_Exchange_Table = "DROP TABLE IF EXISTS churchdb.exchanges";
     const Create_Exchange_Table = "CREATE TABLE IF NOT EXISTS churchdb.exchanges" +
-      " (TimeStamp time," +
+      " (TimeStamp TIMESTAMP," +
       "exch_id varchar," +
       "exch_name varchar," +
       "exch_code varchar," +
@@ -206,14 +207,16 @@ module.exports = {
         return res.send({data: createTableResponse});
       })
       .catch(function (err) {
-        return cassandraClient.shutdown();
+        console.log(err);
+         res.send({error:err});
+        return err;
       });
   },
 
   createCoinSocialTable: function(req, res) {
     const Delete_Social_Table = "DROP TABLE IF EXISTS churchdb.coin_social";
     const Create_Social_Table = "CREATE TABLE IF NOT EXISTS churchdb.coin_social" +
-      " (TimeStamp time," +
+      " (TimeStamp TIMESTAMP," +
       " id varchar," +
       " Reddit text," +
       " Facebook text," +

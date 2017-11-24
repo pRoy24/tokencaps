@@ -15,4 +15,7 @@ router.route('/list-coin').get(User.listCoins);
 
 router.route('/add-user-transaction').post(User.addUserTransaction);
 
+
+router.route('/get-all-users').get(User.listUsers);
+
 module.exports = router;

@@ -67,5 +67,10 @@ module.exports = {
 
   deleteCoinDayHistoryData(coinSymbol) {
     return CoinUpdate.deleteCoinDayHistoryData(coinSymbol)
+  },
+
+
+  findRedisCoinList() {
+
   }
 }

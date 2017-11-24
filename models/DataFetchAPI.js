@@ -5,6 +5,7 @@ let _ = require('lodash');
 const DiskStorage = require('./DiskStorage'),
   APIStorage = require('./APIStorage');
   CoinUtils = require('./DiskStorage/Coin/util');
+CacheStorage = require('./CacheStorage/');
 
 module.exports = {
   getCoinRow: function(coinSymbol) {
@@ -66,6 +67,7 @@ module.exports = {
       }
     })
   },
+
   getCoinSocialData: function (coinID) {
     return DiskStorage.findCoinSocialData(coinID).then(function(response){
       if (response && response.data.length > 0) {
@@ -95,8 +97,22 @@ module.exports = {
     })
   },
 
-  getCoinList: function() {
-    return DiskStorage.findCoinList().then(function(response){
+
+  saveCoinListToCache: function() {
+    return APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
+      const coinListResponse = apiCoinSnapshotResponse.data;
+      CacheStorage.saveCoinList(coinListResponse);
+      return coinListResponse;
+    })
+  },
+
+  getCoinListFromCache: function () {
+    return CacheStorage.getCoinList();
+  },
+
+  getCoinList: function(rangeRequest) {
+    return CacheStorage.getCoinList(rangeRequest).then(function(response){
+
       if (response && response.data && response.data.length > 0) {
         return response.data;
       } else {
@@ -108,6 +124,9 @@ module.exports = {
     });
   },
 
+  deleteCoinList: function(token) {
+    CacheStorage.deleteCoinList(token);
+  },
   getDailyHistoryData: function(coinSymbol) {
     return DiskStorage.findCoinDayHistoryData(coinSymbol).then(function(response){
       if (response && response.data.length > 0) {
@@ -167,21 +186,22 @@ module.exports = {
   },
 
   findCoinByName: function(coinSearchString) {
-    return DiskStorage.searchCoin(coinSearchString).then(function(searchCoinResponse){
-      if (searchCoinResponse && searchCoinResponse.data.length > 0) {
-        return {data: searchCoinResponse.data}
+
+    return CacheStorage.searchCoin(coinSearchString).then(function(coinSearchResponse){
+      if (coinSearchResponse && coinSearchResponse.data.length > 0) {
+        return {data: coinSearchResponse.data}
       } else {
         return APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
           const coinListResponse = apiCoinSnapshotResponse.data;
           let coinSearchMatchesList = coinListResponse.filter(function(coin){
             return (new RegExp(coinSearchString.toLowerCase()).test(coin.fullname.toLowerCase()));
           });
-          DiskStorage.saveCoinListData(coinListResponse);
           return {data: coinSearchMatchesList}
         });
       }
-    })
+    });
   },
+
   findCoinPriceAtTimeStamp: function(fromSymbol, exchange, timeStamp ) {
     return APIStorage.getCoinHistoricalPrice(fromSymbol, exchange, timeStamp)
       .then(function(coinHistoryResponse){
@@ -210,4 +230,7 @@ function mergeList(exchangeMarketData, exchangeList) {
    }
    return mergedList;
 }
+
+
+
 

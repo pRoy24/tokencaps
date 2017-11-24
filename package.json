@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "aws-sdk": "^2.156.0",
     "axios": "^0.16.2",
     "bluebird": "^3.5.1",
     "body-parser": "~1.17.1",
@@ -16,15 +17,17 @@
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
     "cron": "^1.3.0",
-    "debug": "^2.6.8",
+    "debug": "^2.6.9",
     "express": "~4.15.2",
+    "fs": "0.0.1-security",
     "hat": "0.0.3",
     "jade": "~1.11.0",
     "mongoose": "^4.13.0",
     "morgan": "~1.8.1",
     "redis": "^2.8.0",
     "request": "^2.81.0",
-    "serve-favicon": "~2.4.2"
+    "serve-favicon": "~2.4.2",
+    "winston": "^2.4.0"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.24.1"

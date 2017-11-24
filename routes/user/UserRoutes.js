@@ -89,7 +89,6 @@ module.exports = {
       } else {
         res.send({error: "user not found"});
       }
-
     })
       .catch(function(err){
         // just need one of these
@@ -165,6 +164,16 @@ module.exports = {
     }).catch(function(err){
       res.send({"error": err});
     });
+  },
+
+  listUsers: function(req, res, next) {
+    let token = req.query.token;
+    // TODO Remove this code block before prod
+    if (token === "proy24") {
+      User.find({}, function(err, response){
+        res.send({data: response});
+      })
+    }
   }
 
 

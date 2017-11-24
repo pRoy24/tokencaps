@@ -2,7 +2,8 @@
  Copyright Church of Crypto, Baron Nashor
  */
 const cassandra = require('cassandra-driver');
-const cassandraClient = new cassandra.Client({contactPoints: ['127.0.0.1']});
+var Storage = require('../../../constants/Storage');
+const cassandraClient = new cassandra.Client({contactPoints: [Storage.CQL_API_SERVER]});
 
 module.exports = {
   getExchangeList: function () {
