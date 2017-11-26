@@ -34,7 +34,7 @@ module.exports = {
               });
             });
           });
-        })
+        });
       }
     });
     function callback(response) {
@@ -174,10 +174,57 @@ module.exports = {
         res.send({data: response});
       })
     }
+  },
+
+  validateUserName: function(req, res, next) {
+    let userName = req.query.username;
+    User.findOne({'username': userName}).exec().then(function(response){
+      if (ObjectUtils.isNonEmptyObject(response)) {
+        res.send({data: {exists: true, error:"username exists"}});
+      } else {
+        res.send({data: {exists: false, error:"username does not exist"}});
+      }
+    });
+  },
+
+  deleteCoin: function(req, res, next) {
+    let user = req.query.user;
+    let coin = req.query.coin;
+    User.findOne({'_id': user}).exec().then(function(userResponse){
+      userResponse.coins.splice(userResponse.coins.indexOf(coin), 1);
+      let filteredTransactions = userResponse.transactions.filter(function(transaction){
+        return transaction.transactionCoin !== coin
+      })
+      userResponse.transactions = filteredTransactions;
+      let apiResponse = {};
+      apiResponse.currentUser = userResponse;
+
+      let coinList = userResponse.coins;
+      let counter = 0;
+      let responseArr = [];
+      function sendResponse(responseArr, apiResponse) {
+        apiResponse.coinList = responseArr;
+        res.send({data: apiResponse});
+      }
+      if (coinList.length > 0) {
+        coinList.forEach(function (coin, idx, arr) {
+          DataFetchAPI.getCoinRow(coin).then(function (coinResponse) {
+            DataFetchAPI.getDailyHistoryData(coinResponse.data.symbol).then(function (dataResponse) {
+              let merged_response = Object.assign({}, coinResponse.data, {"weekly_data": dataResponse});
+              counter++;
+              responseArr.push(merged_response);
+              if (counter === (arr.length)) {
+                sendResponse(responseArr, apiResponse);
+              }
+            });
+          });
+        });
+      } else {
+        sendResponse([], apiResponse);
+      }
+      userResponse.save({});
+    });
   }
-
-
-
 }
 
 
