@@ -5,19 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="31c7711b-8ab9-4d00-96f4-3b1a3d17a8f5" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/routes/schema/Coins.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/routes/schema/CoinsTable.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/routes/schema/Exchanges.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/routes/schema/Users.js" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/routes/coins/CoinDetail.js" afterPath="$PROJECT_DIR$/routes/coins/CoinRoutes.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/graph/CoinDailyHistoryGraph.js" afterPath="$PROJECT_DIR$/graph/CoinDailyHistoryGraph.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/DataFetchAPI.js" afterPath="$PROJECT_DIR$/models/DataFetchAPI.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/DiskStorage/Coin/CoinUpdate.js" afterPath="$PROJECT_DIR$/models/DiskStorage/Coin/CoinUpdate.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/coins/index.js" afterPath="$PROJECT_DIR$/routes/coins/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/cron/CronRoutes.js" afterPath="$PROJECT_DIR$/routes/cron/CronRoutes.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/schema/CreateTable.js" afterPath="$PROJECT_DIR$/routes/schema/CreateTable.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/ObjectUtils.js" afterPath="$PROJECT_DIR$/utils/ObjectUtils.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -125,8 +113,8 @@
       <file leaf-file-name="CoinUpdate.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/models/DiskStorage/Coin/CoinUpdate.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="381">
-              <caret line="44" column="6" lean-forward="false" selection-start-line="44" selection-start-column="6" selection-end-line="44" selection-end-column="6" />
+            <state relative-caret-position="480">
+              <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -750,12 +738,12 @@
       <workItem from="1511579922443" duration="1562000" />
       <workItem from="1511646469234" duration="5962000" />
       <workItem from="1511681488172" duration="175000" />
-      <workItem from="1511735050264" duration="1802000" />
+      <workItem from="1511735050264" duration="1903000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="306607000" />
+    <option name="totallyTimeSpent" value="306708000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
@@ -1113,8 +1101,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/models/DiskStorage/Coin/CoinUpdate.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="381">
-          <caret line="44" column="6" lean-forward="false" selection-start-line="44" selection-start-column="6" selection-end-line="44" selection-end-column="6" />
+        <state relative-caret-position="480">
+          <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
           <folding />
         </state>
       </provider>
