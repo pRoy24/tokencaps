@@ -22,6 +22,7 @@ module.exports = {
 
   getCoinSnapshot: function(coinSymbol) {
     return DiskStorage.findCoinSnapshot(coinSymbol).then(function(response){
+      console.log(response);
       if (response && Object.keys(response).length > 0) {
         return response;
       } else {

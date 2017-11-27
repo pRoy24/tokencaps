@@ -8,6 +8,9 @@ module.exports = {
     const historyData = responseData[coinSymbol];
     const ChartjsNode = require('chartjs-node');
 
+    if (historyData.length === 0) {
+      console.log("Empty data response");
+    }
 
     const historyDataMap = historyData.map((dataItem) => ({y: dataItem.high, x: dataItem.time}));
     const historyLabels = historyData.map((dataItem)=>moment(dataItem.time).format("hh:mm"));
@@ -41,7 +44,7 @@ module.exports = {
           drawOnChartArea: false,
           "ticks": {
             fontColor: "#ECECEC",
-            fontSize: 16,
+            fontSize: 12,
             fontWeight: "bold",
             maxTicksLimit: 4,
             "beginAtZero": false
@@ -115,13 +118,13 @@ function writeFileToS3Location(coinSymbol) {
     var base64data = new Buffer(data, 'binary');
 
     var s3 = new AWS.S3();
+    
     s3.upload({
       Bucket: 'images.tokenplex.io',
       Key: coinSymbol+".png",
       Body: base64data,
       ACL: 'public-read'
-    },function (resp) {
-      console.log(arguments);
+    },function (err, resp) {
       console.log('Successfully uploaded package.');
     });
 

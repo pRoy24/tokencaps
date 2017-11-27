@@ -9,32 +9,41 @@ module.exports = {
   saveCoinSnapshot: function(coinTradeNormalizedData) {
     const queries = [];
     coinTradeNormalizedData.forEach(function(coinTradeData) {
-      let keys = Object.keys(coinTradeData).map(function(key){
-        if (key === "lastmarket") {
-          return null;
-        }
+
+      delete coinTradeData["lastmarket"];
+      if (coinTradeData["openday"]) {
+        delete coinTradeData["openday"];
+        delete coinTradeData["highday"];
+        delete coinTradeData["lowday"];
+        delete coinTradeData["volumeday"];
+        delete coinTradeData["volumedayto"];
+      }
+
+      let keys = Object.keys(coinTradeData).map(function(key, idx){
         return key;
       }).filter(Boolean).join(", ");
-      let placeholders = Object.keys(coinTradeData).map(function(key){
-        if (key === "lastmarket") {
-          return null;
-        }
+
+      let placeholders = Object.keys(coinTradeData).map(function(key, idx){
         return "?";
       }).filter(Boolean).join(", ");
+
       let values = Object.keys(coinTradeData).map(function(key){
-        if (key === "lastmarket") {
-          return null;
-        }
-        return coinTradeData[key]
+        return (coinTradeData[key]).toString();
       }).filter(Boolean);
-      let ttl = 120;
-      const query = 'INSERT INTO churchdb.coin_details (' + keys + ') VALUES (' + placeholders + ') USING TTL ' +ttl;
+
+
+      const query = 'INSERT INTO churchdb.coin_details (' + keys + ') VALUES (' + placeholders + ') USING TTL 120';
       queries.push({
         query: query,
         params: values
       })
     });
-    return cassandraClient.batch(queries, { prepare: true });
+    return cassandraClient.batch(queries, { prepare: true }, function(err, res){
+      if (err) {
+        return err;
+      }
+      return res;
+    });
   },
 
   saveCoinSocialData: function(coinID, coinSocialData) {

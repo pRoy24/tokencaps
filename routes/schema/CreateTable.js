@@ -235,8 +235,4 @@ module.exports = {
       });
   },
 
-  createCoinFullSnapshotTable: function(req, res) {
-
-  }
-
 }

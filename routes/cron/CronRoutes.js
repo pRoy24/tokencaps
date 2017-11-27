@@ -1,8 +1,8 @@
 /**
- Copyright Church of Crypto, Baron Nashor
+ proy24, TokenPlex
  */
-const DataFetchAPI = require('../../models/DataFetchAPI');
 
+const DataFetchAPI = require('../../models/DataFetchAPI');
 let express = require('express');
 var DBConnection = require('../../models/DBModel');
 const cassandra = require('cassandra-driver');
@@ -13,9 +13,8 @@ const DiskStorage = require('../../models/DiskStorage'),
   APIStorage = require('../../models/APIStorage'),
   CacheStorage = require('../../models/CacheStorage'),
   CoinGraph = require('../../graph');
-
+ObjectUtils = require('../../utils/ObjectUtils');
 const winston = require('winston')
-
 
 module.exports = {
   createCoinDailyHistoryTable: function(req, res, next) {
@@ -31,7 +30,7 @@ module.exports = {
         } else {
           counter = 0;
         }
-      }, 1200);
+      }, 3600);
     });
     res.send({"data": "Started 24 History Data Request"});
   },
@@ -85,13 +84,15 @@ function saveCoinDailyGraph(coinSymbol) {
   winston.log('info', 'Saving Coin Daily History Data', {
     "timestamp": Date.now(),
     'coin': coinSymbol
-  })
-  APIStorage.findCoinDayHistoryData(coinSymbol).then(function (apiCoinDayHistoryDataResponse) {
+  });
+  return APIStorage.findCoinDayHistoryData(coinSymbol).then(function (apiCoinDayHistoryDataResponse) {
     const coinDayHistoryResponse = apiCoinDayHistoryDataResponse.data.Data;
     if (coinDayHistoryResponse && coinDayHistoryResponse.length > 0) {
       const responseData = {};
       responseData[coinSymbol] = coinDayHistoryResponse;
-      CoinGraph.chartCoinDailyHistoryGraph(responseData);
+     return CoinGraph.chartCoinDailyHistoryGraph(responseData);
+    } else {
+   //   ObjectUtils.writeFileToS3Location(coinSymbol, "ETH");
     }
   });
 }
