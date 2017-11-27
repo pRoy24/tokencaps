@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="31c7711b-8ab9-4d00-96f4-3b1a3d17a8f5" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/DataFetchAPI.js" afterPath="$PROJECT_DIR$/models/DataFetchAPI.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -90,11 +91,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DataFetchAPI.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="DataFetchAPI.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/models/DataFetchAPI.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="33" column="38" lean-forward="false" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="38" />
+            <state relative-caret-position="225">
+              <caret line="24" column="6" lean-forward="false" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -110,10 +111,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CoinUpdate.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CoinUpdate.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/DiskStorage/Coin/CoinUpdate.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
+            <state relative-caret-position="316">
               <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
               <folding />
             </state>
@@ -140,9 +141,7 @@
       <find>cons</find>
       <find>consol</find>
       <find>console</find>
-      <find>co</find>
       <find>console.l</find>
-      <find>console.log</find>
       <find>transactionTimestamp</find>
       <find>findCoinPriceAtTimeStamp</find>
       <find>9000</find>
@@ -159,14 +158,16 @@
       <find>coi</find>
       <find>coinsocial</find>
       <find>getCoinList</find>
-      <find>/** Copyright Church of Crypto, Baron Nashor */</find>
       <find>coin_details</find>
+      <find>/** Copyright Church of Crypto, Baron Nashor */</find>
+      <find>co</find>
+      <find>console.log</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/models</dir>
-      <dir>$PROJECT_DIR$/routes</dir>
       <dir>$PROJECT_DIR$/models/DiskStorage/Coin</dir>
       <dir>$PROJECT_DIR$</dir>
+      <dir>$PROJECT_DIR$/routes</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -224,8 +225,8 @@
         <option value="$PROJECT_DIR$/routes/coins/index.js" />
         <option value="$PROJECT_DIR$/routes/cron/CronRoutes.js" />
         <option value="$PROJECT_DIR$/routes/schema/CreateTable.js" />
-        <option value="$PROJECT_DIR$/models/DataFetchAPI.js" />
         <option value="$PROJECT_DIR$/models/DiskStorage/Coin/CoinUpdate.js" />
+        <option value="$PROJECT_DIR$/models/DataFetchAPI.js" />
       </list>
     </option>
   </component>
@@ -738,12 +739,12 @@
       <workItem from="1511579922443" duration="1562000" />
       <workItem from="1511646469234" duration="5962000" />
       <workItem from="1511681488172" duration="175000" />
-      <workItem from="1511735050264" duration="1903000" />
+      <workItem from="1511735050264" duration="1974000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="306708000" />
+    <option name="totallyTimeSpent" value="306779000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
@@ -1083,14 +1084,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/DataFetchAPI.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="33" column="38" lean-forward="false" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/DiskStorage/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -1101,8 +1094,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/models/DiskStorage/Coin/CoinUpdate.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
+        <state relative-caret-position="316">
           <caret line="32" column="0" lean-forward="true" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/DataFetchAPI.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="24" column="6" lean-forward="false" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
           <folding />
         </state>
       </provider>
