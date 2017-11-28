@@ -30,16 +30,14 @@ module.exports = {
 
 
   getCoinList: function() {
+
     return getCoinMarketCapCoinList().then(function (coinMarketApiResponse) {
       coinMarketApiResponse = coinMarketApiResponse.data;
-
       return getCryptoCompareCoinList().then(function (coinListResponse) {
         coinListResponse = coinListResponse.data.Data;
-
         let coinListItems = Object.keys(coinListResponse).map(function (key) {
           return coinListResponse[key];
         });
-
         coinListItems = coinListItems.sort(function (a, b) {
           return Number(a.Rank) - Number(b.Rank);
         });
@@ -72,6 +70,7 @@ module.exports = {
             }
           }
         }
+
         return {data: joinedCoinDataList};
       });
     });
@@ -113,8 +112,8 @@ function getCoinMarketCapCoinList()
   return axios.get(getCoinMarketCapListEndpoint);
 };
 function getCryptoCompareCoinList () {
-  const getCruptoCompreListEndpoint = "https://www.cryptocompare.com/api/data/coinlist/";
-  return axios.get(getCruptoCompreListEndpoint);
+  const getCryptoCompreListEndpoint = "https://min-api.cryptocompare.com/data/all/coinlist";
+  return axios.get(getCryptoCompreListEndpoint);
 };
 
 function symbolNormalizerMatches(symbol, name) {

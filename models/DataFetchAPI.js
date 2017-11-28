@@ -112,7 +112,6 @@ module.exports = {
 
   getCoinList: function(rangeRequest) {
     return CacheStorage.getCoinList(rangeRequest).then(function(response){
-
       if (response && response.data && response.data.length > 0) {
         return response.data;
       } else {

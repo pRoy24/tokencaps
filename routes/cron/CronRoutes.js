@@ -1,8 +1,6 @@
-/**
- proy24, TokenPlex
- */
 
 const DataFetchAPI = require('../../models/DataFetchAPI');
+
 let express = require('express');
 var DBConnection = require('../../models/DBModel');
 const cassandra = require('cassandra-driver');
@@ -15,6 +13,7 @@ const DiskStorage = require('../../models/DiskStorage'),
   CoinGraph = require('../../graph');
 ObjectUtils = require('../../utils/ObjectUtils');
 const winston = require('winston')
+
 
 module.exports = {
   createCoinDailyHistoryTable: function(req, res, next) {
@@ -30,21 +29,23 @@ module.exports = {
         } else {
           counter = 0;
         }
-      }, 3600);
+      }, 10000);
     });
     res.send({"data": "Started 24 History Data Request"});
   },
 
   getCoinListAndMerge: function(req, res, next) {
-    new CronJob("*/2 * * * *", function() {
+
+    setInterval(function(){
       winston.log('info', 'querying API for Coin List', {
         "timestamp": Date.now()
       })
-      APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
+      return APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
         const coinListResponse = apiCoinSnapshotResponse.data;
-        CacheStorage.saveCoinList(coinListResponse);
+        return CacheStorage.saveCoinList(coinListResponse);
       });
-    }, null, true, 'America/Los_Angeles');
+    }, 2000);
+
     res.send({"data": "Stated Coin List Data Request"});
   }
 }
@@ -88,6 +89,7 @@ function saveCoinDailyGraph(coinSymbol) {
   return APIStorage.findCoinDayHistoryData(coinSymbol).then(function (apiCoinDayHistoryDataResponse) {
     const coinDayHistoryResponse = apiCoinDayHistoryDataResponse.data.Data;
     if (coinDayHistoryResponse && coinDayHistoryResponse.length > 0) {
+
       const responseData = {};
       responseData[coinSymbol] = coinDayHistoryResponse;
      return CoinGraph.chartCoinDailyHistoryGraph(responseData);

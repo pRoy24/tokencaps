@@ -36,11 +36,23 @@ module.exports = {
   },
 
   saveCoinList: function(coinList) {
-    coinList.forEach(function(coinItem){
-      if (ObjectUtils.isNonEmptyObject(coinItem)) {
-        client.hsetAsync("coins", coinItem.symbol, JSON.stringify(coinItem));
-      }
-    });
+    let keys = [];
+    let values = [];
+    console.log("IY");
+
+    let redisSave = [];
+    redisSave.push("coins");
+     coinList.forEach(function(coinItem){
+      redisSave.push(coinItem.symbol);
+      redisSave.push(JSON.stringify(coinItem));
+      client.hsetAsync("coins", coinItem.symbol, JSON.stringify(coinItem)).then(function(response){
+        console.log("GG");
+          console.log(response);
+
+        }).catch(function(err){
+          console.log(err);
+        });
+     });
   },
 
   saveCoinSeachList: function(coinList) {

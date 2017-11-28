@@ -89,7 +89,6 @@ module.exports = {
         })
           .then(function (createTableResponse) {
             res.send({data: createTableResponse});
-            return cassandraClient.metadata.getTable('churchdb', 'daily_history_data');
 
           }).catch(function (err) {
             res.send({"error": err});
@@ -117,7 +116,7 @@ module.exports = {
         })
           .then(function (createTableResponse) {
             res.send({data: createTableResponse});
-            return cassandraClient.metadata.getTable('churchdb', 'coin_week_history_data');
+
           }).catch(function (err) {
             res.send({"error": err});
           });

@@ -1,9 +1,13 @@
 {
-  "name": "server",
+  "name": "TokenPlex",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
+  },
+  "apidoc": {
+    "title": "TokenPlex API Docs",
+    "url": "https://api.tokenplex.io"
   },
   "dependencies": {
     "aws-sdk": "^2.156.0",
