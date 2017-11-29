@@ -37,9 +37,7 @@ router.route('/coin-list').get(CoinRoutes.getCoinList);
 
 router.route('/get-coin-list').get(CoinRoutes.getCoinList);
 
-
 router.route('/coin-day-history').get(CoinRoutes.getCoinDailyData);
-
 
 router.route('/coin-week-history').get(CoinRoutes.getCoinWeekData);
 

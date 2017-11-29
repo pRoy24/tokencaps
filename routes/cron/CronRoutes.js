@@ -29,7 +29,7 @@ module.exports = {
         } else {
           counter = 0;
         }
-      }, 10000);
+      }, 30000);
     });
     res.send({"data": "Started 24 History Data Request"});
   },
@@ -44,7 +44,7 @@ module.exports = {
         const coinListResponse = apiCoinSnapshotResponse.data;
         return CacheStorage.saveCoinList(coinListResponse);
       });
-    }, 2000);
+    }, 30000);
 
     res.send({"data": "Stated Coin List Data Request"});
   }

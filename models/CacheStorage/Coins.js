@@ -43,15 +43,7 @@ module.exports = {
     let redisSave = [];
     redisSave.push("coins");
      coinList.forEach(function(coinItem){
-      redisSave.push(coinItem.symbol);
-      redisSave.push(JSON.stringify(coinItem));
-      client.hsetAsync("coins", coinItem.symbol, JSON.stringify(coinItem)).then(function(response){
-        console.log("GG");
-          console.log(response);
-
-        }).catch(function(err){
-          console.log(err);
-        });
+       client.hset("coins", coinItem.symbol, JSON.stringify(coinItem));
      });
   },
 
