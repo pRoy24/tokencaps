@@ -37,9 +37,13 @@ module.exports = {
 
   saveCoinList: function(coinList) {
 
-
+    let arrayLog = [];
+    arrayLog.push("coins");
      coinList.forEach(function(coinItem){
        if (ObjectUtils.isNonEmptyObject(coinItem)) {
+         arrayLog.push(coinItem.symbol);
+         arrayLog.push(coinItem);
+
          client.hset("coins", coinItem.symbol, JSON.stringify(coinItem), function (err, response) {
            if (err) {
              console.log(err);
@@ -49,6 +53,8 @@ module.exports = {
          });
        }
      });
+     console.log(arrayLog);
+     return("started coin list scrape");
   },
 
   saveCoinSeachList: function(coinList) {
