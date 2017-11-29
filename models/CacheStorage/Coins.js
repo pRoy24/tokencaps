@@ -36,14 +36,18 @@ module.exports = {
   },
 
   saveCoinList: function(coinList) {
-    let keys = [];
-    let values = [];
-    console.log("IY");
 
-    let redisSave = [];
-    redisSave.push("coins");
+
      coinList.forEach(function(coinItem){
-       client.hset("coins", coinItem.symbol, JSON.stringify(coinItem), redis.print);
+       if (ObjectUtils.isNonEmptyObject(coinItem)) {
+         client.hset("coins", coinItem.symbol, JSON.stringify(coinItem), function (err, response) {
+           if (err) {
+             console.log(err);
+           } else {
+             console.log(response);
+           }
+         });
+       }
      });
   },
 

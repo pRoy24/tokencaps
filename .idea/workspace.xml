@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="31c7711b-8ab9-4d00-96f4-3b1a3d17a8f5" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/CacheStorage/Coins.js" afterPath="$PROJECT_DIR$/models/CacheStorage/Coins.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -33,8 +34,8 @@
       <file leaf-file-name="Coins.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/models/CacheStorage/Coins.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="332">
-              <caret line="45" column="82" lean-forward="false" selection-start-line="45" selection-start-column="82" selection-end-line="45" selection-end-column="82" />
+            <state relative-caret-position="378">
+              <caret line="49" column="8" lean-forward="false" selection-start-line="49" selection-start-column="8" selection-end-line="49" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -714,12 +715,12 @@
       <workItem from="1511681488172" duration="175000" />
       <workItem from="1511735050264" duration="6911000" />
       <workItem from="1511814103978" duration="2971000" />
-      <workItem from="1511861725596" duration="1678000" />
+      <workItem from="1511861725596" duration="1916000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="316365000" />
+    <option name="totallyTimeSpent" value="316603000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
@@ -1084,8 +1085,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/models/CacheStorage/Coins.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="45" column="82" lean-forward="false" selection-start-line="45" selection-start-column="82" selection-end-line="45" selection-end-column="82" />
+        <state relative-caret-position="378">
+          <caret line="49" column="8" lean-forward="false" selection-start-line="49" selection-start-column="8" selection-end-line="49" selection-end-column="8" />
           <folding />
         </state>
       </provider>
