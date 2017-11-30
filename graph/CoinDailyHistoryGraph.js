@@ -15,7 +15,6 @@ module.exports = {
     const historyDataMap = historyData.map((dataItem) => ({y: dataItem.high, x: dataItem.time}));
     const historyLabels = historyData.map((dataItem)=>moment(dataItem.time).format("hh:mm"));
 
-
     const chartOptions = {
       "type": "line",
       "data": {
@@ -83,9 +82,8 @@ module.exports = {
         streamResult.length // => Integer length of stream
 
         let filePath = 'public/images/charts/' + coinSymbol + '.png';
+
         return chartNode.writeImageToFile('image/png', 'public/images/charts/' + coinSymbol + '.png');
-
-
       })
       .then((file) => {
         writeFileToS3Location(coinSymbol);
@@ -113,12 +111,8 @@ function writeFileToS3Location(coinSymbol) {
       console.log(err);
       throw err;
     }
-
-
     var base64data = new Buffer(data, 'binary');
-
     var s3 = new AWS.S3();
-    
     s3.upload({
       Bucket: 'images.tokenplex.io',
       Key: coinSymbol+".png",
@@ -127,7 +121,5 @@ function writeFileToS3Location(coinSymbol) {
     },function (err, resp) {
       console.log('Successfully uploaded package.');
     });
-
-
   });
 }

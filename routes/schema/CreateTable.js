@@ -234,4 +234,124 @@ module.exports = {
       });
   },
 
+  createAllTables: function(req, res) {
+    // Tables will be created in the following order
+    /*
+      Coin Daily History Table
+      Coin Weekly History Table
+      Coin Yearly History Table
+      Coin Snapshot Table
+      Coin Social Table
+     */
+
+
+
+  }
+
 }
+
+function createKeySpace() {
+  DBConnection.getCassandraClientConnection()
+    .then(function () {
+      const query = "CREATE KEYSPACE IF NOT EXISTS tokenplex WITH replication =" +
+        "{'class': 'SimpleStrategy', 'replication_factor': '1' }";
+      return cassandraClient.execute(query);
+    });
+}
+
+function createCoinSocialTable() {
+  const Delete_Social_Table = "DROP TABLE IF EXISTS tokenplex.coin_social";
+  const Create_Social_Table = "CREATE TABLE IF NOT EXISTS tokenplex.coin_social" +
+    " (TimeStamp TIMESTAMP," +
+    " id varchar," +
+    " Reddit text," +
+    " Facebook text," +
+    " Twitter text," +
+    " CodeRepository Text, PRIMARY KEY(id))";
+
+  cassandraClient.execute(Delete_Social_Table).then(function(deleteTableResponse){
+    return cassandraClient.execute(Create_Social_Table);
+  })
+    .then(function(createTableResponse){
+      return createTableResponse;
+    })
+    .catch(function (err) {
+      return err;
+    });
+}
+
+function createCoinDailyHistoryTable() {
+  const CREATE_DAILY_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.coin_daily_history_data" +
+    "( symbol varchar," +
+    " time timestamp," +
+    " high float," +
+    " low float," +
+    " open float," +
+    " volumefrom float," +
+    " volumeto float," +
+    " close float, PRIMARY KEY(symbol, time))";
+  const DELETE_DAILY_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.coin_daily_history_data";
+
+  cassandraClient.connect()
+    .then(function () {
+      return cassandraClient.execute(DELETE_DAILY_HISTORY_TABLE).then(function () {
+        return cassandraClient.execute(CREATE_DAILY_HISTORY_TABLE)
+      })
+        .then(function (createTableResponse) {
+          res.send({data: createTableResponse});
+
+        }).catch(function (err) {
+          res.send({"error": err});
+        });
+    });
+}
+
+function createCoinWeeklyHistoryTable() {
+  const CREATE_WEEK_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.coin_week_history_data" +
+    "(symbol varchar," +
+    " time timestamp," +
+    "high float," +
+    "low float," +
+    "open float," +
+    "volumefrom float," +
+    "volumeto float," +
+    "close float, PRIMARY KEY(symbol, time))";
+  const DELETE_WEEK_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.coin_week_history_data";
+
+  cassandraClient.connect()
+    .then(function () {
+      return cassandraClient.execute(DELETE_WEEK_HISTORY_TABLE).then(function () {
+        return cassandraClient.execute(CREATE_WEEK_HISTORY_TABLE)
+      })
+        .then(function (createTableResponse) {
+          return createTableResponse;
+        }).catch(function (err) {
+          return err;
+        });
+    });
+}
+
+function createCoinYearlyHistoryTable() {
+  const CREATE_ALL_TIME_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.coin_all_time_history_data" +
+    "(symbol varchar," +
+    " time timestamp," +
+    "high float," +
+    "low float," +
+    "open float," +
+    "volumefrom float," +
+    "volumeto float," +
+    "close float, PRIMARY KEY(symbol, time))";
+  const DELETE_ALL_TIME_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.coin_all_time_history_data";
+  cassandraClient.connect()
+    .then(function () {
+      return cassandraClient.execute(DELETE_ALL_TIME_HISTORY_TABLE).then(function () {
+        return cassandraClient.execute(CREATE_ALL_TIME_HISTORY_TABLE)
+      })
+        .then(function (createTableResponse) {
+          return createTableResponse;
+        }).catch(function (err) {
+          return err;
+        });
+    });
+}
+

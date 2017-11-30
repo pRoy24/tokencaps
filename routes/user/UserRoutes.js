@@ -8,6 +8,7 @@ mongoose.Promise = require('bluebird');
 
 var ObjectUtils = require('../../utils/ObjectUtils');
 module.exports = {
+
   listCoins: function(req, res, next) {
 
     const headerParts = req.headers.authorization.split(' ')
@@ -95,7 +96,6 @@ module.exports = {
         console.log('error:', err);
       });
   },
-
 
   addUserTransaction: function(req, res, next) {
     const headerParts = req.headers.authorization.split(' ')
@@ -225,6 +225,7 @@ module.exports = {
       userResponse.save({});
     });
   }
+
 }
 
 

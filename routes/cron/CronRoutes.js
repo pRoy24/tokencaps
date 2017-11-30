@@ -35,7 +35,6 @@ module.exports = {
   },
 
   getCoinListAndMerge: function(req, res, next) {
-
     setInterval(function(){
       winston.log('info', 'querying API for Coin List', {
         "timestamp": Date.now()
@@ -48,6 +47,7 @@ module.exports = {
 
     res.send({"data": "Stated Coin List Data Request"});
   }
+
 }
 
 function saveCoinGraphResponse(coinListResponse, currentTimeSchedulerSeconds) {
@@ -79,7 +79,6 @@ function saveCoinGraphResponse(coinListResponse, currentTimeSchedulerSeconds) {
 
   }, null, true, 'America/Los_Angeles');
 }
-
 
 function saveCoinDailyGraph(coinSymbol) {
   winston.log('info', 'Saving Coin Daily History Data', {

@@ -3,7 +3,7 @@
  */
 const DataFetchAPI = require('../../models/DataFetchAPI');
 const DiskStorage = require("../../models/DiskStorage");
-const CronTab = require("../../cron/ScrapeUtils");
+
 module.exports = {
 
   // Coin Detail Snapshot

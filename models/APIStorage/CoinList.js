@@ -9,6 +9,7 @@ module.exports = {
     const coinSnapShotEndpoint = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym="+coinSymbol+"&tsym="+toSymbol;
     return axios.get(coinSnapShotEndpoint);
   },
+
   getCoinSocialData(coinID) {
     const histogramDataEndpoint = "https://www.cryptocompare.com/api/data/socialstats/?id="+coinID;
     return axios.get(histogramDataEndpoint);
@@ -19,18 +20,18 @@ module.exports = {
     var getCoinMarketCapListEndpoint = "https://api.coinmarketcap.com/v1/ticker";
     return axios.get(getCoinMarketCapListEndpoint);
   },
+
   getCryptoCompareCoinList: function () {
     const getCruptoCompreListEndpoint = "https://min-api.cryptocompare.com/data/all/coinlist";
     return axios.get(getCruptoCompreListEndpoint);
   },
+
   getCoinDayHistogram: function(coinSymbol) {
     const histogramDataEndpoint = "https://min-api.cryptocompare.com/data/histohour?fsym="+coinSymbol+"&tsym=USD&limit=24&aggregate=1";
     return axios.get(histogramDataEndpoint);
   },
 
-
   getCoinList: function() {
-
     return getCoinMarketCapCoinList().then(function (coinMarketApiResponse) {
       coinMarketApiResponse = coinMarketApiResponse.data;
       return getCryptoCompareCoinList().then(function (coinListResponse) {
@@ -70,7 +71,6 @@ module.exports = {
             }
           }
         }
-
         return {data: joinedCoinDataList};
       });
     });
@@ -110,11 +110,12 @@ function getCoinMarketCapCoinList()
 {
   const getCoinMarketCapListEndpoint = "https://api.coinmarketcap.com/v1/ticker/?limit=500";
   return axios.get(getCoinMarketCapListEndpoint);
-};
+}
+
 function getCryptoCompareCoinList () {
   const getCryptoCompreListEndpoint = "https://min-api.cryptocompare.com/data/all/coinlist";
   return axios.get(getCryptoCompreListEndpoint);
-};
+}
 
 function symbolNormalizerMatches(symbol, name) {
   if (symbol === "bcc" && name === "bccoin") {

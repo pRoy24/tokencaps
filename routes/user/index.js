@@ -15,7 +15,6 @@ router.route('/list-coin').get(User.listCoins);
 
 router.route('/add-user-transaction').post(User.addUserTransaction);
 
-
 router.route('/get-all-users').get(User.listUsers);
 
 router.route('/validate-user-name').get(User.validateUserName);
