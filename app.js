@@ -6,7 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var users = require('./routes/user');
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://34.212.228.45/tp_users');
@@ -17,9 +16,6 @@ const cron_route_api = require('./routes/cron');
 const coin_detail_api = require('./routes/coins');
 
 var cors = require('cors')
-
-
-
 
 var app = express();
 app.use(cors())
@@ -39,7 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/coin', coin_detail_api);
 app.use('/create', create_table);
-app.use('/users', users);
+
 app.use('/cron', cron_route_api);
 
 // catch 404 and forward to error handler
@@ -48,6 +44,7 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {

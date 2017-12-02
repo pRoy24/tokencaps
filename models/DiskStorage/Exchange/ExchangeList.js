@@ -7,7 +7,7 @@ const cassandraClient = new cassandra.Client({contactPoints: [Storage.CQL_API_SE
 
 module.exports = {
   getExchangeList: function () {
-    const query = "select * from churchdb.exchanges";
+    const query = "select * from tokenplex.exchanges";
     return cassandraClient.execute(query).then(function(response){
       return {data: response.rows[0]};
     });

@@ -7,6 +7,7 @@ bluebird = require('bluebird');
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
 var ObjectUtils = require('../../utils/ObjectUtils');
+const logger = require('../../logs/logger');
 
 module.exports = {
   getCoinList: function(range) {
@@ -43,18 +44,16 @@ module.exports = {
        if (ObjectUtils.isNonEmptyObject(coinItem)) {
          arrayLog.push(coinItem.symbol);
          arrayLog.push(coinItem);
-
          client.hset("coins", coinItem.symbol, JSON.stringify(coinItem), function (err, response) {
            if (err) {
-             console.log(err);
+              logger.log({"type":"error", "message": JSON.stringify(err)});
            } else {
-             console.log(response);
+
            }
          });
        }
      });
-     console.log(arrayLog);
-     return("started coin list scrape");
+    return("started coin list scrape");
   },
 
   saveCoinSeachList: function(coinList) {
@@ -99,6 +98,12 @@ module.exports = {
         }
       });
     }
+  },
+
+  findCoinRow: function(coinSymbol){
+    return client.hgetAsync("coins", coinSymbol).then(function(coinDataResponse){
+      return coinDataResponse;
+    })
   }
 
 

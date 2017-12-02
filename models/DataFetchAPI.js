@@ -9,7 +9,8 @@ CacheStorage = require('./CacheStorage/');
 
 module.exports = {
   getCoinRow: function(coinSymbol) {
-    return DiskStorage.findCoinRow(coinSymbol).then(function (response) {
+    console.log(coinSymbol);
+    return CacheStorage.findCoinRow(coinSymbol).then(function (response) {
       if (response && response.data && Object.keys(response.data).length > 0) {
         return response;
       } else {

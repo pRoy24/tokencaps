@@ -7,20 +7,21 @@ var DBConnection = require('../../models/DBModel');
 const cassandra = require('cassandra-driver');
 var Storage = require('../../constants/Storage');
 const cassandraClient = new cassandra.Client({contactPoints: [Storage.CQL_API_SERVER]});
+const logger = require('../../logs/logger');
 
 module.exports = {
   // Create Coin List table, used to render top level views
   createCoinListTable: function(req, res) {
     DBConnection.getCassandraClientConnection()
       .then(function () {
-        const query = "CREATE KEYSPACE IF NOT EXISTS churchdb WITH replication =" +
+        const query = "CREATE KEYSPACE IF NOT EXISTS tokenplex WITH replication =" +
           "{'class': 'SimpleStrategy', 'replication_factor': '1' }";
         return cassandraClient.execute(query);
       }).then(function(){
-      const deleteQuery = "DROP TABLE IF EXISTS churchdb.coins";
+      const deleteQuery = "DROP TABLE IF EXISTS tokenplex.coins";
       return cassandraClient.execute(deleteQuery)
     }).then(function(deleteTableResponse){
-      const Create_Coin_Table = "CREATE TABLE IF NOT EXISTS churchdb.coins" +
+      const Create_Coin_Table = "CREATE TABLE IF NOT EXISTS tokenplex.coins" +
         " (TimeStamp varchar," +
         "id varchar," +
         "name varchar," +
@@ -53,7 +54,7 @@ module.exports = {
       return cassandraClient.execute(Create_Coin_Table);
     })
       .then(function(createTableResponse){
-/*        let sdsiQuery = "CREATE CUSTOM INDEX  fn_prefix ON churchdb.coins (fullname)" +
+/*        let sdsiQuery = "CREATE CUSTOM INDEX  fn_prefix ON tokenplex.coins (fullname)" +
                         " USING 'org.apache.cassandra.index.sasi.SASIIndex' WITH OPTIONS = { " +
                         "'mode': 'CONTAINS'," +
                         "'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.NonTokenizingAnalyzer'," +
@@ -71,7 +72,7 @@ module.exports = {
 
   // Create Coin 24 hour history table, consists of hourly data points.
   createDayHistoryTable: function(req, res, next) {
-    const CREATE_DAILY_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS churchdb.daily_history_data" +
+    const CREATE_DAILY_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.daily_history_data" +
       "( symbol varchar," +
       " time timestamp," +
       " high float," +
@@ -80,7 +81,7 @@ module.exports = {
       " volumefrom float," +
       " volumeto float," +
       " close float, PRIMARY KEY(symbol, time))";
-    const DELETE_DAILY_HISTORY_TABLE = "DROP TABLE IF EXISTS churchdb.daily_history_data";
+    const DELETE_DAILY_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.daily_history_data";
 
     cassandraClient.connect()
       .then(function () {
@@ -98,7 +99,7 @@ module.exports = {
 
   // Create Coin 7 day history table, consists of hourly data points.
   createCoinWeekHistoryTable: function(req, res, next) {
-    const CREATE_WEEK_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS churchdb.week_history_data" +
+    const CREATE_WEEK_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.week_history_data" +
       "(symbol varchar," +
       " time timestamp," +
       "high float," +
@@ -107,7 +108,7 @@ module.exports = {
       "volumefrom float," +
       "volumeto float," +
       "close float, PRIMARY KEY(symbol, time))";
-    const DELETE_WEEK_HISTORY_TABLE = "DROP TABLE IF EXISTS churchdb.coin_week_history_data";
+    const DELETE_WEEK_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.week_history_data";
 
     cassandraClient.connect()
       .then(function () {
@@ -125,7 +126,7 @@ module.exports = {
 
   // Create Coin All Time history table
   createAllTimeHistoryTable: function(req, res, next) {
-    const CREATE_ALL_TIME_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS churchdb.coin_all_time_history_data" +
+    const CREATE_ALL_TIME_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.coin_all_time_history_data" +
       "(symbol varchar," +
       " time timestamp," +
       "high float," +
@@ -134,7 +135,7 @@ module.exports = {
       "volumefrom float," +
       "volumeto float," +
       "close float, PRIMARY KEY(symbol, time))";
-    const DELETE_ALL_TIME_HISTORY_TABLE = "DROP TABLE IF EXISTS churchdb.coin_all_time_history_data";
+    const DELETE_ALL_TIME_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.coin_all_time_history_data";
     cassandraClient.connect()
       .then(function () {
         return cassandraClient.execute(DELETE_ALL_TIME_HISTORY_TABLE).then(function () {
@@ -142,7 +143,7 @@ module.exports = {
         })
           .then(function (createTableResponse) {
             res.send({data: createTableResponse});
-            return cassandraClient.metadata.getTable('churchdb', 'coin_all_time_history_data');
+            return cassandraClient.metadata.getTable('tokenplex', 'coin_all_time_history_data');
 
           }).catch(function (err) {
             res.send({"error": err});
@@ -152,7 +153,7 @@ module.exports = {
 
   // Create Coin Snapshot table
   createCoinSnapshotTable: function(req, res, next) {
-    const CREATE_COIN_SNAPSHOT_TABLE = "CREATE TABLE IF NOT EXISTS churchdb.coin_details" +
+    const CREATE_COIN_SNAPSHOT_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.coin_details" +
       "(type varchar," +
       "market varchar," +
       "open24hour varchar,"+
@@ -170,7 +171,7 @@ module.exports = {
       "high24hour varchar," +
       "low24hour varchar," +
       "PRIMARY KEY(fromsymbol, tosymbol, market))";
-    const DELETE_COIN_SNAPSHOT_TABLE = "DROP TABLE IF EXISTS churchdb.coin_details";
+    const DELETE_COIN_SNAPSHOT_TABLE = "DROP TABLE IF EXISTS tokenplex.coin_details";
     DBConnection.getCassandraClientConnection()
       .then(function () {
         return cassandraClient.execute(DELETE_COIN_SNAPSHOT_TABLE).then(function () {
@@ -178,7 +179,7 @@ module.exports = {
         })
           .then(function (createTableResponse) {
             res.send({data: createTableResponse});
-            return cassandraClient.metadata.getTable('churchdb', 'coin_details');
+
           }).catch(function (err) {
             res.send({"error": err});
           });
@@ -186,8 +187,8 @@ module.exports = {
   },
 
   createExchangeTable: function(req, res) {
-    const Delete_Exchange_Table = "DROP TABLE IF EXISTS churchdb.exchanges";
-    const Create_Exchange_Table = "CREATE TABLE IF NOT EXISTS churchdb.exchanges" +
+    const Delete_Exchange_Table = "DROP TABLE IF EXISTS tokenplex.exchanges";
+    const Create_Exchange_Table = "CREATE TABLE IF NOT EXISTS tokenplex.exchanges" +
       " (TimeStamp TIMESTAMP," +
       "exch_id varchar," +
       "exch_name varchar," +
@@ -213,8 +214,8 @@ module.exports = {
   },
 
   createCoinSocialTable: function(req, res) {
-    const Delete_Social_Table = "DROP TABLE IF EXISTS churchdb.coin_social";
-    const Create_Social_Table = "CREATE TABLE IF NOT EXISTS churchdb.coin_social" +
+    const Delete_Social_Table = "DROP TABLE IF EXISTS tokenplex.coin_social";
+    const Create_Social_Table = "CREATE TABLE IF NOT EXISTS tokenplex.coin_social" +
       " (TimeStamp TIMESTAMP," +
       " id varchar," +
       " Reddit text," +
@@ -235,28 +236,61 @@ module.exports = {
   },
 
   createAllTables: function(req, res) {
-    // Tables will be created in the following order
-    /*
-      Coin Daily History Table
-      Coin Weekly History Table
-      Coin Yearly History Table
-      Coin Snapshot Table
-      Coin Social Table
-     */
-
-
-
+    createKeySpace().then(function(createKeySpaceResponse) {
+      logger.log({"level": "info", "message": "create table request submitted"});
+      createCoinDailyHistoryTable();
+      createCoinWeeklyHistoryTable();
+      createCoinYearlyHistoryTable();
+      createCoinSocialTable();
+      createCoinSnapshotTable();
+    });
+    res.send({"data": "Create Table Request submitted"});
   }
-
 }
 
 function createKeySpace() {
-  DBConnection.getCassandraClientConnection()
+  return DBConnection.getCassandraClientConnection()
     .then(function () {
       const query = "CREATE KEYSPACE IF NOT EXISTS tokenplex WITH replication =" +
         "{'class': 'SimpleStrategy', 'replication_factor': '1' }";
-      return cassandraClient.execute(query);
+      return cassandraClient.execute(query).then(function(response){
+        return response;
+      });
+    }).catch(function(err){
+      logger.log({"level": "error", "message": JSON.stringify(err)});
+      return err;
     });
+}
+
+function createCoinSnapshotTable() {
+  const CREATE_COIN_SNAPSHOT_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.coin_details" +
+    "(type varchar," +
+    "market varchar," +
+    "open24hour varchar,"+
+    "fromsymbol varchar," +
+    "tosymbol varchar," +
+    "flags varchar," +
+    "price varchar," +
+    "lastupdate varchar," +
+    "lastvolume varchar," +
+    "lastvolumeto varchar," +
+    "lasttradeid varchar," +
+    "volume24hour varchar," +
+    "volume24hourto varchar," +
+    "openhourto varchar," +
+    "high24hour varchar," +
+    "low24hour varchar," +
+    "PRIMARY KEY(fromsymbol, tosymbol, market))";
+  const DELETE_COIN_SNAPSHOT_TABLE = "DROP TABLE IF EXISTS tokenplex.coin_details";
+   return cassandraClient.execute(DELETE_COIN_SNAPSHOT_TABLE).then(function () {
+        return cassandraClient.execute(CREATE_COIN_SNAPSHOT_TABLE)
+      })
+        .then(function (createTableResponse) {
+          logger.log({"level": "info", "details": "created coin snapshot table"});
+          return (createTableResponse);
+        }).catch(function (err) {
+          return (err);
+        });
 }
 
 function createCoinSocialTable() {
@@ -269,13 +303,17 @@ function createCoinSocialTable() {
     " Twitter text," +
     " CodeRepository Text, PRIMARY KEY(id))";
 
-  cassandraClient.execute(Delete_Social_Table).then(function(deleteTableResponse){
+  return cassandraClient.execute(Delete_Social_Table).then(function(){
     return cassandraClient.execute(Create_Social_Table);
   })
     .then(function(createTableResponse){
+      logger.log({
+        "level": "info", "message": "Coin Social table created"
+      });
       return createTableResponse;
     })
     .catch(function (err) {
+      logger.log({"level": "error", "message": JSON.stringify(err)})
       return err;
     });
 }
@@ -291,23 +329,21 @@ function createCoinDailyHistoryTable() {
     " volumeto float," +
     " close float, PRIMARY KEY(symbol, time))";
   const DELETE_DAILY_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.coin_daily_history_data";
-
-  cassandraClient.connect()
-    .then(function () {
-      return cassandraClient.execute(DELETE_DAILY_HISTORY_TABLE).then(function () {
-        return cassandraClient.execute(CREATE_DAILY_HISTORY_TABLE)
-      })
-        .then(function (createTableResponse) {
-          res.send({data: createTableResponse});
-
-        }).catch(function (err) {
-          res.send({"error": err});
-        });
+  return cassandraClient.execute(DELETE_DAILY_HISTORY_TABLE).then(function () {
+    return cassandraClient.execute(CREATE_DAILY_HISTORY_TABLE)
+  }).then(function (createTableResponse) {
+    logger.log({
+      "level": "info", "message": "Daily History Table created"
     });
+    return({data: createTableResponse});
+  }).catch(function (err) {
+    logger.log({"level": "error", "message": JSON.stringify(err)})
+    return {error: err};
+  });
 }
 
 function createCoinWeeklyHistoryTable() {
-  const CREATE_WEEK_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.coin_week_history_data" +
+  const CREATE_WEEK_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.week_history_data" +
     "(symbol varchar," +
     " time timestamp," +
     "high float," +
@@ -316,19 +352,16 @@ function createCoinWeeklyHistoryTable() {
     "volumefrom float," +
     "volumeto float," +
     "close float, PRIMARY KEY(symbol, time))";
-  const DELETE_WEEK_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.coin_week_history_data";
-
-  cassandraClient.connect()
-    .then(function () {
-      return cassandraClient.execute(DELETE_WEEK_HISTORY_TABLE).then(function () {
-        return cassandraClient.execute(CREATE_WEEK_HISTORY_TABLE)
-      })
-        .then(function (createTableResponse) {
-          return createTableResponse;
-        }).catch(function (err) {
-          return err;
-        });
-    });
+  const DELETE_WEEK_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.week_history_data";
+  return cassandraClient.execute(DELETE_WEEK_HISTORY_TABLE).then(function () {
+    return cassandraClient.execute(CREATE_WEEK_HISTORY_TABLE)
+  }).then(function (createTableResponse) {
+    logger.log({"level": "info", "message": "Weekly history table created week_history_data"});
+    return createTableResponse;
+  }).catch(function (err) {
+    logger.log({"level": "error", "message": JSON.stringify(err)});
+    return err;
+  });
 }
 
 function createCoinYearlyHistoryTable() {
@@ -348,8 +381,10 @@ function createCoinYearlyHistoryTable() {
         return cassandraClient.execute(CREATE_ALL_TIME_HISTORY_TABLE)
       })
         .then(function (createTableResponse) {
+          logger.log({"level": "info", "message": "All time history data table created"})
           return createTableResponse;
         }).catch(function (err) {
+          logger.log({"level": "error", "message": JSON.stringify(err)})
           return err;
         });
     });

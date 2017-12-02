@@ -32,7 +32,7 @@ module.exports = {
       }).filter(Boolean);
 
 
-      const query = 'INSERT INTO churchdb.coin_details (' + keys + ') VALUES (' + placeholders + ') USING TTL 120';
+      const query = 'INSERT INTO tokenplex.coin_details (' + keys + ') VALUES (' + placeholders + ') USING TTL 120';
       queries.push({
         query: query,
         params: values
@@ -57,7 +57,7 @@ module.exports = {
     let keyItems = "id, Reddit, Facebook, Twitter, CodeRepository";
 
     const SOCIAL_DATA_TTL = 3600;
-    const query = 'INSERT INTO churchdb.coin_social (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' + SOCIAL_DATA_TTL;
+    const query = 'INSERT INTO tokenplex.coin_social (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' + SOCIAL_DATA_TTL;
     const params = values;
 
     cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
@@ -91,7 +91,7 @@ module.exports = {
         }
       }).filter(Boolean).join(",");
 
-      const query = 'INSERT INTO churchdb.coins (' + keyslist + ') VALUES (' + placeholders + ') USING TTL 120';
+      const query = 'INSERT INTO tokenplex.coins (' + keyslist + ') VALUES (' + placeholders + ') USING TTL 120';
       queries.push({
         query: query,
         params: values
@@ -112,7 +112,7 @@ module.exports = {
           let keyItems = "symbol, high, time";
           let ttl = 86400;
 
-          const query = 'INSERT INTO churchdb.daily_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' + ttl;
+          const query = 'INSERT INTO tokenplex.daily_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' + ttl;
           const params = values;
           cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
             if (err) {
@@ -135,7 +135,7 @@ module.exports = {
           let keyItems = "symbol, high, time";
           let ttl = 86400;
 
-          const query = 'INSERT INTO churchdb.week_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' + ttl;
+          const query = 'INSERT INTO tokenplex.week_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' + ttl;
           const params = values;
           cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
             if (err) {
@@ -149,7 +149,7 @@ module.exports = {
   },
 
   deleteCoinDayHistoryData: function(coinSymbol) {
-    const query = "DELETE FROM churchdb.daily_history_data WHERE symbol = '" + coinSymbol +"'";
+    const query = "DELETE FROM tokenplex.daily_history_data WHERE symbol = '" + coinSymbol +"'";
     return cassandraClient.execute(query).then(function(response){
       return response;
     });

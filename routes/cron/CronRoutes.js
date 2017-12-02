@@ -45,15 +45,13 @@ module.exports = {
       });
     }, 30000);
 
-    res.send({"data": "Stated Coin List Data Request"});
+    res.send({"data": "Started Coin List Data Request"});
   }
-
 }
 
 function saveCoinGraphResponse(coinListResponse, currentTimeSchedulerSeconds) {
   let counter = 0;
   return new CronJob(currentTimeSchedulerSeconds, function() {
-
     if (coinListResponse[counter]) {
       let coinSymbol = coinListResponse[counter].symbol;
       winston.log('info', 'querying API for Coin Daily History Data', {
@@ -76,7 +74,6 @@ function saveCoinGraphResponse(coinListResponse, currentTimeSchedulerSeconds) {
    if (counter === coinListResponse.length) {
      counter = 0;
    }
-
   }, null, true, 'America/Los_Angeles');
 }
 
@@ -88,7 +85,6 @@ function saveCoinDailyGraph(coinSymbol) {
   return APIStorage.findCoinDayHistoryData(coinSymbol).then(function (apiCoinDayHistoryDataResponse) {
     const coinDayHistoryResponse = apiCoinDayHistoryDataResponse.data.Data;
     if (coinDayHistoryResponse && coinDayHistoryResponse.length > 0) {
-
       const responseData = {};
       responseData[coinSymbol] = coinDayHistoryResponse;
      return CoinGraph.chartCoinDailyHistoryGraph(responseData);

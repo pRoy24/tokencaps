@@ -5,7 +5,6 @@ const DataFetchAPI = require('../../models/DataFetchAPI');
 const DiskStorage = require("../../models/DiskStorage");
 
 module.exports = {
-
   // Coin Detail Snapshot
   getCoinDetailSnapshot: function(req, res, next){
     const coinSymbol = req.query.coin_symbol;
@@ -28,7 +27,6 @@ module.exports = {
             return DataFetchAPI.getCoinSocialData(coinID);
           }
         }
-
         function callback(responseData) {
           res.send({data: responseData});
         }

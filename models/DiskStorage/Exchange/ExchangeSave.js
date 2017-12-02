@@ -19,7 +19,7 @@ module.exports ={
         }
       });
       let ttl = 6000;
-      const query = 'INSERT INTO churchdb.exchanges (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
+      const query = 'INSERT INTO tokenplex.exchanges (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
       const params = values;
       cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
         if (err) {
@@ -46,7 +46,7 @@ module.exports ={
       });
 
       let ttl = 6000;
-      const query = 'INSERT INTO churchdb.daily_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
+      const query = 'INSERT INTO tokenplex.daily_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
       const params = values;
 
       cassandraClient.execute(query, params, {prepare: true}, function (err, response) {

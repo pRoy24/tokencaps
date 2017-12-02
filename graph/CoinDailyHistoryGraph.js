@@ -2,7 +2,10 @@
  Copyright Church of Crypto, Baron Nashor
  */
 var moment = require('moment');
+const config = require('../constants/config');
+
 module.exports = {
+  // Coin Daily History Graph
   chartDailyCoinHistory: function(responseData) {
     const coinSymbol = Object.keys(responseData)[0];
     const historyData = responseData[coinSymbol];
@@ -102,7 +105,7 @@ function writeFileToS3Location(coinSymbol) {
 
   const coinURI = 'public/images/charts/' + coinSymbol + '.png';
 // For dev purposes only
-  AWS.config.update({ accessKeyId: 'AKIAJELMCMBAAONTCKTQ', secretAccessKey: '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'});
+  AWS.config.update({ accessKeyId: config.AWS_ACCESS_KEY, secretAccessKey: config.AWS_SECRET_KEY});
 
 
   // Read in the file, convert it to base64, store to S3

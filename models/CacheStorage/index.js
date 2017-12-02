@@ -13,5 +13,8 @@ module.exports = {
   },
   deleteCoinList: function(token) {
     return Coins.deleteCoinList(token);
+  },
+  findCoinRow: function(coinSymbol) {
+    return Coins.findCoinRow(coinSymbol);
   }
 }

@@ -11,13 +11,14 @@ var axios = require('axios');
 const cassandra = require('cassandra-driver');
 var Storage = require('../constants/Storage');
 const cassandraClient = new cassandra.Client({contactPoints: [Storage.CQL_API_SERVER]});
+
 router.get('/', function(req, res, next) {
-  res.send({"data": "Welcome to Church Of Crypto API. API version 0.0.1"});
+  res.send({"data": "Welcome to the land to tokens. API Version 0.9"});
 });
 
 router.get('/coin-list', function(req, res, next){
   DBConnection.getCassandraClientConnection().then(function(connection){
-    const query = "SELECT * from churchdb.coins";
+    const query = "SELECT * from tokenplex.coins";
     return cassandraClient.execute(query);
   }).then(function(coinListDBResponse){
     if (coinListDBResponse && coinListDBResponse.rows.length > 0) {
@@ -82,7 +83,7 @@ router.get('/coin-list', function(req, res, next){
               }
             }).filter(Boolean).join(",");
 
-            const query = 'INSERT INTO churchdb.coins (' + keyslist + ') VALUES (' + placeholders + ') USING TTL 00';
+            const query = 'INSERT INTO tokenplex.coins (' + keyslist + ') VALUES (' + placeholders + ') USING TTL 00';
             queries.push({
               query: query,
               params: values
@@ -99,7 +100,7 @@ router.get('/coin-list', function(req, res, next){
 
 router.get('/daily-coin-history', function(req, res, next){
   let coinListQuery = req.query.coin_symbol;
-  cassandraClient.execute("SELECT * from churchdb.daily_history_data where symbol=" + coinListQuery, function (err, result) {
+  cassandraClient.execute("SELECT * from tokenplex.daily_history_data where symbol=" + coinListQuery, function (err, result) {
     if (result && result.rows.length > 0) {
       let responseData = {};
       responseData[coinListQuery] = result.rows;
@@ -116,7 +117,7 @@ router.get('/daily-coin-history', function(req, res, next){
           });
           values.push(coinListQuery);
           let ttl = Math.floor(Math.random() * 300) + 200;
-          const query = 'INSERT INTO churchdb.daily_history_data (' + keys + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
+          const query = 'INSERT INTO tokenplex.daily_history_data (' + keys + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
           const params = values;
 
           cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
@@ -135,7 +136,7 @@ router.get('/daily-coin-history', function(req, res, next){
 
 router.get('/coin-history-data', function(req, res, next){
   let coinListQuery = req.query.coin_symbol;
-  cassandraClient.execute("SELECT * from churchdb.coin_history_data where symbol=" + coinListQuery, function (err, result) {
+  cassandraClient.execute("SELECT * from tokenplex.coin_history_data where symbol=" + coinListQuery, function (err, result) {
     if (result && result.rows.length > 0) {
       let responseData = {};
       responseData[coinListQuery] = result.rows;
@@ -152,7 +153,7 @@ router.get('/coin-history-data', function(req, res, next){
           });
           values.push(coinListQuery);
           let ttl = Math.floor(Math.random() * 300) + 200;
-          const query = 'INSERT INTO churchdb.coin_history_data (' + keys + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
+          const query = 'INSERT INTO tokenplex.coin_history_data (' + keys + ') VALUES (' + placeHolders + ') USING TTL ' +ttl;
           const params = values;
 
           cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
@@ -167,12 +168,11 @@ router.get('/coin-history-data', function(req, res, next){
       });
     }
   });
-  //res.send({error: ""});
 });
 
 router.get('/coin-snapshot', function(req, res, next){
   let coinSnapShotQuery = req.query.coin_symbol;
-  cassandraClient.execute("SELECT * FROM churchdb.coin_details WHERE fromsymbol='"+coinSnapShotQuery+"'", function (err, result) {
+  cassandraClient.execute("SELECT * FROM tokenplex.coin_details WHERE fromsymbol='"+coinSnapShotQuery+"'", function (err, result) {
     if (result && result.rows.length > 0) {
       res.send({data: {symbol: coinSnapShotQuery, exchangeData: result.rows}});
     } else {
@@ -211,7 +211,7 @@ router.get('/coin-snapshot', function(req, res, next){
               return coinTradeData[key]
             }).filter(Boolean);
             let ttl = 400;
-            const query = 'INSERT INTO churchdb.coin_details (' + keys + ') VALUES (' + placeholders + ') USING TTL ' +ttl;
+            const query = 'INSERT INTO tokenplex.coin_details (' + keys + ') VALUES (' + placeholders + ') USING TTL ' +ttl;
             queries.push({
               query: query,
               params: values
@@ -226,7 +226,5 @@ router.get('/coin-snapshot', function(req, res, next){
     }
   });
 });
-
-
 
 module.exports = router;
