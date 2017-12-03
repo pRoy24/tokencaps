@@ -28,20 +28,11 @@ You can run your own load balancer and application server on top of this archite
 
 ### Give it CQL Compatible data host for metrics data.
 
-Some CQL compatible hosts are
-
 http://cassandra.apache.org/
-
-https://github.com/YugaByte
-
 
 ### Give it a Redis API Compatible data host for ticker data.
 
-Redis API compatible servers can be run on -
-
 https://redis.io/
-
-https://github.com/YugaByte
 
 
 See the api documentation for information regarding the REST API's exposed.
