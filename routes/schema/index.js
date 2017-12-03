@@ -17,6 +17,14 @@ router.route('/create-exchange-table').get(CreateTable.createExchangeTable);
 
 router.route('/create-social-table').get(CreateTable.createCoinSocialTable);
 
+/**
+ * @api {get} /create/create-all-tables Create all coin tables
+ * @apiName createAllTables
+ * @apiGroup Create Table
+ * @apiParam {String} App Secret
+ * @apiSuccess {String} API request submitted message string.
+ * @apiError {String} Server error String.
+ */
 router.route('/create-all-tables').get(CreateTable.createAllTables);
 
 module.exports = router;

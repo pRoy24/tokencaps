@@ -16,7 +16,7 @@ const winston = require('winston')
 
 
 module.exports = {
-  createCoinDailyHistoryTable: function(req, res, next) {
+  getCoinDayGraph: function(req, res, next) {
     DataFetchAPI.getCoinList(600).then(function (coinListResponse) {
       let counter  = 0;
 
