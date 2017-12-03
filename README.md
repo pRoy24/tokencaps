@@ -26,10 +26,10 @@ You can run your own load balancer and application server on top of this archite
 
 # Running a Local API Server
 
-I recommend that you run the Application Server on the YugaByte project which is compatible with both
-Redis and CQL API's.
+I recommend that you run the Application Server on the [YugaByte](https://www.yugabyte.com) project
+which is compatible with both Redis and CQL API's.
 
-### Give it CQL Compatible data host.
+### CQL Compatible data host.
 
 Some CQL compatible hosts are
 
@@ -38,7 +38,7 @@ http://cassandra.apache.org/
 https://github.com/YugaByte
 
 
-### Give it a Redis API Compatible data host for ticker data.
+### Redis API Compatible data host for ticker data.
 
 Redis API compatible servers can be run on -
 
@@ -46,6 +46,10 @@ https://redis.io/
 
 https://github.com/YugaByte
 
+
+### Optional
+
+S3 based Image server if you're interested in server side graph rendering.
 
 See the api documentation for information regarding the REST API's exposed.
 
