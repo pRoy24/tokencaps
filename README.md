@@ -3,7 +3,12 @@
 
 ## What is TokenPlex
 
-TokenPlex is a data aggregator for digital currency trades and transactions.
+TokenPlex is a framework for running a data aggregator server 
+for digital currency trades and transactions.
+
+You can easily run a middleware server for an application/service involving digital currency data.
+
+For an example of the kind of stuff you can do visit https://tokenplex.io/token/ETH/home.
 
 ## Implementation
 
@@ -25,6 +30,9 @@ Additionally you can specify an S3 Image server location for server side renderi
 You can run your own load balancer and application server on top of this architecture.
 
 # Running a Local API Server
+
+This project is essentially an ExpressJS middleware which 
+you can use to run your own private aggregator service.
 
 You can run this with any CQL and Redis API compatible server, we are big fans of
 the [YugaByte](https://www.yugabyte.com) project which is compatible with both Redis and CQL API's
