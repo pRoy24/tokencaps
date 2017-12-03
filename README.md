@@ -26,8 +26,10 @@ You can run your own load balancer and application server on top of this archite
 
 # Running a Local API Server
 
-I recommend that you run the Application Server on the [YugaByte](https://www.yugabyte.com) project
-which is compatible with both Redis and CQL API's.
+You can run this with any CQL and Redis API compatible server, we are big fans of
+the [YugaByte](https://www.yugabyte.com) project which is compatible with both Redis and CQL API's
+and allows you to easily run CQL and Redis services on the same set of nodes and easily perform scale-in
+and scale-out operations.
 
 ### CQL Compatible data host.
 
