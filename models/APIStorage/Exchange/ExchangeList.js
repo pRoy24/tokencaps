@@ -1,5 +1,5 @@
 /**
- Copyright Church of Crypto, Baron Nashor
+ Copyright Tokenplex
  */
 var axios = require('axios');
 

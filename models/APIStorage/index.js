@@ -1,5 +1,5 @@
 /**
- Copyright Church of Crypto, Baron Nashor
+ Copyright Tokenplex
  */
 const CoinList = require('./CoinList');
 const ExchangeList  = require('./Exchange/ExchangeList');

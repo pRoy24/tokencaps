@@ -1,5 +1,5 @@
 /**
- Copyright Church of Crypto, Baron Nashor
+ Copyright Tokenplex
  */
 var moment = require('moment');
 const config = require('../constants/config');

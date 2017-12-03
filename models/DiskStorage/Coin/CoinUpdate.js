@@ -1,5 +1,5 @@
 /**
- Copyright Church of Crypto, Baron Nashor
+ Copyright Tokenplex
  */
 const cassandra = require('cassandra-driver');
 var Storage = require('../../../constants/Storage');

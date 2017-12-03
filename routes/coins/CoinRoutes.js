@@ -1,5 +1,5 @@
 /**
- Copyright Church of Crypto, Baron Nashor
+ Copyright Tokenplex
  */
 const DataFetchAPI = require('../../models/DataFetchAPI');
 const DiskStorage = require("../../models/DiskStorage");

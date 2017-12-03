@@ -1,5 +1,5 @@
 /**
- Copyright Church of Crypto, Baron Nashor
+ Copyright Tokenplex
  */
 let _ = require('lodash');
 const DiskStorage = require('./DiskStorage'),
