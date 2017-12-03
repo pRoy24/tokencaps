@@ -23,7 +23,6 @@ module.exports = {
           }
         });
         return {data: coinListArray};
-
     });
   },
 

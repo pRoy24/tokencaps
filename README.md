@@ -7,9 +7,36 @@ TokenPlex is a data aggregator for digital currency trades and transactions.
 ## Implementation
 Web Front-End is hosted at https://tokenplex.io/
 
-API Docs at https://api.tokenplex.io/
+API Docs at https://api.tokenplex.io/docs
 
-## Date Sources
+# How It Works
+Ticker data is stored in a Redis Cache and is by default updated every 2 minutes.
+Contains data on top 1000 coins by ranking at CoinMarketCap.
+Graph data and token details is stored in a CQL Server and is updated on last request with a TTL 
+strategy of 120 seconds.
+Additionally you can specify an S3 Image server location for server side rendering of graph images.
+You can run your own load balancer and application server on top of this architecture.
+
+# Running a Local API Server
+
+Give it CQL Compatible data host.
+Some hosts are
+http://cassandra.apache.org/
+https://github.com/YugaByte
+
+Give it a Redis Compatible data host.
+Redis API compatible servers can be run on -
+https://redis.io/
+https://github.com/YugaByte
+
+See the api documentation for information regarding the REST API's exposed.
+
+# Using the hosted service
+
+You can use the hosted service at https://api.tokenplex.io
+Read the docs at https://api.tokenplex.io/docs
+
+## Data Sources
 
 Current API Aggregator is powered by
 
