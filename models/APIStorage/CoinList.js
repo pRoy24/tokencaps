@@ -47,7 +47,8 @@ module.exports = {
         for (let a = 0; a < coinMarketApiResponse.length; a++) {
           for (let b = 0; b < coinListItems.length; b++) {
             if (coinMarketApiResponse[a].symbol.toLowerCase().trim() === coinListItems[b].Name.toLowerCase().trim() ||
-              symbolNormalizerMatches(coinMarketApiResponse[a].symbol.toLowerCase(), coinListItems[b].Name.toLowerCase())) {
+              symbolNormalizerMatches(coinMarketApiResponse[a].symbol.toLowerCase(), coinListItems[b].Name.toLowerCase()) ||
+              symbolNormalizerMatches(coinMarketApiResponse[a].name.toLowerCase(), coinListItems[b].CoinName.toLowerCase())) {
               // Normalize response to store in cassandra DB
               const normalizedCMApiResponse =
                 Object.assign(...Object.keys(coinMarketApiResponse[a]).map(function (cmResponseKey) {
@@ -66,6 +67,7 @@ module.exports = {
                   temp[clResponseKey.toLowerCase()] = coinListItems[b][clResponseKey];
                   return temp;
                 }));
+
               joinedCoinDataList.push(Object.assign({}, normalizedCMApiResponse, normalizedCLApiResponse));
               break;
             }
