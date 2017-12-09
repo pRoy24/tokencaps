@@ -2,7 +2,7 @@
  Copyright Tokenplex
  */
 var moment = require('moment');
-const config = require('../constants/config');
+//const config = require('../constants/config');
 
 module.exports = {
   // Coin Daily History Graph
@@ -89,7 +89,7 @@ module.exports = {
         return chartNode.writeImageToFile('image/png', 'public/images/charts/' + coinSymbol + '.png');
       })
       .then((file) => {
-        writeFileToS3Location(coinSymbol);
+        //   writeFileToS3Location(coinSymbol);
         // chart is now written to the file path
         // ./testimage.png
       }).catch(function(err){

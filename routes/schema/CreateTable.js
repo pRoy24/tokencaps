@@ -5,8 +5,9 @@
 let express = require('express');
 var DBConnection = require('../../models/DBModel');
 const cassandra = require('cassandra-driver');
-var Storage = require('../../constants/Storage');
-const cassandraClient = new cassandra.Client({contactPoints: [Storage.CQL_API_SERVER]});
+var Constants = require('../../constants');
+const cassandraClient = new cassandra.Client({contactPoints: [Constants.CQL_API_SERVER]});
+
 const logger = require('../../logs/logger');
 
 module.exports = {

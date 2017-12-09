@@ -7,9 +7,6 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://34.212.228.45/tp_users');
-
 var create_table = require('./routes/schema');
 
 const cron_route_api = require('./routes/cron');

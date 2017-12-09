@@ -1,8 +1,9 @@
 // pRoy24 TokenPlex
 //import {} from '../';
-var Storage = require('../../constants/Storage');
+var Constants = require('../../constants');
+
 var redis = require("redis"),
-  client = redis.createClient({host: Storage.REDIS_API_SERVER});
+  client = redis.createClient({host: Constants.REDIS_API_SERVER});
 bluebird = require('bluebird');
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);

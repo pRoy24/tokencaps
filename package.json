@@ -5,6 +5,8 @@
   "scripts": {
     "start": "node ./bin/www"
   },
+  "url": "https://github.com/TokenPlex/tokenplex-core",
+  "email": "pritam@tokenplex.io",
   "apidoc": {
     "title": "TokenPlex API Docs",
     "url": "https://api.tokenplex.io"
@@ -14,10 +16,7 @@
     "axios": "^0.16.2",
     "bluebird": "^3.5.1",
     "body-parser": "~1.17.1",
-    "canvas": "^1.6.7",
     "cassandra-driver": "^3.2.2",
-    "chart.js": "^2.7.1",
-    "chartjs-node": "^1.6.0",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
     "cron": "^1.3.0",

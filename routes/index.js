@@ -9,8 +9,8 @@ var DBConnection = require('../models/DBModel');
 var axios = require('axios');
 
 const cassandra = require('cassandra-driver');
-var Storage = require('../constants/Storage');
-const cassandraClient = new cassandra.Client({contactPoints: [Storage.CQL_API_SERVER]});
+var Constants = require('../constants');
+const cassandraClient = new cassandra.Client({contactPoints: [Constants.CQL_API_SERVER]});
 
 router.get('/', function(req, res, next) {
   res.send({"data": "Welcome to the land to tokens. API Version 0.9"});
