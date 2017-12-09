@@ -2,8 +2,8 @@
 
 ## What is TokenPlex
 
-TokenPlex is a framework that aggregates crypto-currency data from the web, normalizes and cleans it and provides 
-simple easy to digest endpoints.
+TokenPlex is an express/node based framework to aggregate crypto-currency data from the web, normalize and cleanse it, 
+and provide simple easy to digest endpoints.
 
 It can be used as a middleware server for an application/service involving digital currencies.
 
@@ -17,7 +17,7 @@ and a Redis server for Ticker data.
 
 You have several options to choose from.
 
-TokenPlex uses YugaByte which is a unified CQL + Redis implementation.
+TokenPlex uses [YugaByte](www.yugabyte.com) which is a unified CQL + Redis implementation.
 
 For instructions on how to build YugaByte from source, visit 
 https://github.com/YugaByte/yugabyte-db
