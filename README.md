@@ -41,16 +41,35 @@ GET /create/create-all-tables
 Individual create table documentation can be found in 
 
 ```
+routes/schema/index.js
+
+```
+To start cron job for querying coin ticker data
+
+```
 GET /cron/query-coin-list-table 
 ```
 
-Optionally for server side rendering of Graph data
+##### Optional
+For server side rendering of Graph data, you need to install chartjs-node.
+It requires canvas.js to be pre-installed in the system and 
+also has a dependancy on chart.js.
+Installation instructions for Cairo and Canvas for your plaform can be found
+ [here](https://github.com/Automattic/node-canvas#installation)
+ Create /public/image/charts directory in your project where charts will be stored.
+
+```
+npm install chart.js@2.6.0
+npm install chartjs-node
+```
+and then simply call this endpoint to start cron job for querying 24 hour data
+and server side graph rendering.
 
 ```
 GET /cron/query-daily-history-table
 ```
 
-You are now serving an API load balancer for serving crypto-currency data.
+You are now running an API load balancer for serving crypto-currency data.
 
 
 ## Using the hosted Implementation
@@ -64,8 +83,6 @@ API Docs at https://api.tokenplex.io/docs
 ## How It Works
 
 Ticker data is stored in a Redis Cache and is by default updated every 2 minutes.
-
-Contains data on top 1000 coins by ranking at CoinMarketCap.
 
 TimeSeries metrics data and token details is stored in a CQL database and is updated
 on last request with a TTL strategy of 120 seconds.
