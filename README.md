@@ -91,14 +91,6 @@ Additionally you can specify an S3 Image server location for server side renderi
 
 You can run your own load balancer and application server on top of this architecture.
 
-
-## Optional
-
-S3 based Image server if you're interested in server side graph rendering.
-
-See the api documentation for information regarding the REST API's exposed.
-
-
 ## Data Sources
 
 Current API Aggregator is powered by
