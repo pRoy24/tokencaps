@@ -1,6 +1,4 @@
-/**
- Copyright Tokenplex
- */
+// pRoy24 tokenplex
 
 module.exports  = {
   normalizeCoinSnapShotData: function(coinResponseData) {

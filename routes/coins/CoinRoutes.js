@@ -1,6 +1,5 @@
-/**
- Copyright Tokenplex
- */
+// pRoy24 tokenplex
+
 const DataFetchAPI = require('../../models/DataFetchAPI');
 const DiskStorage = require("../../models/DiskStorage");
 

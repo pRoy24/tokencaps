@@ -1,6 +1,5 @@
-/**
- Copyright Tokenplex
- */
+// pRoy24 tokenplex
+
 let _ = require('lodash');
 const DiskStorage = require('./DiskStorage'),
   APIStorage = require('./APIStorage');

@@ -1,3 +1,1 @@
-/**
- Copyright Tokenplex
- */
+// pRoy24 tokenplex

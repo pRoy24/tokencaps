@@ -33,7 +33,7 @@ router.route('/coin-list').get(CoinRoutes.getCoinList);
  * @api {get} /coin/coin-day-history Get daily history of coin with given symbol
  * @apiName getCoinDailyData
  * @apiGroup Tokens
- * @apiParam {String} symbol of the coin to get
+ * @apiParam {String} coin_symbol symbol of the coin to get
  * @apiSuccess {Array} Coin Daily ticker data aggregated hourly
  * @apiError {String} Server error String.
  */
@@ -43,17 +43,17 @@ router.route('/coin-day-history').get(CoinRoutes.getCoinDailyData);
  * @api {get} /coin/coin-week-history Get week history data for coin with given symbol
  * @apiName getCoinWeekData
  * @apiGroup Tokens
- * @apiParam {String} symbol of the coin to get
+ * @apiParam {String} coin_symbol symbol of the coin to get
  * @apiSuccess {Array} Coin Weekly ticker data aggregated minutely.
  * @apiError {String} Server error String.
  */
 router.route('/coin-week-history').get(CoinRoutes.getCoinWeekData);
 
 /**
- * @api {get} /coin/coin-list Search for a coin by name or symbol.
+ * @api {get} /coin/search Search for a coin by name or symbol.
  * @apiName searchCoinByName
  * @apiGroup Tokens
- * @apiParam {String} range Range of coins to get
+ * @apiParam {String} coin_symbol Name of Symbol Regex Match for the coin
  * @apiSuccess {Array} Array of coins with regex approx match for given input.
  * @apiError {String} Server error String.
  */
@@ -64,13 +64,6 @@ router.route('/search').get(CoinRoutes.searchCoinByName);
  */
 router.route('/save-coin-list').get(CoinRoutes.saveCoinListToCache);
 
-/**
- * @api {delete} /coin/delete-coin-list Delete list of tokens.
- * @apiName deleteCoinList
- * @apiGroup Tokens
- * @apiSuccess {String} Success Message String.
- * @apiError {String} Server error String.
- */
 router.route('/delete-coin-list').delete(CoinRoutes.deleteCoinList);
 
 

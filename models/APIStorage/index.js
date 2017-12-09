@@ -1,6 +1,5 @@
-/**
- Copyright Tokenplex
- */
+// pRoy24 tokenplex
+
 const CoinList = require('./CoinList');
 const ExchangeList  = require('./Exchange/ExchangeList');
 module.exports = {
