@@ -19,7 +19,7 @@ You can use any CQL API compliant database and Redis API compatible cache for st
 
 TokenPlex uses [YugaByte](www.yugabyte.com) which is a unified CQL + Redis implementation.
 
-For instructions on how to build YugaByte from source, [here](https://github.com/YugaByte/yugabyte-db)
+For instructions on how to build YugaByte from source, see [here](https://github.com/YugaByte/yugabyte-db)
 
 To download and install binaries for your platform, see [here](https://docs.yugabyte.com/quick-start/install/) 
 
