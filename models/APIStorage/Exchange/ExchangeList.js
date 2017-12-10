@@ -1,6 +1,5 @@
-/**
- Copyright Tokenplex
- */
+// pRoy24 tokenplex
+
 var axios = require('axios');
 
 module.exports = {

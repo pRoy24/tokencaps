@@ -1,6 +1,4 @@
-/**
- Copyright Tokenplex
- */
+// pRoy24 tokenplex
 
 let express = require('express');
 var DBConnection = require('../../models/DBModel');

@@ -1,6 +1,4 @@
-/**
- Copyright Tokenplex
- */
+// pRoy24 tokenplex
 
 const CoinDailyHistoryGraph = require('../graph/CoinDailyHistoryGraph');
 module.exports = {

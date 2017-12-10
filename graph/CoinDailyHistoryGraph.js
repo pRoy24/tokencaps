@@ -1,6 +1,5 @@
-/**
- Copyright Tokenplex
- */
+// pRoy24 tokenplex
+
 var moment = require('moment');
 //const config = require('../constants/config');
 

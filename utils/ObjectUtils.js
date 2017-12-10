@@ -1,3 +1,4 @@
+// pRoy24 tokenplex
 
 module.exports = {
   isNonEmptyObject: function(obj) {
@@ -36,8 +37,6 @@ module.exports = {
         console.log(arguments);
         console.log('Successfully uploaded package.');
       });
-
-
     });
   }
 }
