@@ -37,7 +37,6 @@ module.exports = {
   },
 
   saveCoinList: function(coinList) {
-
     let arrayLog = [];
     arrayLog.push("coins");
      coinList.forEach(function(coinItem){
@@ -48,26 +47,12 @@ module.exports = {
            if (err) {
               logger.log({"type":"error", "message": JSON.stringify(err)});
            } else {
-
+              logger.log({"type": "info", "message": "saved coin list"});
            }
          });
        }
      });
     return("started coin list scrape");
-  },
-
-  saveCoinSeachList: function(coinList) {
-    let coinSearchStrings = [];
-    coinSearchStrings.push("searchStrings");
-    coinList.forEach(function(coinItem){
-      coinSearchStrings.push(coinItem.symbol);
-      coinSearchStrings.push(coinItem.name+":"+coinItem.rank+":"+coinItem.symbol);
-    });
-
-    client.hmsetAsync(coinSearchStrings).then(function(coinSearchStringResponse){
-      return {data: "success"};
-    })
-
   },
 
   searchCoin: function(coinSearchString) {
@@ -81,12 +66,9 @@ module.exports = {
           coinListArray.push(coinResponse);
         }
       });
-
       return {data: coinListArray};
-
     });
   },
-
 
   deleteCoinList: function(token) {
     if (token === "proy24") {

@@ -32,6 +32,8 @@ npm install
 npm start
 ```
 
+By default the [Express](https://expressjs.com/) service will start at http://localhost:9000/
+
 To Create all tables 
 
 ```

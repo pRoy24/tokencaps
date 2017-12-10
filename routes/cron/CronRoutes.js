@@ -89,7 +89,7 @@ function saveCoinDailyGraph(coinSymbol) {
       responseData[coinSymbol] = coinDayHistoryResponse;
      return CoinGraph.chartCoinDailyHistoryGraph(responseData);
     } else {
-   //   ObjectUtils.writeFileToS3Location(coinSymbol, "ETH");
+      // ObjectUtils.writeFileToS3Location(coinSymbol, "ETH");
     }
   });
 }

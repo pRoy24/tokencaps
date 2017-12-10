@@ -93,11 +93,6 @@ module.exports = {
     return axios.get(histogramDataEndpoint);
   },
 
-
-  searchCoin: function(coinSymbol) {
-    return ({data: []});
-  },
-
   getCoinHistoricalPrice: function(fromSymbol, exchange, timeStamp) {
     let toSymbol = "BTC,USD,ETH";
     const priceHistoricalEndpoint = "https://min-api.cryptocompare.com/data/pricehistorical?fsym="
