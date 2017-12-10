@@ -12,18 +12,16 @@ It can be used as a middleware server for an application/service involving digit
 ## Running a local middleware server 
 
 #### Prerequisites
-You need to have a running CQL installation for time-series data
-and a Redis server for Ticker data.
+You need to have a running [CQL](http://cassandra.apache.org/doc/latest/cql/) installation for time-series data
+and a [Redis](https://redis.io/) server for Ticker data.
 
-You have several options to choose from.
+You can use any CQL API compliant database and Redis API compatible cache for storage.
 
 TokenPlex uses [YugaByte](www.yugabyte.com) which is a unified CQL + Redis implementation.
 
-For instructions on how to build YugaByte from source, visit 
-https://github.com/YugaByte/yugabyte-db
+For instructions on how to build YugaByte from source, [here](https://github.com/YugaByte/yugabyte-db)
 
-To download and install binaries for your platform, visit
-https://docs.yugabyte.com/quick-start/install/
+To download and install binaries for your platform, see [here](https://docs.yugabyte.com/quick-start/install/) 
 
 #### Installation
 
