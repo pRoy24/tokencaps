@@ -23,6 +23,8 @@ For instructions on how to build YugaByte from source, see [here](https://github
 
 To download and install binaries for your platform, see [here](https://docs.yugabyte.com/quick-start/install/) 
 
+If you are using a remote redis or CQL host, then update constants.js with you CQL and Redis host.
+
 #### Installation
 
 ```
