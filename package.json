@@ -1,7 +1,7 @@
 {
   "name": "TokenPlex",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.9",
+  "private": false,
   "scripts": {
     "start": "node ./bin/www"
   },
