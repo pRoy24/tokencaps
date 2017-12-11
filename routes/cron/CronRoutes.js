@@ -38,8 +38,8 @@ module.exports = {
     setInterval(function(){
       winston.log('info', 'querying API for Coin List', {
         "timestamp": Date.now()
-      })
-      return APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
+      });
+      APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
         const coinListResponse = apiCoinSnapshotResponse.data;
         if (ObjectUtils.isNonEmptyArray(coinListResponse)) {
           return CacheStorage.saveCoinList(coinListResponse);
@@ -47,7 +47,7 @@ module.exports = {
           return null;
         }
       });
-    }, 30000);
+    }, 60000);
 
     res.send({"data": "Started Coin List Data Request"});
   }

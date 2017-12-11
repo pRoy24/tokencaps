@@ -84,7 +84,7 @@ API Docs at https://api.tokenplex.io/docs
 
 ## How It Works
 
-Ticker data is stored in a Redis Cache and is by default updated every 2 minutes.
+Ticker data is stored in a Redis Cache and is by default updated every 60 seconds.
 
 TimeSeries metrics data and token details is stored in a CQL database and is updated
 on last request with a TTL strategy of 120 seconds.
