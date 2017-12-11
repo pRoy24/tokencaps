@@ -47,6 +47,13 @@ module.exports = {
     });
   },
 
+  getCoinYearDayHistoryData: function(coinSymbol) {
+    const query = "SELECT * from tokenplex.year_history_data where symbol='" + coinSymbol +"'";
+    return cassandraClient.execute(query).then(function(queryResponse){
+      return {data: queryResponse.rows};
+    });
+  },
+
   searchCoinByQuery: function(coinSearchQuery) {
     const query = "SELECT * from tokenplex.coins where fullname like '%" + coinSearchQuery.trim() + "%'";
     return cassandraClient.execute(query).then(function(response){

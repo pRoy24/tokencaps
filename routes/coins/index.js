@@ -62,6 +62,11 @@ router.route('/search').get(CoinRoutes.searchCoinByName);
 /**
  *
  */
+router.route('/coin-year-history').get(CoinRoutes.getCoinYearData);
+
+/**
+ *
+ */
 router.route('/save-coin-list').get(CoinRoutes.saveCoinListToCache);
 
 router.route('/delete-coin-list').delete(CoinRoutes.deleteCoinList);

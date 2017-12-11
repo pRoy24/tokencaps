@@ -14,6 +14,8 @@ router.route('/create-all-time-history-table').get(CreateTable.createAllTimeHist
 
 router.route('/create-day-history-table').get(CreateTable.createDayHistoryTable);
 
+router.route('/create-year-history-table').get(CreateTable.createCoinYearlyHistoryTable);
+
 router.route('/create-exchange-table').get(CreateTable.createExchangeTable);
 
 router.route('/create-social-table').get(CreateTable.createCoinSocialTable);

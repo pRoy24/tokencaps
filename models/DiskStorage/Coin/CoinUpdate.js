@@ -109,7 +109,7 @@ module.exports = {
           const placeHolders = "?, ?, ?";
           let values = [coinSymbol, dataResponseItem["high"], dataResponseItem["time"]];
           let keyItems = "symbol, high, time";
-          let ttl = 86400;
+          let ttl = 120;
 
           const query = 'INSERT INTO tokenplex.daily_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' + ttl;
           const params = values;
@@ -129,10 +129,12 @@ module.exports = {
       if (coinHistoryDataList[coinSymbol].length > 0) {
         let coinHistoryData = coinHistoryDataList[coinSymbol];
         coinHistoryData.forEach(function(dataResponseItem){
-          const placeHolders = "?, ?, ?";
-          let values = [coinSymbol, dataResponseItem["high"], dataResponseItem["time"]];
-          let keyItems = "symbol, high, time";
-          let ttl = 86400;
+          const placeHolders = "?, ?, ?, ?, ?";
+          let values = [coinSymbol, dataResponseItem["high"], dataResponseItem["low"],
+            dataResponseItem["open"], dataResponseItem["time"]];
+          let keyItems = "symbol, high, low, open, time";
+          // TTL Strategy of 120 seconds for Minute history data for week
+          let ttl = 120;
 
           const query = 'INSERT INTO tokenplex.week_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' + ttl;
           const params = values;
@@ -144,7 +146,33 @@ module.exports = {
         });
       }
     });
-    return {data: "started job"};
+    return {data: "Coin Week History Data persist started"};
+  },
+
+  saveCoinYearDayHistoryData: function(coinYearHistoryData) {
+    Object.keys(coinYearHistoryData).forEach(function(coinSymbol) {
+      if (coinYearHistoryData[coinSymbol].length > 0) {
+        let coinHistoryData = coinYearHistoryData[coinSymbol];
+        coinHistoryData.forEach(function(dataResponseItem){
+          const placeHolders = "?, ?, ?, ?, ?";
+          let values = [coinSymbol, dataResponseItem["high"], dataResponseItem["low"],
+            dataResponseItem["open"], dataResponseItem["time"]];
+
+          let keyItems = "symbol, high, low, open, time";
+          // TTL Strategy of 2000 seconds for Day history data per year.
+          let ttl = 2000;
+
+          const query = 'INSERT INTO tokenplex.year_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' + ttl;
+          const params = values;
+          cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
+            if (err) {
+              console.log(err);
+            }
+          });
+        });
+      }
+    });
+    return {data: "Coin Year History Data persist started"};
   },
 
   deleteCoinDayHistoryData: function(coinSymbol) {

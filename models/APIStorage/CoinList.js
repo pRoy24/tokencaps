@@ -83,7 +83,7 @@ module.exports = {
   },
 
   getCoinYearHistoryData: function(coinSymbol) {
-    const dataEndpoint = "hhttps://min-api.cryptocompare.com/data/histoday?fsym="+coinSymbol+"&tsym=USD&limit=365&aggregate=1&e=CCCAGG";
+    const dataEndpoint = "https://min-api.cryptocompare.com/data/histoday?fsym="+coinSymbol+"&tsym=USD&limit=365&aggregate=1&e=CCCAGG";
     return axios.get(dataEndpoint);
   },
 

@@ -75,11 +75,15 @@ module.exports = {
 
   getCoinWeekData(req, res, next) {
     let coinSymbol = req.query.coin_symbol;
-    function promiseFullfilled(historyDataResponse) {
-      res.send({data: historyDataResponse});
-    }
     DataFetchAPI.getWeekMinuteHistoryData(coinSymbol).then(function (historyDataResponse) {
-      promiseFullfilled(historyDataResponse);
+      res.send({data: historyDataResponse});
+    });
+  },
+
+  getCoinYearData(req, res, next) {
+    let coinSymbol = req.query.coin_symbol;
+    DataFetchAPI.getCoinYearHistoryData(coinSymbol).then(function(coinHistoryDataResponse){
+      res.send({data: coinHistoryDataResponse});
     });
   },
 

@@ -17,7 +17,7 @@ and a [Redis](https://redis.io/) server for Ticker data.
 
 You can use any CQL API compliant database and Redis API compatible cache for storage.
 
-TokenPlex uses [YugaByte](www.yugabyte.com) which is a unified CQL + Redis implementation.
+TokenPlex uses [YugaByte](https://www.yugabyte.com) which is a unified CQL + Redis implementation.
 
 For instructions on how to build YugaByte from source, see [here](https://github.com/YugaByte/yugabyte-db)
 

@@ -123,6 +123,34 @@ module.exports = {
       });
   },
 
+  // Create Coin 1 year history table, consists of daily data points.
+  createCoinYearlyHistoryTable: function(req, res, next) {
+    const CREATE_ALL_TIME_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.year_history_data" +
+      "(symbol varchar," +
+      " time timestamp," +
+      "high float," +
+      "low float," +
+      "open float," +
+      "volumefrom float," +
+      "volumeto float," +
+      "close float, PRIMARY KEY(symbol, time))";
+    const DELETE_ALL_TIME_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.year_history_data";
+    cassandraClient.connect()
+      .then(function () {
+        return cassandraClient.execute(DELETE_ALL_TIME_HISTORY_TABLE).then(function () {
+          return cassandraClient.execute(CREATE_ALL_TIME_HISTORY_TABLE)
+        })
+          .then(function (createTableResponse) {
+            logger.log({"level": "info", "message": "All time history data table created"})
+            res.send({data: createTableResponse});
+            return createTableResponse;
+          }).catch(function (err) {
+            logger.log({"level": "error", "message": JSON.stringify(err)})
+            return err;
+          });
+      });
+  },
+
   // Create Coin All Time history table
   createAllTimeHistoryTable: function(req, res, next) {
     const CREATE_ALL_TIME_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.coin_all_time_history_data" +
@@ -364,7 +392,7 @@ function createCoinWeeklyHistoryTable() {
 }
 
 function createCoinYearlyHistoryTable() {
-  const CREATE_ALL_TIME_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.coin_all_time_history_data" +
+  const CREATE_ALL_TIME_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.year_history_data" +
     "(symbol varchar," +
     " time timestamp," +
     "high float," +
@@ -373,14 +401,15 @@ function createCoinYearlyHistoryTable() {
     "volumefrom float," +
     "volumeto float," +
     "close float, PRIMARY KEY(symbol, time))";
-  const DELETE_ALL_TIME_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.coin_all_time_history_data";
+  const DELETE_ALL_TIME_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.year_history_data";
+
   cassandraClient.connect()
     .then(function () {
       return cassandraClient.execute(DELETE_ALL_TIME_HISTORY_TABLE).then(function () {
         return cassandraClient.execute(CREATE_ALL_TIME_HISTORY_TABLE)
       })
         .then(function (createTableResponse) {
-          logger.log({"level": "info", "message": "All time history data table created"})
+          logger.log({"level": "info", "message": "Yearly history data table created year_history_data"})
           return createTableResponse;
         }).catch(function (err) {
           logger.log({"level": "error", "message": JSON.stringify(err)})

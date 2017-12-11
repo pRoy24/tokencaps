@@ -126,6 +126,7 @@ module.exports = {
   deleteCoinList: function(token) {
     CacheStorage.deleteCoinList(token);
   },
+
   getDailyHistoryData: function(coinSymbol) {
     return DiskStorage.findCoinDayHistoryData(coinSymbol).then(function(response){
       if (response && response.data.length > 0) {
@@ -143,6 +144,7 @@ module.exports = {
 
   getWeekMinuteHistoryData: function(coin_symbol) {
     return DiskStorage.findCoinWeekMinuteHistoryData(coin_symbol).then(function (response) {
+      console.log("Fetch from DB");
       if (response && response.data.length > 0) {
         return response.data;
       } else {
@@ -150,14 +152,16 @@ module.exports = {
           const coinAPIResponse = apiCoinDayHistoryDataResponse.data.Data;
           let response = {};
           response[coin_symbol] = coinAPIResponse;
+          DiskStorage.saveCoinWeekMinuteHistoryData(response);
           return coinAPIResponse;
         }).catch(function(e){
           console.log(e);
           return {error: e};
         });
       }
-    })
+    });
   },
+
   getExchangeList: function() {
     return DiskStorage.findExchangeList().then(function(diskStorageResponse){
       if (diskStorageResponse && diskStorageResponse.data.length > 0) {
@@ -185,7 +189,6 @@ module.exports = {
   },
 
   findCoinByName: function(coinSearchString) {
-
     return CacheStorage.searchCoin(coinSearchString).then(function(coinSearchResponse){
       if (coinSearchResponse && coinSearchResponse.data.length > 0) {
         return {data: coinSearchResponse.data}
@@ -208,6 +211,25 @@ module.exports = {
         let coinPrice = responseObject[Object.keys(responseObject)[0]];
         return {data: coinPrice};
       })
+  },
+
+  getCoinYearHistoryData: function(coin_symbol) {
+    return DiskStorage.findCoinYearDayHistoryData(coin_symbol).then(function (response) {
+      if (response && response.data.length > 0) {
+        return response.data;
+      } else {
+        return APIStorage.findCoinYearDayHistoryData(coin_symbol).then(function(apiCoinDayHistoryDataResponse){
+          const coinAPIResponse = apiCoinDayHistoryDataResponse.data.Data;
+          let response = {};
+          response[coin_symbol] = coinAPIResponse;
+          DiskStorage.saveCoinYearDayHistoryData(response);
+          return coinAPIResponse;
+        }).catch(function(e){
+          console.log(e);
+          return {error: e};
+        });
+      }
+    });
   }
 }
 

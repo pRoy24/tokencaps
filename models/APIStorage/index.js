@@ -6,21 +6,31 @@ module.exports = {
   findCoinSnapshot: function (coinSymbol, toSymbol) {
     return CoinList.getCoinSnapShot(coinSymbol, toSymbol);
   },
+
   findCoinSocialData: function(coinID) {
     return CoinList.getCoinSocialData(coinID);
   },
+
   findExchangeList: function() {
     return ExchangeList.getExchangeList();
   },
+
   findCoinList: function() {
     return CoinList.getCoinList();
   },
+
   findCoinDayHistoryData: function(coinSymbol) {
     return CoinList.getCoinDayHistoryData(coinSymbol);
   },
+
   findCoinWeekMinuteHistoryData: function(coinSymbol) {
     return CoinList.getCoinWeekHistoryData(coinSymbol);
   },
+
+  findCoinYearDayHistoryData: function(coinSymbol) {
+    return CoinList.getCoinYearHistoryData(coinSymbol);
+  },
+
   searchCoin: function (coinSymbol) {
     return CoinList.searchCoin(coinSymbol);
   },
