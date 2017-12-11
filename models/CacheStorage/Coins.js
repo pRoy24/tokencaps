@@ -45,9 +45,7 @@ module.exports = {
          arrayLog.push(coinItem);
          client.hset("coins", coinItem.symbol, JSON.stringify(coinItem), function (err, response) {
            if (err) {
-              logger.log({"type":"error", "message": JSON.stringify(err)});
-           } else {
-              logger.log({"type": "info", "message": "saved coin list"});
+              logger.log({"level": "error", "message": JSON.stringify(err)});
            }
          });
        }

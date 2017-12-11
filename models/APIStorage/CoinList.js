@@ -73,6 +73,8 @@ module.exports = {
         }
         return {data: joinedCoinDataList};
       });
+    }).catch(function(err){
+      return ({data: [], error: err});
     });
   },
 

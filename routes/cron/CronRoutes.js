@@ -41,7 +41,11 @@ module.exports = {
       })
       return APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
         const coinListResponse = apiCoinSnapshotResponse.data;
-        return CacheStorage.saveCoinList(coinListResponse);
+        if (ObjectUtils.isNonEmptyArray(coinListResponse)) {
+          return CacheStorage.saveCoinList(coinListResponse);
+        } else {
+          return null;
+        }
       });
     }, 30000);
 
