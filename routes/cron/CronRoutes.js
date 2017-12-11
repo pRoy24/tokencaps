@@ -12,8 +12,7 @@ const DiskStorage = require('../../models/DiskStorage'),
   CacheStorage = require('../../models/CacheStorage'),
   CoinGraph = require('../../graph');
 ObjectUtils = require('../../utils/ObjectUtils');
-const winston = require('winston')
-
+const logger = require('../../logs/logger');
 
 module.exports = {
   getCoinDayGraph: function(req, res, next) {
@@ -36,7 +35,7 @@ module.exports = {
 
   getCoinListAndMerge: function(req, res, next) {
     setInterval(function(){
-      winston.log('info', 'querying API for Coin List', {
+      logger.log('info', 'querying API for Coin List', {
         "timestamp": Date.now()
       });
       APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
@@ -58,7 +57,7 @@ function saveCoinGraphResponse(coinListResponse, currentTimeSchedulerSeconds) {
   return new CronJob(currentTimeSchedulerSeconds, function() {
     if (coinListResponse[counter]) {
       let coinSymbol = coinListResponse[counter].symbol;
-      winston.log('info', 'querying API for Coin Daily History Data', {
+      logger.log('info', 'querying API for Coin Daily History Data', {
         "timestamp": Date.now(),
         'coin': coinSymbol
       })
@@ -82,7 +81,7 @@ function saveCoinGraphResponse(coinListResponse, currentTimeSchedulerSeconds) {
 }
 
 function saveCoinDailyGraph(coinSymbol) {
-  winston.log('info', 'Saving Coin Daily History Data', {
+  logger.log('info', 'Saving Coin Daily History Data', {
     "timestamp": Date.now(),
     'coin': coinSymbol
   });
@@ -95,6 +94,8 @@ function saveCoinDailyGraph(coinSymbol) {
     } else {
       // ObjectUtils.writeFileToS3Location(coinSymbol, "ETH");
     }
+  }).catch(function(err){
+    return null;
   });
 }
 
