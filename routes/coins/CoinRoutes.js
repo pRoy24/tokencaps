@@ -1,16 +1,22 @@
 // pRoy24 tokenplex
 
+const ObjectUtils = require('../../utils/ObjectUtils');
 const DataFetchAPI = require('../../models/DataFetchAPI');
 const DiskStorage = require("../../models/DiskStorage");
 
 module.exports = {
   // Coin Detail Snapshot
   getCoinDetailSnapshot: function(req, res, next){
-    const coinSymbol = req.query.coin_symbol;
-    if (!coinSymbol) {
-      res.send ({error: "coin detail must be specified"});
+    const fromSymbol = req.query.from_symbol;
+    let toSymbol = req.query.to_symbol;
+
+    if (ObjectUtils.isEmptyString(toSymbol)) {
+      toSymbol = "USD";
+    }
+    if (ObjectUtils.isEmptyString(fromSymbol)) {
+      res.send ({error: "coin symbol must be specified"});
     } else {
-      DataFetchAPI.getCoinRow(coinSymbol).then(function (coinRowResponse) {
+      DataFetchAPI.getCoinRow(fromSymbol).then(function(coinRowResponse) {
         let responseData = {};
         responseData[coinRowResponse.data.symbol] = {
           "detail": coinRowResponse.data
@@ -20,7 +26,7 @@ module.exports = {
 
         function getCoinObject(objectType) {
           if (objectType === "coinSnapshot") {
-            return DataFetchAPI.getCoinSnapshot(coinRowResponse.data.symbol);
+            return DataFetchAPI.getCoinSnapshot(fromSymbol, toSymbol);
           }
           if (objectType === "coinSocial") {
             return DataFetchAPI.getCoinSocialData(coinID);
@@ -74,8 +80,10 @@ module.exports = {
   },
 
   getCoinWeekData(req, res, next) {
-    let coinSymbol = req.query.coin_symbol;
-    DataFetchAPI.getWeekMinuteHistoryData(coinSymbol).then(function (historyDataResponse) {
+    let fromSymbol = req.query.from_symbol;
+    let toSymbol = req.query.to_symbol;
+
+    DataFetchAPI.getWeekMinuteHistoryData(fromSymbol, toSymbol).then(function (historyDataResponse) {
       res.send({data: historyDataResponse});
     });
   },
@@ -111,6 +119,58 @@ module.exports = {
     let token = req.query.token;
     DataFetchAPI.deleteCoinList(token);
     res.send({"data": "deleting data now"});
-  }
+  },
 
+  getCoinArbitrage(req, res, next) {
+    const toSymbol = req.query.to_symbol;
+    let fromSymbol = req.query.from_symbol;
+    if (ObjectUtils.isEmptyString(fromSymbol)) {
+      fromSymbol = "USD";
+    }
+    DataFetchAPI.getCoinArbitrage(fromSymbol, toSymbol).then(function(coinArbitrageResponse){
+      res.send({data: coinArbitrageResponse});
+    });
+  },
+
+  getCoinSocialAndHeartbeat(req, res, next) {
+    const fromSymbol = req.query.coin_symbol;
+
+    if (ObjectUtils.isEmptyString(fromSymbol)) {
+      res.send ({error: "coin symbol must be specified"});
+    } else {
+      DataFetchAPI.getCoinRow(fromSymbol).then(function(coinRowResponse) {
+        let responseData = {};
+        responseData[coinRowResponse.data.symbol] = {
+          "detail": coinRowResponse.data
+        };
+        const coinID = coinRowResponse.data.id;
+        const coinSymbol = coinRowResponse.data.symbol;
+
+        function getCoinObject(objectType) {
+          if (objectType === "coinSocial") {
+            return DataFetchAPI.getCoinSocialData(coinID);
+          }
+        }
+        function callback(responseData) {
+          res.send({data: responseData});
+        }
+
+        const coinDetailsObjects = ["coinSocial"];
+        let counter = 0;
+        coinDetailsObjects.forEach((item, index, array) => {
+          getCoinObject(item).then(function (dataResponse) {
+            counter++;
+            responseData[coinSymbol][item] = dataResponse;
+            if (counter === array.length) {
+              callback(responseData);
+            }
+          });
+        });
+      }).catch(function (err) {
+        res.send({"error": err});
+      })
+    }
+
+
+  }
 }

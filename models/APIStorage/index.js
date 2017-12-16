@@ -23,8 +23,8 @@ module.exports = {
     return CoinList.getCoinDayHistoryData(coinSymbol);
   },
 
-  findCoinWeekMinuteHistoryData: function(coinSymbol) {
-    return CoinList.getCoinWeekHistoryData(coinSymbol);
+  findCoinWeekMinuteHistoryData: function(fromSymbol, toSymbol) {
+    return CoinList.getCoinWeekHistoryData(fromSymbol, toSymbol);
   },
 
   findCoinYearDayHistoryData: function(coinSymbol) {
@@ -42,5 +42,10 @@ module.exports = {
   },
   getCoinHistoricalPrice: function(fromSymbol, exchange, timeStamp) {
     return CoinList.getCoinHistoricalPrice(fromSymbol, exchange, timeStamp);
+  },
+
+  getCoinArbitrage: function(fromSymbol, toSymbol) {
+    return CoinList.getCoinArbitrage(fromSymbol, toSymbol);
   }
+ // findCoinArbitrageResponse: function(fromS)
 }

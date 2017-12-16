@@ -100,13 +100,14 @@ module.exports = {
   createCoinWeekHistoryTable: function(req, res, next) {
     const CREATE_WEEK_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.week_history_data" +
       "(symbol varchar," +
-      " time timestamp," +
-      "high float," +
-      "low float," +
-      "open float," +
-      "volumefrom float," +
-      "volumeto float," +
-      "close float, PRIMARY KEY(symbol, time))";
+       "tosymbol varchar," +
+       "time timestamp," +
+       "high float," +
+       "low float," +
+       "open float," +
+       "volumefrom float," +
+       "volumeto float," +
+       "close float, PRIMARY KEY(symbol, time))";
     const DELETE_WEEK_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.week_history_data";
 
     cassandraClient.connect()
@@ -372,13 +373,14 @@ function createCoinDailyHistoryTable() {
 function createCoinWeeklyHistoryTable() {
   const CREATE_WEEK_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.week_history_data" +
     "(symbol varchar," +
-    " time timestamp," +
+    " time varchar," +
+    "tosymbol varchar," +
     "high float," +
     "low float," +
     "open float," +
     "volumefrom float," +
     "volumeto float," +
-    "close float, PRIMARY KEY(symbol, time))";
+    "close float, PRIMARY KEY(symbol, tosymbol, time))";
   const DELETE_WEEK_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.week_history_data";
   return cassandraClient.execute(DELETE_WEEK_HISTORY_TABLE).then(function () {
     return cassandraClient.execute(CREATE_WEEK_HISTORY_TABLE)

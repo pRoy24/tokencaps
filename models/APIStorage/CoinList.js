@@ -29,6 +29,11 @@ module.exports = {
     return axios.get(histogramDataEndpoint);
   },
 
+  getCoinArbitrage: function(fromSymbol, toSymbol) {
+    const coinSnapShotEndpoint = "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym="+fromSymbol+"&tsym="+toSymbol;
+    return axios.get(coinSnapShotEndpoint);
+  },
+
   getCoinList: function() {
     return getCoinMarketCapCoinList().then(function (coinMarketApiResponse) {
       coinMarketApiResponse = coinMarketApiResponse.data;
@@ -79,13 +84,13 @@ module.exports = {
   },
 
   // Method returns 10080 minute data endpoints for past week
-  getCoinWeekHistoryData: function(coinSymbol) {
-    const dataEndpoint = "https://min-api.cryptocompare.com/data/histohour?fsym="+coinSymbol+"&tsym=USD&limit=168&aggregate=3&e=CCCAGG";
+  getCoinWeekHistoryData: function(fromSymbol, toSymbol) {
+    const dataEndpoint = "https://min-api.cryptocompare.com/data/histohour?fsym="+fromSymbol+"&tsym="+toSymbol+"&limit=168&aggregate=3&e=CCCAGG";
     return axios.get(dataEndpoint);
   },
 
-  getCoinYearHistoryData: function(coinSymbol) {
-    const dataEndpoint = "https://min-api.cryptocompare.com/data/histoday?fsym="+coinSymbol+"&tsym=USD&limit=365&aggregate=1&e=CCCAGG";
+  getCoinYearHistoryData: function(fromSymbol, toSymbol) {
+    const dataEndpoint = "https://min-api.cryptocompare.com/data/histoday?fsym="+fromSymbol+"&tsym="+toSymbol+"&limit=365&aggregate=1&e=CCCAGG";
     return axios.get(dataEndpoint);
   },
 

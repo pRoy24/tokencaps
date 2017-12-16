@@ -12,7 +12,7 @@ var express = require('express')
  * @api {get} /coin/coin-detail Get details of a token.
  * @apiName getCoinDetailSnapshot
  * @apiGroup Tokens
- * @apiParam {String} symbol Unique Coin Symbol eg. ETH.
+ * @apiParam {String, String} from_symbol, to_symbol Unique To and From Coin Symbol eg. ETH.
  * @apiSuccess {Json} Coin detail object.
  * @apiError {String} Server error String.
  */
@@ -58,6 +58,10 @@ router.route('/coin-week-history').get(CoinRoutes.getCoinWeekData);
  * @apiError {String} Server error String.
  */
 router.route('/search').get(CoinRoutes.searchCoinByName);
+
+router.route('/coin-social').get(CoinRoutes.getCoinSocialAndHeartbeat);
+
+router.route('/coin-arbitrage').get(CoinRoutes.getCoinArbitrage);
 
 /**
  *

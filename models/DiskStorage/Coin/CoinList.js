@@ -40,10 +40,20 @@ module.exports = {
     });
   },
 
-  getCoinWeekHistoryData: function(coinSymbol) {
-    const query = "SELECT * from tokenplex.week_history_data where symbol='" + coinSymbol + "'";
+  getCoinArbitrage: function(fromSymbol, toSymbol) {
+
+    const query = "SELECT * from tokenplex.coin_details WHERE fromsymbol='"
+                  + fromSymbol + "' AND tosymbol='" + toSymbol + "'";
+    return cassandraClient.execute(query).then(function(queryResponse) {
+      return ({data: queryResponse});
+    });
+  },
+
+  getCoinWeekHistoryData: function(coinSymbol, toSymbol) {
+    const query = "SELECT * from tokenplex.week_history_data where symbol='" + coinSymbol + "' AND tosymbol='"
+      + toSymbol + "'";
     return cassandraClient.execute(query).then(function(response){
-      return {data: response.rows};
+      return {data: response};
     });
   },
 

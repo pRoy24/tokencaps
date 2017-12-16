@@ -14,6 +14,13 @@ module.exports = {
     return true;
   },
 
+  isEmptyString: function(str) {
+    if (typeof str === "undefined" || str === null || str.length === 0) {
+      return true;
+    }
+    return false;
+  },
+
   writeFileToS3Location: function(coinSymbol, coinName) {
     var AWS = require('aws-sdk'),
       fs = require('fs');

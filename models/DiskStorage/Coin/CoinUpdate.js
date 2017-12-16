@@ -124,15 +124,17 @@ module.exports = {
     return {data: "started job"};
   },
 
-  saveCoinWeekMinuteHistoryData: function(coinHistoryDataList) {
+  saveCoinWeekMinuteHistoryData: function(coinHistoryDataList, toSymbol) {
     Object.keys(coinHistoryDataList).forEach(function(coinSymbol) {
       if (coinHistoryDataList[coinSymbol].length > 0) {
         let coinHistoryData = coinHistoryDataList[coinSymbol];
         coinHistoryData.forEach(function(dataResponseItem){
-          const placeHolders = "?, ?, ?, ?, ?";
+          const placeHolders = "?, ?, ?, ?, ?, ?, ?, ?";
           let values = [coinSymbol, dataResponseItem["high"], dataResponseItem["low"],
-            dataResponseItem["open"], dataResponseItem["time"]];
-          let keyItems = "symbol, high, low, open, time";
+            dataResponseItem["open"], dataResponseItem["time"].toString(),
+          dataResponseItem["volumefrom"], dataResponseItem["volumeto"], toSymbol];
+
+          let keyItems = "symbol, high, low, open, time, volumefrom, volumeto, tosymbol";
           // TTL Strategy of 120 seconds for Minute history data for week
           let ttl = 120;
 

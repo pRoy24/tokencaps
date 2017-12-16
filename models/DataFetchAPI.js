@@ -5,10 +5,10 @@ const DiskStorage = require('./DiskStorage'),
   APIStorage = require('./APIStorage');
   CoinUtils = require('./DiskStorage/Coin/util');
 CacheStorage = require('./CacheStorage/');
+ObjectUtils = require('../utils/ObjectUtils');
 
 module.exports = {
   getCoinRow: function(coinSymbol) {
-    console.log(coinSymbol);
     return CacheStorage.findCoinRow(coinSymbol).then(function (response) {
       if (response && response.data && Object.keys(response.data).length > 0) {
         return response;
@@ -20,15 +20,28 @@ module.exports = {
     })
   },
 
-  getCoinSnapshot: function(coinSymbol) {
-    return DiskStorage.findCoinSnapshot(coinSymbol).then(function(response){
+  getCoinArbitrage: function (fromSymbol, toSymbol) {
+    return DiskStorage.getCoinArbitrage(fromSymbol, toSymbol).then(function(coinArbitrageResponse){
+      if (coinArbitrageResponse.data.rows && ObjectUtils.isNonEmptyArray(coinArbitrageResponse.data.rows)) {
+        return coinArbitrageResponse.data.rows;
+      } else {
+        return APIStorage.getCoinArbitrage(fromSymbol, toSymbol).then(function(apiArbitrageResponse){
+          let normalizedAPISnapshot = CoinUtils.normalizeCoinSnapShotData(apiArbitrageResponse);
+          return normalizedAPISnapshot;
+        });
+      }
+    });
+  },
+
+  getCoinSnapshot: function(fromSymbol, toSymbol) {
+    return DiskStorage.findCoinSnapshot(fromSymbol, toSymbol).then(function(response){
       if (response && Object.keys(response).length > 0) {
         return response;
       } else {
-        return APIStorage.findCoinSnapshot(coinSymbol, "USD").then(function(apiCoinSnapshotResponseUSD){
+        return APIStorage.findCoinSnapshot(fromSymbol, toSymbol).then(function(apiCoinSnapshotResponseUSD){
           if (!apiCoinSnapshotResponseUSD || apiCoinSnapshotResponseUSD.data.Data === null
             || Object.keys(apiCoinSnapshotResponseUSD.data.Data).length === 0) {
-            return APIStorage.findCoinSnapshot(coinSymbol, "BTC").then(function(apiCoinSnapshotResponseBTC){
+            return APIStorage.findCoinSnapshot(fromSymbol, "BTC").then(function(apiCoinSnapshotResponseBTC){
               let normalizedAPISnapshot = CoinUtils.normalizeCoinSnapShotData(apiCoinSnapshotResponseBTC);
               DiskStorage.saveCoinSnapshot(normalizedAPISnapshot);
               return normalizedAPISnapshot;
@@ -50,9 +63,9 @@ module.exports = {
       } else {
         return APIStorage.findCoinSnapshot(coinID).then(function(apiCoinSnapshotResponse){
           return apiCoinSnapshotResponse;
-        })
+        });
       }
-    })
+    });
   },
 
   getMarketList: function(coinID) {
@@ -142,17 +155,17 @@ module.exports = {
     });
   },
 
-  getWeekMinuteHistoryData: function(coin_symbol) {
-    return DiskStorage.findCoinWeekMinuteHistoryData(coin_symbol).then(function (response) {
-      console.log("Fetch from DB");
-      if (response && response.data.length > 0) {
-        return response.data;
+  getWeekMinuteHistoryData: function(fromSymbol, toSymbol) {
+    return DiskStorage.findCoinWeekMinuteHistoryData(fromSymbol, toSymbol).then(function (response) {
+      if (response && response.data.rows.length > 0) {
+        console.log(response.data.rows[0]);
+        return response.data.rows;
       } else {
-        return APIStorage.findCoinWeekMinuteHistoryData(coin_symbol).then(function(apiCoinDayHistoryDataResponse){
+        return APIStorage.findCoinWeekMinuteHistoryData(fromSymbol, toSymbol).then(function(apiCoinDayHistoryDataResponse){
           const coinAPIResponse = apiCoinDayHistoryDataResponse.data.Data;
           let response = {};
-          response[coin_symbol] = coinAPIResponse;
-          DiskStorage.saveCoinWeekMinuteHistoryData(response);
+          response[fromSymbol] = coinAPIResponse;
+          DiskStorage.saveCoinWeekMinuteHistoryData(response, toSymbol);
           return coinAPIResponse;
         }).catch(function(e){
           console.log(e);
@@ -237,7 +250,7 @@ function mergeList(exchangeMarketData, exchangeList) {
   let mergedList = [];
   for (let a= 0 ;a < exchangeMarketData.length; a++) {
     let objectFound = false;
-    for( let b =0; b< exchangeList.length; b++) {
+    for( let b =0; b < exchangeList.length; b++) {
       if ((exchangeMarketData[a].MARKET.toLowerCase().trim() === exchangeList[b].exch_name.toLowerCase().trim()) ||
         exchangeMarketData[a].MARKET.toLowerCase().trim() === exchangeList[b].exch_code.toLowerCase().trim()) {
         mergedList.push(Object.assign({}, exchangeMarketData[a], exchangeList[b]));
