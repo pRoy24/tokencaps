@@ -105,6 +105,7 @@ module.exports = {
        "high float," +
        "low float," +
        "open float," +
+        "close float," +
        "volumefrom float," +
        "volumeto float," +
        "close float, PRIMARY KEY(symbol, time))";
@@ -128,13 +129,15 @@ module.exports = {
   createCoinYearlyHistoryTable: function(req, res, next) {
     const CREATE_ALL_TIME_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.year_history_data" +
       "(symbol varchar," +
-      " time timestamp," +
+        "tosymbol varchar,"+
+      " time varchar," +
       "high float," +
       "low float," +
       "open float," +
+      "close float," +
       "volumefrom float," +
       "volumeto float," +
-      "close float, PRIMARY KEY(symbol, time))";
+      "close float, PRIMARY KEY(symbol, tosymbol, time))";
     const DELETE_ALL_TIME_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.year_history_data";
     cassandraClient.connect()
       .then(function () {
@@ -394,21 +397,22 @@ function createCoinWeeklyHistoryTable() {
 }
 
 function createCoinYearlyHistoryTable() {
-  const CREATE_ALL_TIME_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.year_history_data" +
+  const CREATE_YEAR_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.year_history_data" +
     "(symbol varchar," +
-    " time timestamp," +
+      "tosymbol varchar," +
+     "time varchar," +
     "high float," +
     "low float," +
     "open float," +
     "volumefrom float," +
     "volumeto float," +
-    "close float, PRIMARY KEY(symbol, time))";
-  const DELETE_ALL_TIME_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.year_history_data";
+    "close float, PRIMARY KEY(symbol, tosymbol, time))";
+  const DELETE_YEAR_HISTORY_TABLE = "DROP TABLE IF EXISTS tokenplex.year_history_data";
 
   cassandraClient.connect()
     .then(function () {
-      return cassandraClient.execute(DELETE_ALL_TIME_HISTORY_TABLE).then(function () {
-        return cassandraClient.execute(CREATE_ALL_TIME_HISTORY_TABLE)
+      return cassandraClient.execute(DELETE_YEAR_HISTORY_TABLE).then(function () {
+        return cassandraClient.execute(CREATE_YEAR_HISTORY_TABLE)
       })
         .then(function (createTableResponse) {
           logger.log({"level": "info", "message": "Yearly history data table created year_history_data"})

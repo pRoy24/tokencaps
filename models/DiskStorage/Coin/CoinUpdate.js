@@ -129,12 +129,12 @@ module.exports = {
       if (coinHistoryDataList[coinSymbol].length > 0) {
         let coinHistoryData = coinHistoryDataList[coinSymbol];
         coinHistoryData.forEach(function(dataResponseItem){
-          const placeHolders = "?, ?, ?, ?, ?, ?, ?, ?";
+          const placeHolders = "?, ?, ?, ?, ?, ?, ?, ?, ?";
           let values = [coinSymbol, dataResponseItem["high"], dataResponseItem["low"],
-            dataResponseItem["open"], dataResponseItem["time"].toString(),
+            dataResponseItem["open"], dataResponseItem["close"], dataResponseItem["time"].toString(),
           dataResponseItem["volumefrom"], dataResponseItem["volumeto"], toSymbol];
 
-          let keyItems = "symbol, high, low, open, time, volumefrom, volumeto, tosymbol";
+          let keyItems = "symbol, high, low, open, close, time, volumefrom, volumeto, tosymbol";
           // TTL Strategy of 120 seconds for Minute history data for week
           let ttl = 120;
 
@@ -151,16 +151,17 @@ module.exports = {
     return {data: "Coin Week History Data persist started"};
   },
 
-  saveCoinYearDayHistoryData: function(coinYearHistoryData) {
+  saveCoinYearDayHistoryData: function(coinYearHistoryData, toSymbol) {
     Object.keys(coinYearHistoryData).forEach(function(coinSymbol) {
       if (coinYearHistoryData[coinSymbol].length > 0) {
         let coinHistoryData = coinYearHistoryData[coinSymbol];
         coinHistoryData.forEach(function(dataResponseItem){
-          const placeHolders = "?, ?, ?, ?, ?";
+          const placeHolders = "?, ?, ?, ?, ?, ?, ?, ?, ?";
           let values = [coinSymbol, dataResponseItem["high"], dataResponseItem["low"],
-            dataResponseItem["open"], dataResponseItem["time"]];
+            dataResponseItem["open"], dataResponseItem["close"], dataResponseItem["time"].toString(),
+            dataResponseItem["volumefrom"], dataResponseItem["volumeto"], toSymbol];
 
-          let keyItems = "symbol, high, low, open, time";
+          let keyItems = "symbol, high, low, open, close, time, volumefrom, volumeto, tosymbol";
           // TTL Strategy of 2000 seconds for Day history data per year.
           let ttl = 2000;
 
@@ -175,6 +176,46 @@ module.exports = {
       }
     });
     return {data: "Coin Year History Data persist started"};
+  },
+
+  saveCoinArbitrage: function(coinArbitrageData) {
+    const queries = [];
+    coinArbitrageData.forEach(function(coinTradeData) {
+
+      delete coinTradeData["lastmarket"];
+      if (coinTradeData["openday"]) {
+        delete coinTradeData["openday"];
+        delete coinTradeData["highday"];
+        delete coinTradeData["lowday"];
+        delete coinTradeData["volumeday"];
+        delete coinTradeData["volumedayto"];
+      }
+
+      let keys = Object.keys(coinTradeData).map(function(key, idx){
+        return key;
+      }).filter(Boolean).join(", ");
+
+      let placeholders = Object.keys(coinTradeData).map(function(key, idx){
+        return "?";
+      }).filter(Boolean).join(", ");
+
+      let values = Object.keys(coinTradeData).map(function(key){
+        return (coinTradeData[key]).toString();
+      }).filter(Boolean);
+
+
+      const query = 'INSERT INTO tokenplex.coin_details (' + keys + ') VALUES (' + placeholders + ') USING TTL 120';
+      queries.push({
+        query: query,
+        params: values
+      })
+    });
+    return cassandraClient.batch(queries, { prepare: true }, function(err, res){
+      if (err) {
+        return err;
+      }
+      return res;
+    });
   },
 
   deleteCoinDayHistoryData: function(coinSymbol) {

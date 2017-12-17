@@ -82,15 +82,19 @@ module.exports = {
   getCoinWeekData(req, res, next) {
     let fromSymbol = req.query.from_symbol;
     let toSymbol = req.query.to_symbol;
-
     DataFetchAPI.getWeekMinuteHistoryData(fromSymbol, toSymbol).then(function (historyDataResponse) {
       res.send({data: historyDataResponse});
     });
   },
 
   getCoinYearData(req, res, next) {
-    let coinSymbol = req.query.coin_symbol;
-    DataFetchAPI.getCoinYearHistoryData(coinSymbol).then(function(coinHistoryDataResponse){
+    let fromSymbol = req.query.from_symbol;
+    let toSymbol = req.query.to_symbol;
+    if (ObjectUtils.isEmptyString(toSymbol)) {
+      toSymbol = "USD";
+    }
+
+    DataFetchAPI.getCoinYearHistoryData(fromSymbol, toSymbol).then(function(coinHistoryDataResponse){
       res.send({data: coinHistoryDataResponse});
     });
   },
@@ -127,8 +131,10 @@ module.exports = {
     if (ObjectUtils.isEmptyString(fromSymbol)) {
       fromSymbol = "USD";
     }
-    DataFetchAPI.getCoinArbitrage(fromSymbol, toSymbol).then(function(coinArbitrageResponse){
-      res.send({data: coinArbitrageResponse});
+    DataFetchAPI.getCoinRow(fromSymbol).then(function(coinRowResponse) {
+      DataFetchAPI.getCoinArbitrage(fromSymbol, toSymbol).then(function (coinArbitrageResponse) {
+        res.send({data: {exchange: coinArbitrageResponse, details: coinRowResponse.data}});
+      });
     });
   },
 
@@ -139,38 +145,14 @@ module.exports = {
       res.send ({error: "coin symbol must be specified"});
     } else {
       DataFetchAPI.getCoinRow(fromSymbol).then(function(coinRowResponse) {
-        let responseData = {};
-        responseData[coinRowResponse.data.symbol] = {
-          "detail": coinRowResponse.data
-        };
         const coinID = coinRowResponse.data.id;
-        const coinSymbol = coinRowResponse.data.symbol;
-
-        function getCoinObject(objectType) {
-          if (objectType === "coinSocial") {
-            return DataFetchAPI.getCoinSocialData(coinID);
-          }
-        }
-        function callback(responseData) {
-          res.send({data: responseData});
-        }
-
-        const coinDetailsObjects = ["coinSocial"];
-        let counter = 0;
-        coinDetailsObjects.forEach((item, index, array) => {
-          getCoinObject(item).then(function (dataResponse) {
-            counter++;
-            responseData[coinSymbol][item] = dataResponse;
-            if (counter === array.length) {
-              callback(responseData);
-            }
-          });
+        return DataFetchAPI.getCoinSocialData(coinID).then(function(coinSocialResponse){
+          res.send({data: coinSocialResponse});
         });
+
       }).catch(function (err) {
         res.send({"error": err});
       })
     }
-
-
   }
 }

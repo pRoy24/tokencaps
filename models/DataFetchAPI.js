@@ -26,8 +26,20 @@ module.exports = {
         return coinArbitrageResponse.data.rows;
       } else {
         return APIStorage.getCoinArbitrage(fromSymbol, toSymbol).then(function(apiArbitrageResponse){
-          let normalizedAPISnapshot = CoinUtils.normalizeCoinSnapShotData(apiArbitrageResponse);
-          return normalizedAPISnapshot;
+
+          if (toSymbol !== "BTC" && (!apiArbitrageResponse || apiArbitrageResponse.data.Data === null
+            || Object.keys(apiArbitrageResponse.data.Data).length === 0)) {
+            return APIStorage.findCoinSnapshot(fromSymbol, "BTC").then(function (apiCoinArbitrageResponseBTC) {
+              let normalizedAPISnapshot = CoinUtils.normalizeCoinSnapShotData(apiCoinArbitrageResponseBTC);
+              DiskStorage.saveCoinArbitrage(normalizedAPISnapshot);
+              return normalizedAPISnapshot;
+            });
+          } else
+          {
+            let normalizedAPISnapshot = CoinUtils.normalizeCoinSnapShotData(apiArbitrageResponse);
+            DiskStorage.saveCoinSnapshot(normalizedAPISnapshot, toSymbol);
+            return normalizedAPISnapshot;
+          }
         });
       }
     });
@@ -158,7 +170,6 @@ module.exports = {
   getWeekMinuteHistoryData: function(fromSymbol, toSymbol) {
     return DiskStorage.findCoinWeekMinuteHistoryData(fromSymbol, toSymbol).then(function (response) {
       if (response && response.data.rows.length > 0) {
-        console.log(response.data.rows[0]);
         return response.data.rows;
       } else {
         return APIStorage.findCoinWeekMinuteHistoryData(fromSymbol, toSymbol).then(function(apiCoinDayHistoryDataResponse){
@@ -226,16 +237,16 @@ module.exports = {
       })
   },
 
-  getCoinYearHistoryData: function(coin_symbol) {
-    return DiskStorage.findCoinYearDayHistoryData(coin_symbol).then(function (response) {
+  getCoinYearHistoryData: function(fromSymbol, toSymbol) {
+    return DiskStorage.findCoinYearDayHistoryData(fromSymbol, toSymbol).then(function (response) {
       if (response && response.data.length > 0) {
         return response.data;
       } else {
-        return APIStorage.findCoinYearDayHistoryData(coin_symbol).then(function(apiCoinDayHistoryDataResponse){
+        return APIStorage.findCoinYearDayHistoryData(fromSymbol, toSymbol).then(function(apiCoinDayHistoryDataResponse){
           const coinAPIResponse = apiCoinDayHistoryDataResponse.data.Data;
           let response = {};
-          response[coin_symbol] = coinAPIResponse;
-          DiskStorage.saveCoinYearDayHistoryData(response);
+          response[fromSymbol] = coinAPIResponse;
+          DiskStorage.saveCoinYearDayHistoryData(response, toSymbol);
           return coinAPIResponse;
         }).catch(function(e){
           console.log(e);

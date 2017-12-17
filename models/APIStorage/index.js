@@ -27,8 +27,8 @@ module.exports = {
     return CoinList.getCoinWeekHistoryData(fromSymbol, toSymbol);
   },
 
-  findCoinYearDayHistoryData: function(coinSymbol) {
-    return CoinList.getCoinYearHistoryData(coinSymbol);
+  findCoinYearDayHistoryData: function(fromSymbol, toSymbol) {
+    return CoinList.getCoinYearHistoryData(fromSymbol, toSymbol);
   },
 
   searchCoin: function (coinSymbol) {

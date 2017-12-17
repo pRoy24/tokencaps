@@ -27,8 +27,8 @@ module.exports = {
     return CoinList.getCoinWeekHistoryData(fromSymbol, toSymbol);
   },
 
-  findCoinYearDayHistoryData: function(coinSymbol) {
-    return CoinList.getCoinYearDayHistoryData(coinSymbol);
+  findCoinYearDayHistoryData: function(fromSymbol, toSymbol) {
+    return CoinList.getCoinYearDayHistoryData(fromSymbol, toSymbol);
   },
 
   findExchangeList: function() {
@@ -58,8 +58,8 @@ module.exports = {
     return CoinUpdate.saveCoinWeekMinuteHistoryData(coinWeekHistoryData, toSymbol);
   },
 
-  saveCoinYearDayHistoryData: function(coinYearHistoryDataObject) {
-    return CoinUpdate.saveCoinYearDayHistoryData(coinYearHistoryDataObject);
+  saveCoinYearDayHistoryData: function(coinYearHistoryDataObject, toSymbol) {
+    return CoinUpdate.saveCoinYearDayHistoryData(coinYearHistoryDataObject, toSymbol);
   },
 
   saveExchangeList: function(exchangeListData) {
@@ -83,5 +83,8 @@ module.exports = {
 
   findRedisCoinList() {
 
+  },
+  saveCoinArbitrage(coinDataArray) {
+    return CoinUpdate.saveCoinArbitrage(coinDataArray);
   }
 }

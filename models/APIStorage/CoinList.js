@@ -85,7 +85,8 @@ module.exports = {
 
   // Method returns 10080 minute data endpoints for past week
   getCoinWeekHistoryData: function(fromSymbol, toSymbol) {
-    const dataEndpoint = "https://min-api.cryptocompare.com/data/histohour?fsym="+fromSymbol+"&tsym="+toSymbol+"&limit=168&aggregate=3&e=CCCAGG";
+    const dataEndpoint = "https://min-api.cryptocompare.com/data/histominute?fsym="+fromSymbol+"&tsym="
+      +toSymbol+"&limit=2000&aggregate=5&e=CCCAGG&allData=true";
     return axios.get(dataEndpoint);
   },
 
