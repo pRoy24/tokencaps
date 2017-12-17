@@ -7,9 +7,12 @@ const DiskStorage = require("../../models/DiskStorage");
 module.exports = {
   // Coin Detail Snapshot
   getCoinDetailSnapshot: function(req, res, next){
-    const fromSymbol = req.query.from_symbol;
+    let fromSymbol = req.query.from_symbol;
     let toSymbol = req.query.to_symbol;
-
+    let coinSymbol = req.query.coin_symbol;
+    if (ObjectUtils.isEmptyString(fromSymbol) && !ObjectUtils.isEmptyString(coinSymbol)) {
+      fromSymbol = coinSymbol;
+    }
     if (ObjectUtils.isEmptyString(toSymbol)) {
       toSymbol = "USD";
     }
