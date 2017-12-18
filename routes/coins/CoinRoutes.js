@@ -134,10 +134,10 @@ module.exports = {
     if (ObjectUtils.isEmptyString(fromSymbol)) {
       fromSymbol = "USD";
     }
-    DataFetchAPI.getCoinRow(fromSymbol).then(function(coinRowResponse) {
-      DataFetchAPI.getCoinArbitrage(fromSymbol, toSymbol).then(function (coinArbitrageResponse) {
-        res.send({data: {exchange: coinArbitrageResponse, details: coinRowResponse.data}});
-      });
+    // Search is slow currently, need to add sorted set removing coinList.get for now
+
+    DataFetchAPI.getCoinArbitrage(fromSymbol, toSymbol).then(function (coinArbitrageResponse) {
+        res.send({data: {exchange: coinArbitrageResponse}});
     });
   },
 
