@@ -28,7 +28,7 @@ module.exports = {
         } else {
           counter = 0;
         }
-      }, 30000);
+      }, 3000);
     });
     res.send({"data": "Started 24 History Data Request"});
   },
@@ -38,15 +38,19 @@ module.exports = {
       logger.log('info', 'querying API for Coin List', {
         "timestamp": Date.now()
       });
-      APIStorage.findCoinList().then(function(apiCoinSnapshotResponse){
-        const coinListResponse = apiCoinSnapshotResponse.data;
-        if (ObjectUtils.isNonEmptyArray(coinListResponse)) {
-          return CacheStorage.saveCoinList(coinListResponse);
-        } else {
-          return null;
-        }
-      });
-    }, 60000);
+      try {
+        APIStorage.findCoinList().then(function (apiCoinSnapshotResponse) {
+          const coinListResponse = apiCoinSnapshotResponse.data;
+          if (ObjectUtils.isNonEmptyArray(coinListResponse)) {
+            return CacheStorage.saveCoinList(coinListResponse);
+          } else {
+            return null;
+          }
+        });
+      } catch(e){
+        logger.log({"level": "error", "detail": "could not fetch coinlist at timestamp"+Date.now()})
+      }
+    }, 30000);
 
     res.send({"data": "Started Coin List Data Request"});
   }
