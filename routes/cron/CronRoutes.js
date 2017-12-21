@@ -20,15 +20,19 @@ module.exports = {
       let counter  = 0;
 
       setInterval(function(){
-        if (counter < coinListResponse.length - 1) {
-          if (coinListResponse[counter].symbol) {
-            saveCoinDailyGraph(coinListResponse[counter].symbol);
-            counter++;
+        try {
+          if (counter < coinListResponse.length - 1) {
+            if (coinListResponse[counter].symbol) {
+              saveCoinDailyGraph(coinListResponse[counter].symbol);
+              counter++;
+            }
+          } else {
+            counter = 0;
           }
-        } else {
-          counter = 0;
+        } catch (e) {
+          logger.log({"level": "error", "detail": "could not fetch coin data graph at timestamp "+Date.now()})
         }
-      }, 3000);
+      }, 6000);
     });
     res.send({"data": "Started 24 History Data Request"});
   },
@@ -50,7 +54,7 @@ module.exports = {
       } catch(e){
         logger.log({"level": "error", "detail": "could not fetch coinlist at timestamp"+Date.now()})
       }
-    }, 30000);
+    }, 10000);
 
     res.send({"data": "Started Coin List Data Request"});
   }
