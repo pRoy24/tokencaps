@@ -89,7 +89,6 @@ module.exports = {
     console.log(baseToken);
   },
 
-
   getMarketTrades: function (baseToken, quoteToken) {
 
   },
@@ -109,14 +108,6 @@ module.exports = {
     }).catch(function (err) {
       throw err;
     });
-  },
-
-  getExchangeMonthHistory: function () {
-
-  },
-
-  getExchangeYearHistory: function () {
-
   },
 
   getMinutelySampledHistoryData: function(exchangeCode, baseToken, quoteToken) {
@@ -168,7 +159,6 @@ module.exports = {
     });
   },
 
-
   getExchangeOrderbook: function (exchangeCode, baseToken, quoteToken) {
     return getExchangeObject(exchangeCode).then(function(currentExchange){
       return currentExchange.loadMarkets().then(function (loadMarketResponse) {
@@ -207,7 +197,6 @@ module.exports = {
       });
     }
   },
-
 
   findExchangesForToken: function(baseToken) {
     ccxt.exchanges.forEach(function(exchangeName){
@@ -260,8 +249,6 @@ function getExchangeTicker(currentExchange) {
       });
     }
   });
-
-
 }
 
 function fetchMarketTicker(exchangeMarketList, currentExchange, marketSymbol, rateLimit) {

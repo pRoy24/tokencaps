@@ -16,12 +16,7 @@ module.exports = {
       res.send({data: formattedMarketMetadata});
     });
   },
-  /**
-   *
-   * @param req
-   * @param res
-   * @param next
-   */
+
   listExchangeDetails: function(req, res, next) {
     ExchangeModels.getExchangeDetailsList().then(function(exchangeDetailResponse){
       let filteredData = exchangeDetailResponse.filter(function(item){
