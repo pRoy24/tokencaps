@@ -4,7 +4,7 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 var getCoinList = require('../models/GetCoinList');
-var DataFetchAPI = require('../models/DataFetchAPI');
+var DataFetchAPI = require('../models/CoinModels');
 
 /* GET home page. */
 var DBConnection = require('../models/DBModel');

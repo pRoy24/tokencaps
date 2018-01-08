@@ -54,6 +54,64 @@ module.exports ={
         }
       });
     });
-  }
+  },
 
+
+  saveExchangeDetails: function(exchangeData) {
+    let currentTimeStamp = Date.now();
+    const placeHolder = "? , ?, ?";
+    const exchangeName = Object.keys(exchangeData)[0];
+    const values = [exchangeName, JSON.stringify(exchangeData[exchangeName]), currentTimeStamp];
+    const keyItems = "exchange, detail, lastupdate";
+
+    let TTL = 86400;
+    const query  = "INSERT INTO tokenplex.market_detail ("+keyItems+") VALUES ("+ placeHolder +") USING TTL " + TTL;
+   return cassandraClient.execute(query, values, {prepare: true}, function (err, response) {
+      return response;
+    });
+  },
+
+  saveMarketsForExchange: function(exchangeMarketData) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve({rows: []});
+      }, 100);
+    });
+  },
+
+  saveMinutelySampledHistoryData: function(exchangeCode, baseToken, quoteToken, apiWeekHistoryResponse) {
+    const placeholders = "?, ?, ?, ?";
+    let values = [exchangeCode, baseToken, quoteToken, JSON.stringify(apiWeekHistoryResponse)];
+    const keyItems = "exchange, base, quote, detail";
+    const TTL = 10;
+
+    const query  = "INSERT INTO tokenplex.exchange_min_sample_history ("+keyItems+") VALUES ("+ placeholders +") USING TTL " + TTL;
+    return cassandraClient.execute(query, values, {prepare: true}, function (err, response) {
+      return response;
+    });
+  },
+
+  saveHourlySampledHistoryData: function(exchangeCode, baseToken, quoteToken, apiWeekHistoryResponse) {
+    const placeholders = "?, ?, ?, ?";
+    let values = [exchangeCode, baseToken, quoteToken, JSON.stringify(apiWeekHistoryResponse)];
+    const keyItems = "exchange, base, quote, detail";
+    const TTL = 30 * 60; // TTL 30 Mins
+
+    const query  = "INSERT INTO tokenplex.exchange_hour_sample_history ("+keyItems+") VALUES ("+ placeholders +") USING TTL " + TTL;
+    return cassandraClient.execute(query, values, {prepare: true}, function (err, response) {
+      return response;
+    });
+  },
+
+  saveDailySampledHistoryData: function(exchangeCode, baseToken, quoteToken, apiWeekHistoryResponse) {
+    const placeholders = "?, ?, ?, ?";
+    let values = [exchangeCode, baseToken, quoteToken, JSON.stringify(apiWeekHistoryResponse)];
+    const keyItems = "exchange, base, quote, detail";
+    const TTL = 12 * 60 * 60; // TTL 12 Hours
+
+    const query  = "INSERT INTO tokenplex.exchange_day_sample_history ("+keyItems+") VALUES ("+ placeholders +") USING TTL " + TTL;
+    return cassandraClient.execute(query, values, {prepare: true}, function (err, response) {
+      return response;
+    });
+  },
 }

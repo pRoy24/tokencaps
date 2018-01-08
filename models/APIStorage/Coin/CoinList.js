@@ -104,7 +104,7 @@ module.exports = {
   getCoinHistoricalPrice: function(fromSymbol, exchange, timeStamp) {
     let toSymbol = "BTC,USD,ETH";
     const priceHistoricalEndpoint = "https://min-api.cryptocompare.com/data/pricehistorical?fsym="
-      + fromSymbol +"&tsyms=" + toSymbol + "&markets=" + exchange + "&ts=" + timeStamp;
+      + fromSymbol +"&tsyms=" + toSymbol + "&exchange=" + exchange + "&ts=" + timeStamp;
     return axios.get(priceHistoricalEndpoint);
   }
 }

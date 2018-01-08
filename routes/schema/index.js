@@ -2,7 +2,8 @@
 
 var express = require('express')
   , router = express.Router()
-  , CreateTable = require('./CreateTable');
+  , CreateTable = require('./CreateTable')
+  , ExchangeTables = require('./ExchangeTables');
 
 router.route('/create-coin-list-table').get(CreateTable.createCoinListTable);
 
@@ -20,6 +21,11 @@ router.route('/create-exchange-table').get(CreateTable.createExchangeTable);
 
 router.route('/create-social-table').get(CreateTable.createCoinSocialTable);
 
+router.route('/create-coin-exchange-table').get(ExchangeTables.createTokenExchangeListTable);
+
+router.route('/create-market-detail-table').get(ExchangeTables.createExchangeMarketDetailTable);
+
+router.route('/create-exchange-history-tables').get(ExchangeTables.createExchangeOLHCVTables);
 /**
  * @api {get} /create/create-all-tables Create all coin tables
  * @apiName createAllTables

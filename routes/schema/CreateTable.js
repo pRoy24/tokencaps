@@ -186,7 +186,7 @@ module.exports = {
   createCoinSnapshotTable: function(req, res, next) {
     const CREATE_COIN_SNAPSHOT_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.coin_details" +
       "(type varchar," +
-      "market varchar," +
+      "exchange varchar," +
       "open24hour varchar,"+
       "fromsymbol varchar," +
       "tosymbol varchar," +
@@ -201,7 +201,7 @@ module.exports = {
       "openhourto varchar," +
       "high24hour varchar," +
       "low24hour varchar," +
-      "PRIMARY KEY(fromsymbol, tosymbol, market))";
+      "PRIMARY KEY(fromsymbol, tosymbol, exchange))";
     const DELETE_COIN_SNAPSHOT_TABLE = "DROP TABLE IF EXISTS tokenplex.coin_details";
     DBConnection.getCassandraClientConnection()
       .then(function () {
@@ -296,7 +296,7 @@ function createKeySpace() {
 function createCoinSnapshotTable() {
   const CREATE_COIN_SNAPSHOT_TABLE = "CREATE TABLE IF NOT EXISTS tokenplex.coin_details" +
     "(type varchar," +
-    "market varchar," +
+    "exchange varchar," +
     "open24hour varchar,"+
     "fromsymbol varchar," +
     "tosymbol varchar," +
@@ -311,7 +311,7 @@ function createCoinSnapshotTable() {
     "openhourto varchar," +
     "high24hour varchar," +
     "low24hour varchar," +
-    "PRIMARY KEY(fromsymbol, tosymbol, market))";
+    "PRIMARY KEY(fromsymbol, tosymbol, exchange))";
   const DELETE_COIN_SNAPSHOT_TABLE = "DROP TABLE IF EXISTS tokenplex.coin_details";
    return cassandraClient.execute(DELETE_COIN_SNAPSHOT_TABLE).then(function () {
         return cassandraClient.execute(CREATE_COIN_SNAPSHOT_TABLE)

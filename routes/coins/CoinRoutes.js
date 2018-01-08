@@ -1,8 +1,9 @@
 // pRoy24 tokenplex
 
 const ObjectUtils = require('../../utils/ObjectUtils');
-const DataFetchAPI = require('../../models/DataFetchAPI');
+const DataFetchAPI = require('../../models/CoinModels');
 const DiskStorage = require("../../models/DiskStorage");
+const ExchangeModels = require('../../models/ExchangeModels');
 
 module.exports = {
   // Coin Detail Snapshot
@@ -135,9 +136,8 @@ module.exports = {
       fromSymbol = "USD";
     }
     // Search is slow currently, need to add sorted set removing coinList.get for now
-
     DataFetchAPI.getCoinArbitrage(fromSymbol, toSymbol).then(function (coinArbitrageResponse) {
-        res.send({data: {exchange: coinArbitrageResponse}});
+       res.send({data: {exchange: coinArbitrageResponse}});
     });
   },
 
@@ -157,5 +157,13 @@ module.exports = {
         res.send({"error": err});
       })
     }
+  },
+
+  getCoinExchanges(req, res, next) {
+    let coinID = req.url.split("/coin")[0].split("/")[1].toLowerCase();
+    ExchangeModels.getMarketsForToken(coinID).then(function(coinResponse){
+
+    });
+    res.send({data: []});
   }
 }

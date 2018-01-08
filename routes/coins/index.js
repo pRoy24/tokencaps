@@ -94,14 +94,24 @@ router.route('/coin-week-history').get(CoinRoutes.getCoinWeekData);
  */
 router.route('/coin-year-history').get(CoinRoutes.getCoinYearData);
 
+/**
+ * @api {get} /coin/coin-trade-quote Get list of currencies the coin trades against.
+ */
+
+
+
 router.route('/save-coin-list').get(CoinRoutes.saveCoinListToCache);
 
 router.route('/delete-coin-list').delete(CoinRoutes.deleteCoinList);
+
+
 
 
 // Legacy routes, to be deprecated
 router.route('/get-coin-detail').get(CoinRoutes.getCoinDetailSnapshot);
 
 router.route('/get-coin-list').get(CoinRoutes.getCoinList);
+
+router.route('/:coinID/exchanges').get(CoinRoutes.getCoinExchanges);
 
 module.exports = router;

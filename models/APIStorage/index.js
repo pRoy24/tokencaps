@@ -1,7 +1,9 @@
 // pRoy24 tokenplex
 
-const CoinList = require('./CoinList');
+const CoinList = require('./Coin/CoinList');
 const ExchangeList  = require('./Exchange/ExchangeList');
+const MarketList = require('./Exchange/ExchangeList');
+
 module.exports = {
   findCoinSnapshot: function (coinSymbol, toSymbol) {
     return CoinList.getCoinSnapShot(coinSymbol, toSymbol);
@@ -46,6 +48,59 @@ module.exports = {
 
   getCoinArbitrage: function(fromSymbol, toSymbol) {
     return CoinList.getCoinArbitrage(fromSymbol, toSymbol);
+  },
+
+
+   // Market Operations
+   getMarketList: function() {
+     return MarketList.getMarketList();
+   },
+
+   getMarketActiveExchanges: function(currentExchange, exchangeName) {
+     return MarketList.getMarketActiveExchanges(currentExchange, exchangeName);
+   },
+
+  getMarketExchangeByToken: function() {
+    return MarketList.getMarketExchangeByToken();
+  },
+
+  getMarketTrades: function(baseToken, quoteToken) {
+    return MarketList.getMarketTrades(baseToken, quoteToken);
+  },
+
+
+  getMarketsForExchange: function(exchangeName){
+    return ExchangeList.getMarketList(exchangeName);
+  },
+
+  getExchangeWeekHistory: function(exchangeCode, baseToken, quoteToken) {
+    return ExchangeList.getExchangeWeekHistory(exchangeCode, baseToken, quoteToken);
+  },
+
+  getExchangeOrderbook: function(exchangeCode, baseToken, quoteToken) {
+    return ExchangeList.getExchangeOrderbook(exchangeCode, baseToken, quoteToken);
+  },
+
+ getExchangeDetails: function(exchangeName) {
+    return ExchangeList.findExchangeDetails(exchangeName);
+ },
+
+  findExchangesForToken: function(baseToken) {
+    return ExchangeList.findExchangesForToken(baseToken);
+  },
+
+  getMinutelySampledHistoryData: function(exchangeCode, baseToken, quoteToken) {
+    return ExchangeList.getMinutelySampledHistoryData(exchangeCode, baseToken, quoteToken);
+  },
+
+  getDailySampledHistoryData: function(exchangeCode, baseToken, quoteToken) {
+    return ExchangeList.getDailySampledHistoryData(exchangeCode, baseToken, quoteToken);
+  },
+
+  getSampledHistoryData: function(exchangeCode, baseToken, quoteToken, rate) {
+    return ExchangeList.getSampledHistoryData(exchangeCode, baseToken, quoteToken, rate);
   }
+
+
  // findCoinArbitrageResponse: function(fromS)
 }

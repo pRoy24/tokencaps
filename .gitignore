@@ -25,3 +25,5 @@ yarn-error.log*
 /logs/error.log
 
 /.idea
+
+/.env

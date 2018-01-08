@@ -179,8 +179,7 @@ module.exports = {
           DiskStorage.saveCoinWeekMinuteHistoryData(response, toSymbol);
           return coinAPIResponse;
         }).catch(function(e){
-          console.log(e);
-          return {error: e};
+          return {}
         });
       }
     });

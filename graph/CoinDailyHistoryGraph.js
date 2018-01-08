@@ -1,6 +1,7 @@
 // pRoy24 tokenplex
 
 var moment = require('moment');
+var dotenv = require('dotenv').config()
 //const config = require('../constants/config');
 
 module.exports = {
@@ -87,10 +88,13 @@ module.exports = {
         return chartNode.writeImageToFile('image/png', filePath);
       })
       .then((file) => {
+
         //   writeFileToS3Location(coinSymbol);
         // chart is now written to the file path
         // ./testimage.png
+        writeFileToS3Location(coinSymbol);
       }).catch(function(err){
+        console.log(err);
         return err;
       });
   },
@@ -103,9 +107,7 @@ function writeFileToS3Location(coinSymbol) {
 
   const coinURI = 'public/images/charts/' + coinSymbol + '.png';
 // For dev purposes only
-  AWS.config.update({ accessKeyId: config.AWS_ACCESS_KEY, secretAccessKey: config.AWS_SECRET_KEY});
-
-
+  AWS.config.update({ accessKeyId: process.env.AWS_ACCESS_KEY, secretAccessKey: process.env.AWS_SECRET_KEY});
   // Read in the file, convert it to base64, store to S3
   fs.readFile(coinURI, function (err, data) {
     if (err) {
@@ -119,6 +121,9 @@ function writeFileToS3Location(coinSymbol) {
       Body: base64data,
       ACL: 'public-read'
     },function (err, resp) {
+      if (err) {
+        console.log(err);
+      }
       console.log('Successfully uploaded package.');
     });
   });

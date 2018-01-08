@@ -13,8 +13,11 @@ var create_table = require('./routes/schema');
 
 const cron_route_api = require('./routes/cron');
 const coin_detail_api = require('./routes/coins');
+const exchange_api = require('./routes/exchange');
 
 var cors = require('cors')
+
+require('dotenv').config()
 
 var app = express();
 app.use(cors())
@@ -34,7 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/coin', coin_detail_api);
 app.use('/create', create_table);
-
+app.use('/exchange', exchange_api);
 app.use('/cron', cron_route_api);
 
 // catch 404 and forward to error handler

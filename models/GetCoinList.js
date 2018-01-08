@@ -39,13 +39,5 @@ module.exports = {
 
   getCoinDetailSnapshot(coinID) {
     const detailSnapshotEndpoint = "https://www.cryptocompare.com/api/data/coinsnapshotfullbyid/?id="+coinID;
-  },
-
-  getCoinMonthPriceData(fromCoinSymbol, toCoinSymbol) {
-
-  },
-
-  getCoinGenesisPriceData(fromCoinSymbol, toCoinSymbol) {
-
-  },
+  }
 }

@@ -1,5 +1,5 @@
 
-const DataFetchAPI = require('../../models/DataFetchAPI');
+const DataFetchAPI = require('../../models/CoinModels');
 
 let express = require('express');
 var DBConnection = require('../../models/DBModel');
@@ -16,24 +16,17 @@ const logger = require('../../logs/logger');
 
 module.exports = {
   getCoinDayGraph: function(req, res, next) {
-    DataFetchAPI.getCoinList(600).then(function (coinListResponse) {
-      let counter  = 0;
-
-      setInterval(function(){
-        try {
-          if (counter < coinListResponse.length - 1) {
-            if (coinListResponse[counter].symbol) {
-              saveCoinDailyGraph(coinListResponse[counter].symbol);
-              counter++;
-            }
-          } else {
-            counter = 0;
-          }
-        } catch (e) {
-          logger.log({"level": "error", "detail": "could not fetch coin data graph at timestamp "+Date.now()})
-        }
-      }, 6000);
-    });
+    startCoinGraphCron();
+    // Chart every coin graph with a timeout of 4 seconds
+    // Repeat logic every hour
+    const FETCH_COIN_LOOP = 3600000;
+    setInterval(function(){
+      try {
+        startCoinGraphCron();
+      } catch(e) {
+        logger.log({level: "error", message: "caught exception " + e + " retry in "+FETCH_COIN_LOOP+" ms"})
+      }
+    }, FETCH_COIN_LOOP);
     res.send({"data": "Started 24 History Data Request"});
   },
 
@@ -54,57 +47,52 @@ module.exports = {
       } catch(e){
         logger.log({"level": "error", "detail": "could not fetch coinlist at timestamp"+Date.now()})
       }
-    }, 10000);
+    }, 3000);
 
     res.send({"data": "Started Coin List Data Request"});
   }
 }
 
-function saveCoinGraphResponse(coinListResponse, currentTimeSchedulerSeconds) {
-  let counter = 0;
-  return new CronJob(currentTimeSchedulerSeconds, function() {
-    if (coinListResponse[counter]) {
-      let coinSymbol = coinListResponse[counter].symbol;
-      logger.log('info', 'querying API for Coin Daily History Data', {
-        "timestamp": Date.now(),
-        'coin': coinSymbol
-      })
-      APIStorage.findCoinDayHistoryData(coinSymbol).then(function (apiCoinDayHistoryDataResponse) {
-        const coinDayHistoryResponse = apiCoinDayHistoryDataResponse.data.Data;
-        if (coinDayHistoryResponse && coinDayHistoryResponse.length > 0) {
-          const responseData = {};
-          responseData[coinSymbol] = coinDayHistoryResponse;
-          CoinGraph.chartCoinDailyHistoryGraph(responseData);
-          return DiskStorage.deleteCoinDayHistoryData(coinSymbol).then(function (deleteResponse) {
-            return DiskStorage.saveCoinDayHistoryData(responseData);
-          });
+function startCoinGraphCron() {
+  DataFetchAPI.getCoinList(1000).then(function(coinDataList) {
+    if (coinDataList.length > 0) {
+      function createDailyServerSideGraphMap(n, fn, delay) {
+        if (ObjectUtils.isNonEmptyObject(coinDataList[n])) {
+          createCoinHistoryMap(coinDataList[n]);
         }
-      });
-      counter ++;
+        if (n > 0) {
+          fn();
+          if (n > 1) {
+            setTimeout(function() {
+              createDailyServerSideGraphMap(n - 1, fn, delay);
+            }, delay);
+          }
+        }
+      }
+      createDailyServerSideGraphMap(coinDataList.length, function() {
+
+      }, 4000);
     }
-   if (counter === coinListResponse.length) {
-     counter = 0;
-   }
-  }, null, true, 'America/Los_Angeles');
+  });
 }
 
-function saveCoinDailyGraph(coinSymbol) {
-  logger.log('info', 'Saving Coin Daily History Data', {
-    "timestamp": Date.now(),
-    'coin': coinSymbol
-  });
-  return APIStorage.findCoinDayHistoryData(coinSymbol).then(function (apiCoinDayHistoryDataResponse) {
+function createCoinHistoryMap(coinDetailObject) {
+  let coinSymbol = coinDetailObject.symbol;
+  APIStorage.findCoinDayHistoryData(coinSymbol).then(function (apiCoinDayHistoryDataResponse) {
     const coinDayHistoryResponse = apiCoinDayHistoryDataResponse.data.Data;
-    if (coinDayHistoryResponse && coinDayHistoryResponse.length > 0) {
+    if (ObjectUtils.isNonEmptyArray(coinDayHistoryResponse)) {
       const responseData = {};
       responseData[coinSymbol] = coinDayHistoryResponse;
-     return CoinGraph.chartCoinDailyHistoryGraph(responseData);
+      logger.log({"level": "info", "message": "charting coin history for " + coinSymbol});
+      CoinGraph.chartCoinDailyHistoryGraph(responseData);
     } else {
-      // ObjectUtils.writeFileToS3Location(coinSymbol, "ETH");
+      logger.log({"level": "error", "message": "could not fetch coin history data"})
     }
-  }).catch(function(err){
-    return null;
   });
+
 }
+
+
+
 
 

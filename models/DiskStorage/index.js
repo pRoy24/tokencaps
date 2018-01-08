@@ -3,6 +3,9 @@ const CoinUpdate = require('./Coin/CoinUpdate');
 const ExchangeSave = require('./Exchange/ExchangeSave');
 const ExchangeList = require('./Exchange/ExchangeList');
 
+const MarketUpdate = require('./Exchange/ExchangeUpdate');
+const MarketList = require('./Exchange/ExchangeList');
+
 module.exports = {
   findCoinRow: function(coinSymbol) {
     return CoinList.getCoinItem(coinSymbol);
@@ -11,6 +14,7 @@ module.exports = {
   findCoinSnapshot: function(coinSymbol) {
     return CoinList.getCoinSnapShot(coinSymbol);
   },
+
   findCoinSocialData: function (coinID) {
     return CoinList.getCoinSocialData(coinID);
   },
@@ -42,6 +46,7 @@ module.exports = {
   saveCoinExtraDetails: function(coinDetailData) {
     return CoinUpdate.saveCoinExtraDetails(coinDetailData);
   },
+
   saveCoinSocialData: function(coinID, coinSocialData) {
     return CoinUpdate.saveCoinSocialData(coinID, coinSocialData);
   },
@@ -72,7 +77,6 @@ module.exports = {
     return CoinList.searchCoinByQuery(coinString);
   },
 
-
   deleteCoinDayHistoryData(coinSymbol) {
     return CoinUpdate.deleteCoinDayHistoryData(coinSymbol)
   },
@@ -84,7 +88,99 @@ module.exports = {
   findRedisCoinList() {
 
   },
+
   saveCoinArbitrage(coinDataArray) {
     return CoinUpdate.saveCoinArbitrage(coinDataArray);
+  },
+
+  saveMarketList(marketListArray) {
+
+  },
+
+  saveMarketActiveExchanges(marketListInExchange) {
+    MarketUpdate.saveMarketActiveExchanges(marketListInExchange);
+  },
+
+  findExchangesForToken(baseToken) {
+    return MarketList.findExchangesForToken(baseToken);
+  },
+
+  createMarketListByToken(marketListResponse) {
+    return MarketUpdate.saveMarketListByCoin(marketListResponse);
+  },
+
+  getMarketTrades(baseToken) {
+    return MarketList.getMarketTradesForToken(baseToken);
+  },
+
+
+
+  getMarketsForExchange(exchangeName) {
+    return ExchangeList.getMarketsForExchange(exchangeName);
+  },
+
+  saveExchangeMarketList(exchangeList) {
+
+  },
+
+  getExchangeWeekHistory(exchangeName, baseToken, quoteToken) {
+    return ExchangeList.getExchangeWeekHistory(exchangeName, baseToken, quoteToken);
+  },
+
+  getExchangeMonthHistory() {
+    return ExchangeList.getExchangeMonthHistory();
+  },
+
+  getExchangeYearHistory() {
+    return ExchangeList.getExchangeYearHistory();
+  },
+
+  getExchangeOrderbook(exchangeCode, baseToken, quoteToken) {
+    return ExchangeList.getExchangeOrderbook(exchangeCode, baseToken, quoteToken);
+  },
+
+
+  getExchangeDetails(exchangeName) {
+    return ExchangeList.getExchangeDetails(exchangeName);
+  },
+
+
+  saveExchangeDetails(exchangeDetails) {
+    return ExchangeSave.saveExchangeDetails(exchangeDetails);
+  },
+
+  getDailySampledHistoryData(exchangeCode, baseToken, quoteToken) {
+    return ExchangeList.getDailySampledHistoryData(exchangeCode, baseToken, quoteToken);
+  },
+
+  getHourlySampledHistoryData(exchangeCode, baseToken, quoteToken) {
+    return ExchangeList.getHourlySampledHistoryData(exchangeCode, baseToken, quoteToken);
+  },
+
+  getMinutelySampledHistoryData(exchangeCode, baseToken, quoteToken) {
+    return ExchangeList.getMinutelySampledHistoryData(exchangeCode, baseToken, quoteToken);
+  },
+
+  saveMarketsForExchange(exchangeMarketDetails) {
+    return ExchangeSave.saveMarketsForExchange(exchangeMarketDetails);
+  },
+
+  hasExchangeDetailsExpired(exchangeName) {
+    return ExchangeList.hasExchangeDetailsExpired(exchangeName);
+  },
+
+  saveMinutelySampledHistoryData(exchangeCode, baseToken, quoteToken, apiWeekHistoryResponse) {
+    return ExchangeSave.saveMinutelySampledHistoryData(exchangeCode, baseToken, quoteToken, apiWeekHistoryResponse);
+  },
+
+  saveHourlySampledHistoryData(exchangeCode, baseToken, quoteToken, apiWeekHistoryResponse) {
+    return ExchangeSave.saveHourlySampledHistoryData(exchangeCode, baseToken, quoteToken, apiWeekHistoryResponse);
+  },
+
+  saveDailySampledHistoryData(exchangeCode, baseToken, quoteToken, apiWeekHistoryResponse) {
+    return ExchangeSave.saveDailySampledHistoryData(exchangeCode, baseToken, quoteToken, apiWeekHistoryResponse);
   }
+
+
+
 }

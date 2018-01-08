@@ -137,7 +137,6 @@ module.exports = {
           let keyItems = "symbol, high, low, open, close, time, volumefrom, volumeto, tosymbol";
           // TTL Strategy of 120 seconds for Minute history data for week
           let ttl = 120;
-
           const query = 'INSERT INTO tokenplex.week_history_data (' + keyItems + ') VALUES (' + placeHolders + ') USING TTL ' + ttl;
           const params = values;
           cassandraClient.execute(query, params, {prepare: true}, function (err, response) {
@@ -208,7 +207,7 @@ module.exports = {
       queries.push({
         query: query,
         params: values
-      })
+      });
     });
     return cassandraClient.batch(queries, { prepare: true }, function(err, res){
       if (err) {

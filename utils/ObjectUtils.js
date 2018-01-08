@@ -8,7 +8,7 @@ module.exports = {
     return true;
   },
   isNonEmptyArray: function(arr) {
-    if (typeof arr === "undefined" || arr === null || arr === [] || arr.length === 0) {
+    if (typeof arr === "undefined" || arr === null || arr.length === 0) {
       return false;
     }
     return true;
@@ -30,8 +30,9 @@ module.exports = {
     // Read in the file, convert it to base64, store to S3
     fs.readFile(coinURI, function (err, data) {
       if (err) {
+        // Silently absorb write error for now
+        // TODO handle upload to S3 error
         console.log(err);
-        throw err;
       }
       const base64data = new Buffer(data, 'binary');
       const s3 = new AWS.S3();
