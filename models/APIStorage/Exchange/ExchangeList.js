@@ -85,10 +85,6 @@ module.exports = {
     }, 6000);
   },
 
-  getMarketTradesForToken: function (baseToken, quoteToken) {
-    console.log(baseToken);
-  },
-
   getMarketTrades: function (baseToken, quoteToken) {
 
   },

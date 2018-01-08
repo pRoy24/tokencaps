@@ -66,9 +66,11 @@ module.exports ={
 
     let TTL = 86400;
     const query  = "INSERT INTO tokenplex.market_detail ("+keyItems+") VALUES ("+ placeHolder +") USING TTL " + TTL;
-   return cassandraClient.execute(query, values, {prepare: true}, function (err, response) {
-      return response;
-    });
+   return cassandraClient.execute(query, values, {prepare: true}).then(function(response){
+     return response;
+   }).catch(function(err){
+
+   })
   },
 
   saveMarketsForExchange: function(exchangeMarketData) {
