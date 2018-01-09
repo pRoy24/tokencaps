@@ -1,46 +1,16 @@
-
-
 ## What is TokenPlex
 
 TokenPlex is an express/node based framework to aggregate crypto-currency data from the web, normalize and cleanse it, 
 and provide simple easy to digest endpoints.
 
-It can be used as a middleware server for an application/service involving digital currencies.
+It implements the [ccxt](https://github.com/ccxt/ccxt) public library and provides a load-balancer and query-server over 80 supported exchanges.
 
-## Using the hosted Implementation
-
-<img src="https://lh3.googleusercontent.com/FUinxX7di3izoyPTFAwWdYIU9Tl8I5_bnFUZdYGAbIbqkItpIPTHNND0eHaMQSQJA2XU3JWFCkRU_H13xE2otftJ8nYbnb_jJotdeXSCnscewHF6Hf0FfxSOe-emlyBRacFBKM7F9gthbz3dhaxzoiDFT5A6u3GTXFr31K_1OdtGmCO_iXys8hhGQ4W0jzIsrh-Ix_y3crat2cV8pM5UMnPR8tB9BZEizsuALwpUPyQ_DPGBH3uvjbeqDCJ94PcxWN604xSvmytmiPKz5cYS4B5512MvEQHpga8XRMQRRqsXtD-eVJ1madDdOTm8he0V13LmH_z-rS8uaw2XCtxABYQHEs2NXoWTRmyCxMmPOKrK4ti92EPlWSmn2z5dVdt1smJnZJfjK7dIpIxigU3nBoBlyhL3s01-Kc_MfVQ5Awd7w-GMHqtLYEj4_s3cB2p38tcWN0WDPXNme3rOyIlzoMPIDSkAItKIT8QEbZtK98bJIkMVEQIzvvwf79__mA_8Jn7jCdqdqO_mj9ZnuDQKlVM9padQl28MKL6kiSGRRzftTuVQs97_RAEkeL2DrDDn3OJnUNSLY2dQwKalUaHVvAUc6rTgjkDn5ft1I2nE0FYkgbisA84nldmRJAY4ce8r9IyCuuWedaFyP5oxJ25n2ACa7tDxNxmyI5U=w814-h872-no"/>
-
-Web Front-End is hosted at https://tokenplex.io/
-
-API Endpoint is hosted at https://api.tokenplex.io
-
-API Docs at https://api.tokenplex.io/docs
-
-## Running a local middleware server 
-
-#### Prerequisites
-You need to have a running [CQL](http://cassandra.apache.org/doc/latest/cql/) installation for time-series data
-and a [Redis](https://redis.io/) server for Ticker data.
-
-You can use any CQL API compliant database and Redis API compatible cache for storage.
-
-TokenPlex uses [YugaByte](https://www.yugabyte.com) which is a unified CQL + Redis implementation.
-
-For instructions on how to build YugaByte from source, see [here](https://github.com/YugaByte/yugabyte-db)
-
-To download and install binaries for your platform, see [here](https://docs.yugabyte.com/quick-start/install/) 
-
-If you are using a remote redis or CQL host, then update constants.js with the same.
-
-#### Installation
+## Installation
 
 ```
 npm install
 npm start
 ```
-
-By default the [Express](https://expressjs.com/) service will start at http://localhost:9000/
 
 To Create all tables 
 
@@ -48,30 +18,16 @@ To Create all tables
 GET /create/create-all-tables
 ``` 
 
-Individual create table documentation can be found in 
-
-```
-routes/schema/index.js
-
-```
 To start cron job for querying coin ticker data
 
 ```
 GET /cron/query-coin-list-table 
 ```
 
-##### Optional
-For server side rendering of Graph data, you need to install chartjs-node.
-It requires canvas.js to be pre-installed in the system and 
-also has a dependancy on chart.js.
-Installation instructions for Cairo and Canvas for your plaform can be found
- [here](https://github.com/Automattic/node-canvas#installation)
- Create /public/image/charts directory in your project where charts will be stored.
+### Optional
+For server side rendering of Graph data, you need to install [chartjs-node](https://github.com/vmpowerio/chartjs-node).
+It requires canvas.js and cairo to be pre-installed in your system.
 
-```
-npm install chart.js@2.6.0
-npm install chartjs-node
-```
 and then simply call this endpoint to start cron job for querying 24 hour data
 and server side graph rendering.
 
@@ -81,10 +37,48 @@ GET /cron/query-daily-history-table
 
 You are now running an API load balancer for serving crypto-currency data.
 
+## HA Deployment
+To run TokenPlex in a fault-tolerant manner, you should use a HA data cluster and run your API server behind a load balancer. Since NodeJS is essentially single-threaded, you should run the CRON proceess in a separate node/container so that normal requests do not get jammed up due to blocked aggregation queries.
+You can use (YugaByte)[https://yugabyte.com] a polyglot database with unified CQL + Redis implemetation 
+<img src="https://s3-us-west-2.amazonaws.com/images.tokenplex.io/tp_architecture.png"/>
+
+
+## Hosted Solution
+
+### User Interface Endpoint at https://tokenplex.io
+
+#### Exchange View
+This provides a snapshot view public API's of 79 exchanges. The API is implemented over the (https://ccxt.com)[ccxt] library.
+
+<img src="https://s3-us-west-2.amazonaws.com/images.tokenplex.io/top_screens_1.png"/>
+
+#### Token View
+
+This provides a list and details view of 2000 coins. The details join public aggregator API's and provide a normalized view.
+Data is refreshed every 10 seconds.
+<img src="https://s3-us-west-2.amazonaws.com/images.tokenplex.io/top_screens_2.png"/>
+
+#### Portfolio View
+
+This provides a portfolio management screen. Currently only aggregate exchanges supported. More exchange support coming soon.
+
+<img src="https://s3-us-west-2.amazonaws.com/images.tokenplex.io/top_screens_3.png"/>
+
+### API Endpoint at https://api.tokenplex.io
+
+Tokenplex API is a hosted implementation of this repository. It currently uses an RF-1 Yugabyte node as it's database.
+API docs can be found [here](https://api.tokenplex.io/docs)
+
+For production applications, it is recommended that you run your own hosted solution.
+
 
 ## How It Works
 
-Ticker data is stored in a Redis Cache and is by default updated every 60 seconds.
+Ticker data is stored in a Redis Cache and is by default updated every 3 seconds.
+History Data requests have a TTL depending on sample rate of the request.
+For eg. minutely data table has a TTL of 30 seconds while daily sampled data tables have a TTL of 12 hours.
+Exchange-Markets table has a TTL of 6 Seconds.
+Coin-Detail tables have a TTL of 10 Seconds. 
 
 TimeSeries metrics data and token details is stored in a CQL database and is updated
 on last request with a TTL strategy of 120 seconds.
@@ -93,12 +87,6 @@ Additionally you can specify an S3 Image server location for server side renderi
 
 You can run your own load balancer and application server on top of this architecture.
 
-## Data Sources
+## Supported Exchanges
+<img src="https://s3-us-west-2.amazonaws.com/images.tokenplex.io/brand_ex.png"/>
 
-Current API Aggregator is powered by
-
-1. https://www.cryptocompare.com/api/ 
-
-2. https://coinmarketcap.com/api/
-
-Plan to support top 10 exchanges by volume is on the road-map. 
