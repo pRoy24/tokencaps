@@ -39,7 +39,7 @@ You are now running an API load balancer for serving crypto-currency data.
 
 ## HA Deployment
 To run TokenPlex in a fault-tolerant manner, you should use a HA data cluster and run your API server behind a load balancer. Since NodeJS is essentially single-threaded, you should run the CRON proceess in a separate node/container so that normal requests do not get jammed up due to blocked aggregation queries.
-You can use (YugaByte)[https://yugabyte.com] a polyglot database with unified CQL + Redis implemetation 
+You can use [YugaByte](https://yugabyte.com) a polyglot database with unified CQL + Redis implemetation 
 <img src="https://s3-us-west-2.amazonaws.com/images.tokenplex.io/tp_architecture.png"/>
 
 
