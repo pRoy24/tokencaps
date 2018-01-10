@@ -9,16 +9,17 @@ const logger = require('../../../logs/logger');
 
 module.exports = {
   getMarketList: function (exchangeName) {
-    let currentExchange = markets.getExchangeInstance(exchangeName);
-    return currentExchange.loadMarkets().then(function (exchangeMarketList) {
-      return getExchangeTicker(currentExchange).then(function (currentExchangeTickerResponse) {
-        let tickerNormalizedResponse = [];
-        Object.keys(currentExchangeTickerResponse).forEach(function (tickerKey) {
-          let responseMarket = exchangeMarketList[tickerKey];
-          let mergedMarketResponse = Object.assign({}, responseMarket, currentExchangeTickerResponse[tickerKey]);
-          tickerNormalizedResponse.push(MarketUtils.normalizeMarketListForExchange(mergedMarketResponse));
+    return getExchangeObject(exchangeName).then(function(currentExchange){
+      return currentExchange.loadMarkets().then(function (exchangeMarketList) {
+        return getExchangeTicker(currentExchange).then(function (currentExchangeTickerResponse) {
+          let tickerNormalizedResponse = [];
+          currentExchangeTickerResponse.forEach(function(responseObject){
+            if (responseObject.base && responseObject.quote) {
+              tickerNormalizedResponse.push(MarketUtils.normalizeMarketListForExchange(responseObject));
+            }
+          });
+          return tickerNormalizedResponse;
         });
-        return tickerNormalizedResponse;
       });
     });
   },
@@ -137,7 +138,7 @@ module.exports = {
           return item.base === baseToken && item.quote === quoteToken;
         });
         let marketSymbol = marketList.symbol;
-        if (currentExchange.hasFetchOHLCV) {
+        if (currentExchange.hasFetchOHLCV && marketSymbol) {
           return currentExchange.fetchOHLCV(marketSymbol, rate).then(function (ohclvResponse) {
             return ohclvResponse;
           });
@@ -149,7 +150,6 @@ module.exports = {
           });
         }
       }).catch(function (err) {
-        console.log(err);
         return [];
       });
     });
@@ -216,9 +216,11 @@ function getExchangeTicker(currentExchange) {
       return currentExchange.fetchTickers().then(function(tickerResponse){
         let tickerNormalizedResponse = [];
         Object.keys(tickerResponse).forEach(function(tickerKey){
-          let responseMarket = exchangeMarketList[tickerKey];
-          let mergedMarketResponse = Object.assign({}, responseMarket, tickerResponse[tickerKey], {exchangeName: currentExchange.name});
-          tickerNormalizedResponse.push(MarketUtils.normalizeMarketListForExchange(mergedMarketResponse));
+          if (ObjectUtils.isNonEmptyString(tickerKey)) {
+            let responseMarket = exchangeMarketList[tickerKey];
+            let mergedMarketResponse = Object.assign({}, responseMarket, tickerResponse[tickerKey], {exchangeName: currentExchange.name});
+            tickerNormalizedResponse.push(MarketUtils.normalizeMarketListForExchange(mergedMarketResponse));
+          }
         });
        return tickerNormalizedResponse;
       }).catch(function(err){

@@ -47,7 +47,7 @@ module.exports = {
       } catch(e){
         logger.log({"level": "error", "detail": "could not fetch coinlist at timestamp"+Date.now()})
       }
-    }, 3000);
+    }, 10000);
 
     res.send({"data": "Started Coin List Data Request"});
   }

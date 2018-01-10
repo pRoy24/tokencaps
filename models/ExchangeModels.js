@@ -120,28 +120,11 @@ module.exports = {
                  });
                });
             }).catch(function(err){
-           //   console.log("error");
+
             });
           });
         });
-/*        return APIStorage.getMarketTrades(baseToken, quoteToken).then(function(apiMarketTradeResponse){
-          return apiMarketTradeResponse;
-        });*/
       }
-    });
-  },
-
-  getMarketPairs: function(exchangeCode) {
-    let exchangeInstance = markets.getExchangeInstance(exchangeCode);
-    exchangeInstance.loadMarkets().then(function(marketResponse){
-      Object.keys(marketResponse).forEach(function(key){
-
-      });
-       //console.log(marketResponse);
-      //return marketResponse;
-      exchangeInstance.fetchTicker(Object.keys(marketResponse)[0]).then(function(tickerResponse){
-        return tickerResponse;
-      });
     });
   },
 

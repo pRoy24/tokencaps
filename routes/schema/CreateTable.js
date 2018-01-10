@@ -274,6 +274,10 @@ module.exports = {
       createCoinYearlyHistoryTable();
       createCoinSocialTable();
       createCoinSnapshotTable();
+      createExchangeMarketDetailTable();
+      createTokenExchangeListTable();
+      createExchangeOHLCVTable();
+
     });
     res.send({"data": "Create Table Request submitted"});
   }
@@ -424,3 +428,98 @@ function createCoinYearlyHistoryTable() {
     });
 }
 
+function createExchangeMarketDetailTable() {
+  const createMarketsListQuery = "CREATE TABLE IF NOT EXISTS tokenplex.market_detail" +
+    "(exchange varchar," +
+    "detail text," +
+    "lastupdate timestamp," +
+    " PRIMARY KEY (exchange))";
+  const deleteQuery = "DROP TABLE IF EXISTS tokenplex.market_detail";
+  cassandraClient.connect()
+    .then(function () {
+      return cassandraClient.execute(deleteQuery).then(function (delQueryResponse) {
+        return cassandraClient.execute(createMarketsListQuery).then(function (createTableResponse) {
+          logger.log({"level": "info", "message": "markets_detail table created"});
+        });
+      })
+    }).catch(function(ex){
+      logger.log({"level": "error", "message": ex});
+    });
+}
+
+function createTokenExchangeListTable() {
+  const createMarketsListQuery = "CREATE TABLE IF NOT EXISTS tokenplex.token_exchange_list" +
+    "(market map<text,frozen<list<text>>>," +
+    "base varchar," +
+    "timestamp timestamp," +
+    "quoteId varchar, PRIMARY KEY (base))";
+  const deleteQuery = "DROP TABLE IF EXISTS tokenplex.markets_list";
+  cassandraClient.connect()
+    .then(function () {
+      return cassandraClient.execute(deleteQuery).then(function (delQueryResponse) {
+        return cassandraClient.execute(createMarketsListQuery).then(function (createTableResponse) {
+          logger.log({"level": "info", "message": "markets_list table created"});
+        });
+      })
+    }).catch(function(err){
+    logger.log({"level": "error", "message": err});
+  })
+
+}
+
+function createExchangeOHLCVTable() {
+  const createDaySampleOLHCVQuery = "CREATE TABLE IF NOT EXISTS tokenplex.exchange_day_sample_history"+
+    "(base varchar," +
+    "quote varchar," +
+    "detail text," +
+    "exchange varchar,"+
+    "PRIMARY KEY (exchange, base, quote))";
+
+  const createHourSampleOLHCVQuery = "CREATE TABLE IF NOT EXISTS tokenplex.exchange_hour_sample_history"+
+    "(base varchar," +
+    "quote varchar," +
+    "detail text," +
+    "exchange varchar,"+
+    "PRIMARY KEY (exchange, base, quote))";
+
+  const createMinSampleOLHCVQuery = "CREATE TABLE IF NOT EXISTS tokenplex.exchange_min_sample_history"+
+    "(base varchar," +
+    "quote varchar," +
+    "detail text," +
+    "exchange varchar,"+
+    "PRIMARY KEY (exchange, base, quote))";
+
+  const deleteMinSampleQuery = "DROP TABLE IF EXISTS tokenplex.exchange_min_sample_history";
+  const deleteHourSampleQuery = "DROP TABLE IF EXISTS tokenplex.exchange_hour_sample_history";
+  const deleteDaySampleQuery = "DROP TABLE IF EXISTS tokenplex.exchange_day_sample_history";
+
+  cassandraClient.connect()
+    .then(function () {
+      cassandraClient.execute(deleteMinSampleQuery).then(function (response) {
+        return response;
+      }).then(function (response) {
+        cassandraClient.execute(deleteHourSampleQuery).then(function (response) {
+          return response;
+        }).then(function () {
+          cassandraClient.execute(deleteDaySampleQuery).then(function (response) {
+            return response;
+          }).then(function () {
+            cassandraClient.execute(createMinSampleOLHCVQuery).then(function (response) {
+              return response;
+            }).then(function (response) {
+              cassandraClient.execute(createHourSampleOLHCVQuery).then(function (response) {
+                return response;
+              }).then(function () {
+                cassandraClient.execute(createDaySampleOLHCVQuery).then(function (response) {
+                  logger.log({level: "info", "message": "created exchange ohlcv tables"});
+                  return response;
+                })
+              })
+            })
+          })
+        })
+      })
+    }).catch(function(err){
+    logger.log({"level": "error", "message": err});
+  });
+}
