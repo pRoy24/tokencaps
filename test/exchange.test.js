@@ -82,3 +82,15 @@ describe('List Exchange Metadata API', function() {
 });
 
 
+describe('List Exchange Metadata API', function() {
+  describe('#GET /exchange/list-metadata', function(){
+    it('should list exchange metadata', function(done){
+      request(app).get('/exchange/list-metadata')
+        .end(function(err, res){
+          expect(res.statusCode).to.equal(200);
+          done();
+        });
+    });
+  });
+});
+

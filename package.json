@@ -3,8 +3,7 @@
   "version": "0.0.9",
   "private": false,
   "scripts": {
-    "start": "node ./bin/www",
-    "test": "mocha"
+    "start": "node ./bin/www"
   },
   "url": "https://github.com/TokenPlex/tokenplex-core",
   "email": "pritam@tokenplex.io",
