@@ -3,7 +3,8 @@
   "version": "0.0.9",
   "private": false,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "mocha"
   },
   "url": "https://github.com/TokenPlex/tokenplex-core",
   "email": "pritam@tokenplex.io",
@@ -38,6 +39,10 @@
     "winston": "^3.0.0-rc1"
   },
   "devDependencies": {
-    "babel-preset-es2015": "^6.24.1"
+    "babel-preset-es2015": "^6.24.1",
+    "chai": "^4.1.2",
+    "mocha": "^4.1.0",
+    "should": "^13.2.1",
+    "supertest": "^3.0.0"
   }
 }

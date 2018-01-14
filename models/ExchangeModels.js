@@ -90,6 +90,7 @@ module.exports = {
 
   getMarketsForToken: function(baseToken) {
     return DiskStorage.findExchangesForToken(baseToken).then(function(marketTokenResponse){
+
       if (marketTokenResponse && marketTokenResponse.rows.length > 0) {
         return marketTokenResponse;
       } else {

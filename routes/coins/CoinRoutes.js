@@ -162,8 +162,8 @@ module.exports = {
   getCoinExchanges(req, res, next) {
     let coinID = req.url.split("/coin")[0].split("/")[1].toLowerCase();
     ExchangeModels.getMarketsForToken(coinID).then(function(coinResponse){
-
+      res.send({data: coinResponse});
     });
-    res.send({data: []});
+
   }
 }

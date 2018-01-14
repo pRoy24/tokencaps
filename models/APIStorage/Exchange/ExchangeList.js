@@ -8,6 +8,7 @@ const MarketUtils = require('../../../utils/MarketUtils');
 const logger = require('../../../logs/logger');
 
 module.exports = {
+  // Method returns the last of markets for a given exchange
   getMarketList: function (exchangeName) {
     return getExchangeObject(exchangeName).then(function(currentExchange){
       return currentExchange.loadMarkets().then(function (exchangeMarketList) {
@@ -24,6 +25,7 @@ module.exports = {
     });
   },
 
+  // Method returns the active exchanges
   getMarketActiveExchanges(currentExchange, exchangeName) {
     try {
       return currentExchange.fetchMarkets().then(function (exchangeMarket) {
