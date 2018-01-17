@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/pRoy24/tokenplex.svg?branch=master)](https://travis-ci.org/pRoy24/tokenplex)
 
 ## What is TokenPlex
 
@@ -6,6 +5,8 @@ TokenPlex is an express/node based framework to aggregate crypto-currency data f
 and provide simple easy to digest endpoints.
 
 It implements the [ccxt](https://github.com/ccxt/ccxt) public library and provides a load-balancer and query-server over 80 supported exchanges.
+
+[![Build Status](https://travis-ci.org/pRoy24/tokenplex.svg?branch=master)](https://travis-ci.org/pRoy24/tokenplex)
 
 
 ## Installation
