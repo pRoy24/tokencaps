@@ -48,7 +48,7 @@ You can use [YugaByte](https://yugabyte.com) a polyglot database with unified CQ
 ### User Interface Endpoint at https://tokenplex.io
 
 #### Exchange View
-This provides a snapshot view public API's of 79 exchanges. The API is implemented over the (https://ccxt.com)[ccxt] library.
+This provides a snapshot view public API's of 79 exchanges. The API is implemented over the [ccxt](https://github.com/ccxt/ccxt) library.
 
 <img src="https://s3-us-west-2.amazonaws.com/images.tokenplex.io/top_screens_1.png"/>
 
